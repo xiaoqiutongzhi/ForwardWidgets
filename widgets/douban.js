@@ -36,15 +36,9 @@ WidgetMetadata = {
           ],
         },
         {
-          name: "start",
-          title: "开始",
-          type: "count",
-        },
-        {
-          name: "limit",
-          title: "每页数量",
-          type: "constant",
-          value: "20",
+          name: "page",
+          title: "页码",
+          type: "page"
         },
       ],
     },
@@ -75,15 +69,9 @@ WidgetMetadata = {
           ],
         },
         {
-          name: "start",
-          title: "开始",
-          type: "count",
-        },
-        {
-          name: "limit",
-          title: "每页数量",
-          type: "constant",
-          value: "20",
+          name: "page",
+          title: "页码",
+          type: "page"
         },
       ],
     },
@@ -96,11 +84,12 @@ WidgetMetadata = {
 };
 
 async function loadInterestItems(params = {}) {
-  const start = params.start || 0;
-  const limit = params.limit || 20;
+  const page = params.page;
   const user_id = params.user_id || "";
   const status = params.status || "";
-  let url = `https://m.douban.com/rexxar/api/v2/user/${user_id}/interests?status=${status}&start=${start}&count=${limit}`;
+  const count = 20
+  start = (page - 1) * count
+  let url = `https://m.douban.com/rexxar/api/v2/user/${user_id}/interests?status=${status}&start=${start}&count=${count}`;
   const response = await Widget.http.get(url, {
     headers: {
       Referer: `https://m.douban.com/mine/movie`,
@@ -122,13 +111,14 @@ async function loadInterestItems(params = {}) {
 }
 
 async function loadSuggestionItems(params = {}) {
-  const start = params.start || 0;
-  const limit = params.limit || 20;
+  const page = params.page;
   const cookie = params.cookie || "";
   const type = params.type || "";
+  const count = 20
+  start = (page - 1) * count
   const ckMatch = cookie.match(/ck=([^;]+)/);
   const ckValue = ckMatch ? ckMatch[1] : null;
-  let url = `https://m.douban.com/rexxar/api/v2/${type}/suggestion?start=${start}&count=${limit}&new_struct=1&with_review=1&ck=${ckValue}`;
+  let url = `https://m.douban.com/rexxar/api/v2/${type}/suggestion?start=${start}&count=${count}&new_struct=1&with_review=1&ck=${ckValue}`;
   const response = await Widget.http.get(url, {
     headers: {
       Referer: `https://m.douban.com/movie`,
