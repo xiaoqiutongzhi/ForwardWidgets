@@ -88,7 +88,7 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.0",
+  version: "1.0.1",
   requiredVersion: "0.0.1",
   description: "解析豆瓣我看及个性化推荐，获取视频信息",
   author: "huangxd",
