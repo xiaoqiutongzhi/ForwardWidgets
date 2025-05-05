@@ -131,7 +131,8 @@ async function loadSuggestionItems(params = {}) {
   let url = `https://m.douban.com/rexxar/api/v2/${type}/suggestion?start=${start}&count=${limit}&new_struct=1&with_review=1&ck=${ckValue}`;
   const response = await Widget.http.get(url, {
     headers: {
-      Referer: ` https://m.douban.com/movie`,
+      Referer: `https://m.douban.com/movie`,
+      Cookie: cookie,
       "User-Agent":
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
     },
