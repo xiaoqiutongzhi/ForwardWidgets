@@ -11,4 +11,4 @@
 我的豆瓣标签页中有显示用户ID
 
 #### Cookie获取
-最好用iPhone网页登陆豆瓣，然后用Loon或者Qx等工具抓包获取Cookie
+最好用iPhone网页登陆豆瓣，然后用Loon或者Qx等工具抓包获取Cookie（不清楚Cookie多久失效，所以可能过一段时间需要重新获取填一次）
