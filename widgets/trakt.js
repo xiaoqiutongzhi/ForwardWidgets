@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -86,7 +86,7 @@ WidgetMetadata = {
 };
 
 async function fetchTmdbIdsFromTraktUrls(traktUrls) {
-    const tmdbIdPromises = traktUrls.map(async (url) => {
+    let tmdbIdPromises = traktUrls.map(async (url) => {
         try {
             let detailResponse = await Widget.http.get(url, {
                 headers: {
