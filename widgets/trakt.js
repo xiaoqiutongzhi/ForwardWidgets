@@ -85,40 +85,37 @@ WidgetMetadata = {
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
-async function fetchTmdbIdsFromTraktUrls(traktUrls) {
-    const tmdbIdPromises = traktUrls.map(async (url) => {
-        try {
-            const detailResponse = await Widget.http.get(url, {
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                },
-            });
-
-            const detailDoc = Widget.dom.parse(detailResponse.data);
-            const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
-
-            if (!tmdbLinkEl) return null;
-
-            const href = Widget.dom.attr(tmdbLinkEl, 'href');
-            const match = href.match(/\/(tv|movie)\/(\d+)/);
-
-            return match ? `${match[1]}.${match[2]}` : null;
-        } catch {
-            return null; // 忽略单个失败请求
-        }
-    });
-
-    const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
-      id: item,
-      type: "tmdb",
-    }));
-    console.log("请求tmdbIds:", tmdbIds)
-    if (tmdbIds){
-        return tmdbIds;
-    }
-    return [];
-}
+// async function fetchTmdbIdsFromTraktUrls(traktUrls) {
+//     const tmdbIdPromises = traktUrls.map(async (url) => {
+//         try {
+//             const detailResponse = await Widget.http.get(url, {
+//                 headers: {
+//                     "User-Agent":
+//                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+//                 },
+//             });
+//
+//             const detailDoc = Widget.dom.parse(detailResponse.data);
+//             const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+//
+//             if (!tmdbLinkEl) return null;
+//
+//             const href = Widget.dom.attr(tmdbLinkEl, 'href');
+//             const match = href.match(/\/(tv|movie)\/(\d+)/);
+//
+//             return match ? `${match[1]}.${match[2]}` : null;
+//         } catch {
+//             return null; // 忽略单个失败请求
+//         }
+//     });
+//
+//     const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
+//       id: item,
+//       type: "tmdb",
+//     }));
+//     console.log("请求tmdbIds:", tmdbIds)
+//     return tmdbIds;
+// }
 
 async function loadInterestItems(params = {}) {
     try {
@@ -155,7 +152,33 @@ async function loadInterestItems(params = {}) {
             .filter(Boolean)))
             .slice(minNum - 1, maxNum);
 
-        return await fetchTmdbIdsFromTraktUrls(traktUrls);
+        // return await fetchTmdbIdsFromTraktUrls(traktUrls);
+
+        const tmdbIdPromises = traktUrls.map(async (url) => {
+            const detailResponse = await Widget.http.get(url, {
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                },
+            });
+
+            const detailDoc = Widget.dom.parse(detailResponse.data);
+            const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+
+            if (!tmdbLinkEl) return null;
+
+            const href = Widget.dom.attr(tmdbLinkEl, 'href');
+            const match = href.match(/\/(tv|movie)\/(\d+)/);
+
+            return match ? `${match[1]}.${match[2]}` : null;
+        });
+
+        const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
+          id: item,
+          type: "tmdb",
+        }));
+        console.log("请求tmdbIds:", tmdbIds)
+        return tmdbIds;
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -196,5 +219,31 @@ async function loadSuggestionItems(params = {}) {
         .filter(Boolean)))
         .slice(minNum - 1, maxNum);
 
-    return await fetchTmdbIdsFromTraktUrls(traktUrls);
+    // return await fetchTmdbIdsFromTraktUrls(traktUrls);
+
+    const tmdbIdPromises = traktUrls.map(async (url) => {
+        const detailResponse = await Widget.http.get(url, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            },
+        });
+
+        const detailDoc = Widget.dom.parse(detailResponse.data);
+        const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+
+        if (!tmdbLinkEl) return null;
+
+        const href = Widget.dom.attr(tmdbLinkEl, 'href');
+        const match = href.match(/\/(tv|movie)\/(\d+)/);
+
+        return match ? `${match[1]}.${match[2]}` : null;
+    });
+
+    const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
+      id: item,
+      type: "tmdb",
+    }));
+    console.log("请求tmdbIds:", tmdbIds)
+    return tmdbIds;
 }
