@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -122,10 +122,10 @@ async function loadInterestItems(params = {}) {
         const page = params.page;
         const userName = params.user_name || "";
         const status = params.status || "";
-        const count = 20;
+        const count = 5;
         const minNum = (page - 1) * count + 1
         const maxNum = (page) * count
-        const traktPage = (page - 1) / 3 + 1
+        const traktPage = (page - 1) / 12 + 1
 
         if (!userName) {
             throw new Error("必须提供 Trakt 用户名");
@@ -163,7 +163,7 @@ async function loadSuggestionItems(params = {}) {
     const page = params.page;
     const cookie = params.cookie || "";
     const type = params.type || "";
-    const count = 20;
+    const count = 5;
     const minNum = (page - 1) * count + 1
     const maxNum = (page) * count
 
