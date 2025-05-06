@@ -112,9 +112,12 @@ async function fetchTmdbIdsFromTraktUrls(traktUrls) {
     const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
       id: item,
       type: "tmdb",
-    }));;
+    }));
     console.log("请求tmdbIds:", tmdbIds)
-    return Array.from(new Set(tmdbIds));
+    if (tmdbIds){
+        return tmdbIds;
+    }
+    return [];
 }
 
 async function loadInterestItems(params = {}) {
