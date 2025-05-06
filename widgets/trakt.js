@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.0",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -109,7 +109,11 @@ async function fetchTmdbIdsFromTraktUrls(traktUrls) {
         }
     });
 
-    const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean);
+    const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
+      id: item,
+      type: "tmdb",
+    }));;
+    console.log("请求tmdbIds:", tmdbIds)
     return Array.from(new Set(tmdbIds));
 }
 
