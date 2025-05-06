@@ -29,11 +29,11 @@ WidgetMetadata = {
                         },
                         {
                             title: "看过-电影",
-                            value: "history-movies",
+                            value: "history/movies/added/asc",
                         },
                         {
                             title: "看过-电视",
-                            value: "history-shows",
+                            value: "history/shows/added/asc",
                         },
                     ],
                 },
@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.0",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -131,16 +131,7 @@ async function loadInterestItems(params = {}) {
             throw new Error("必须提供 Trakt 用户名");
         }
 
-        let url = '';
-        if (status === 'watchlist') {
-            url = `https://trakt.tv/users/${userName}/watchlist?page=${traktPage}`;
-        } else if (status === 'progress') {
-            url = `https://trakt.tv/users/${userName}/progress?page=${traktPage}`;
-        } else if (status === 'history-movies') {
-            url = `https://trakt.tv/users/${userName}/history/movies/added/asc?page=${traktPage}`;
-        } else if (status === 'history-shows') {
-            url = `https://trakt.tv/users/${userName}/history/shows/added/asc?page=${traktPage}`;
-        }
+        let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
         const response = await Widget.http.get(url, {
             headers: {
                 "User-Agent":
