@@ -85,37 +85,37 @@ WidgetMetadata = {
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
-// async function fetchTmdbIdsFromTraktUrls(traktUrls) {
-//     const tmdbIdPromises = traktUrls.map(async (url) => {
-//         try {
-//             const detailResponse = await Widget.http.get(url, {
-//                 headers: {
-//                     "User-Agent":
-//                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-//                 },
-//             });
-//
-//             const detailDoc = Widget.dom.parse(detailResponse.data);
-//             const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
-//
-//             if (!tmdbLinkEl) return null;
-//
-//             const href = Widget.dom.attr(tmdbLinkEl, 'href');
-//             const match = href.match(/\/(tv|movie)\/(\d+)/);
-//
-//             return match ? `${match[1]}.${match[2]}` : null;
-//         } catch {
-//             return null; // 忽略单个失败请求
-//         }
-//     });
-//
-//     const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
-//       id: item,
-//       type: "tmdb",
-//     }));
-//     console.log("请求tmdbIds:", tmdbIds)
-//     return tmdbIds;
-// }
+async function fetchTmdbIdsFromTraktUrls(traktUrls) {
+    const tmdbIdPromises = traktUrls.map(async (url) => {
+        try {
+            let detailResponse = await Widget.http.get(url, {
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                },
+            });
+
+            let detailDoc = Widget.dom.parse(detailResponse.data);
+            let tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+
+            if (!tmdbLinkEl) return null;
+
+            let href = Widget.dom.attr(tmdbLinkEl, 'href');
+            let match = href.match(/\/(tv|movie)\/(\d+)/);
+
+            return match ? `${match[1]}.${match[2]}` : null;
+        } catch {
+            return null; // 忽略单个失败请求
+        }
+    });
+
+    let tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
+      id: item,
+      type: "tmdb",
+    }));
+    console.log("请求tmdbIds:", tmdbIds)
+    return tmdbIds;
+}
 
 async function loadInterestItems(params = {}) {
     try {
@@ -132,7 +132,7 @@ async function loadInterestItems(params = {}) {
         }
 
         let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
-        const response = await Widget.http.get(url, {
+        let response = await Widget.http.get(url, {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -141,44 +141,18 @@ async function loadInterestItems(params = {}) {
 
         console.log("请求结果:", response.data);
 
-        const docId = Widget.dom.parse(response.data);
-        const metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
+        let docId = Widget.dom.parse(response.data);
+        let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
         if (!metaElements || metaElements.length === 0) {
             throw new Error("未找到任何 meta content 链接");
         }
 
-        const traktUrls = Array.from(new Set(metaElements
+        let traktUrls = Array.from(new Set(metaElements
             .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
             .filter(Boolean)))
             .slice(minNum - 1, maxNum);
 
-        // return await fetchTmdbIdsFromTraktUrls(traktUrls);
-
-        const tmdbIdPromises = traktUrls.map(async (url) => {
-            const detailResponse = await Widget.http.get(url, {
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                },
-            });
-
-            const detailDoc = Widget.dom.parse(detailResponse.data);
-            const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
-
-            if (!tmdbLinkEl) return null;
-
-            const href = Widget.dom.attr(tmdbLinkEl, 'href');
-            const match = href.match(/\/(tv|movie)\/(\d+)/);
-
-            return match ? `${match[1]}.${match[2]}` : null;
-        });
-
-        const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
-          id: item,
-          type: "tmdb",
-        }));
-        console.log("请求tmdbIds:", tmdbIds)
-        return tmdbIds;
+        return await fetchTmdbIdsFromTraktUrls(traktUrls);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -198,7 +172,7 @@ async function loadSuggestionItems(params = {}) {
     }
 
     let url = `https://trakt.tv/${type}/recommendations`;
-    const response = await Widget.http.get(url, {
+    let response = await Widget.http.get(url, {
         headers: {
             Cookie: cookie,
             "User-Agent":
@@ -208,42 +182,16 @@ async function loadSuggestionItems(params = {}) {
 
     console.log("请求结果:", response.data);
 
-    const docId = Widget.dom.parse(response.data);
-    const metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
+    let docId = Widget.dom.parse(response.data);
+    let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
     if (!metaElements || metaElements.length === 0) {
         throw new Error("未找到任何 meta content 链接");
     }
 
-    const traktUrls = Array.from(new Set(metaElements
+    let traktUrls = Array.from(new Set(metaElements
         .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
         .filter(Boolean)))
         .slice(minNum - 1, maxNum);
 
-    // return await fetchTmdbIdsFromTraktUrls(traktUrls);
-
-    const tmdbIdPromises = traktUrls.map(async (url) => {
-        const detailResponse = await Widget.http.get(url, {
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            },
-        });
-
-        const detailDoc = Widget.dom.parse(detailResponse.data);
-        const tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
-
-        if (!tmdbLinkEl) return null;
-
-        const href = Widget.dom.attr(tmdbLinkEl, 'href');
-        const match = href.match(/\/(tv|movie)\/(\d+)/);
-
-        return match ? `${match[1]}.${match[2]}` : null;
-    });
-
-    const tmdbIds = (await Promise.all(tmdbIdPromises)).filter(Boolean).map((item) => ({
-      id: item,
-      type: "tmdb",
-    }));
-    console.log("请求tmdbIds:", tmdbIds)
-    return tmdbIds;
+    return await fetchTmdbIdsFromTraktUrls(traktUrls);
 }
