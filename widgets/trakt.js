@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.4",
+    version: "1.0.5",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -122,16 +122,16 @@ async function loadInterestItems(params = {}) {
         const page = params.page;
         const userName = params.user_name || "";
         const status = params.status || "";
-        const count = 5;
-        const minNum = (page - 1) * count + 1
-        const maxNum = (page) * count
-        const traktPage = (page - 1) / 12 + 1
+        // const count = 5;
+        // const minNum = (page - 1) * count + 1
+        // const maxNum = (page) * count
+        // const traktPage = (page - 1) / 12 + 1
 
         if (!userName) {
             throw new Error("必须提供 Trakt 用户名");
         }
 
-        let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
+        let url = `https://trakt.tv/users/${userName}/${status}?page=${page}`;
         let response = await Widget.http.get(url, {
             headers: {
                 "User-Agent":
@@ -150,7 +150,7 @@ async function loadInterestItems(params = {}) {
         let traktUrls = Array.from(new Set(metaElements
             .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
             .filter(Boolean)))
-            .slice(minNum - 1, maxNum);
+            // .slice(minNum - 1, maxNum);
 
         return await fetchTmdbIdsFromTraktUrls(traktUrls);
     } catch (error) {
@@ -163,9 +163,9 @@ async function loadSuggestionItems(params = {}) {
     const page = params.page;
     const cookie = params.cookie || "";
     const type = params.type || "";
-    const count = 5;
-    const minNum = (page - 1) * count + 1
-    const maxNum = (page) * count
+    // const count = 5;
+    // const minNum = (page - 1) * count + 1
+    // const maxNum = (page) * count
 
     if (!cookie) {
         throw new Error("必须提供用户Cookie");
@@ -191,7 +191,7 @@ async function loadSuggestionItems(params = {}) {
     let traktUrls = Array.from(new Set(metaElements
         .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
         .filter(Boolean)))
-        .slice(minNum - 1, maxNum);
+        // .slice(minNum - 1, maxNum);
 
     return await fetchTmdbIdsFromTraktUrls(traktUrls);
 }
