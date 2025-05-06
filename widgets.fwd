@@ -1,11 +1,11 @@
 {
-  "title": "huangxd's Widgets",
-  "description": "A collection of widgets created by huangxd",
+  "title": "huangxd2's Widgets",
+  "description": "A collection of widgets created by huangxd2",
   "icon": "https://github.com/huangxd-/ForwardWidgets/raw/main/icon.png",
   "widgets": [
     {
-      "id": "douban",
-      "title": "豆瓣我看&豆瓣个性化推荐",
+      "id": "douban2",
+      "title": "豆瓣我看&豆瓣个性化推荐2",
       "description": "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐",
       "requiredVersion": "0.0.1",
       "version": "1.0.2",
