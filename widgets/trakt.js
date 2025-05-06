@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
