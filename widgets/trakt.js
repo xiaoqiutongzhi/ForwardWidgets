@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.17",
+    version: "1.0.18",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -121,7 +121,7 @@ async function loadInterestItems(params = {}) {
                 headers: {
                     "User-Agent":
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "trakt-api-key": clientId,
+                    "trakt-api-key": "596d67a600b57cf18fb52c4fb07f3dc5745320e928254dac963a291b49d82b8f",
                 },
             });
 
