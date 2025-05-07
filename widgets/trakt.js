@@ -9,22 +9,10 @@ WidgetMetadata = {
             functionName: "loadInterestItems",
             params: [
                 {
-                    name: "client_id",
-                    title: "client_id",
+                    name: "user_name",
+                    title: "用户名",
                     type: "input",
-                    description: "必填，获取请参考该项目README",
-                },
-                {
-                    name: "client_secret",
-                    title: "client_secret",
-                    type: "input",
-                    description: "必填，获取请参考该项目README",
-                },
-                {
-                    name: "code",
-                    title: "code",
-                    type: "input",
-                    description: "必填，获取请参考该项目README",
+                    description: "未填写情况下接口不可用",
                 },
                 {
                     name: "status",
@@ -41,11 +29,11 @@ WidgetMetadata = {
                         },
                         {
                             title: "看过-电影",
-                            value: "watched-movie",
+                            value: "history/movies/added/asc",
                         },
                         {
                             title: "看过-电视",
-                            value: "watched-show",
+                            value: "history/shows/added/asc",
                         },
                     ],
                 },
@@ -62,22 +50,10 @@ WidgetMetadata = {
             functionName: "loadSuggestionItems",
             params: [
                 {
-                    name: "client_id",
-                    title: "client_id",
+                    name: "cookie",
+                    title: "用户Cookie",
                     type: "input",
-                    description: "必填，获取请参考该项目README",
-                },
-                {
-                    name: "client_secret",
-                    title: "client_secret",
-                    type: "input",
-                    description: "必填，获取请参考该项目README",
-                },
-                {
-                    name: "code",
-                    title: "code",
-                    type: "input",
-                    description: "必填，获取请参考该项目README",
+                    description: "未填写情况下接口不可用；可登陆网页后，通过loon，Qx等软件抓包获取cookie",
                 },
                 {
                     name: "type",
@@ -86,11 +62,11 @@ WidgetMetadata = {
                     enumOptions: [
                         {
                             title: "电影",
-                            value: "movie",
+                            value: "movies",
                         },
                         {
                             title: "电视",
-                            value: "show",
+                            value: "shows",
                         },
                     ],
                 },
@@ -102,59 +78,35 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.12",
+    version: "1.0.13",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
-async function fetchToken(clientId, clientSecret, code) {
-    try {
-        const data = {
-            code: code,
-            client_id: clientId,
-            client_secret: clientSecret,
-            redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
-            grant_type: "authorization_code",
-        };
-        const jsonData = JSON.stringify(data);
-        console.log("请求jsonData:", jsonData);
-        const response = await Widget.http.post("https://api.trakt.tv/oauth/token", {
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            },
-            body: jsonData
-        });
-
-        console.log("请求access_token:", response.data);
-
-        if (response.data) {
-            return response.data.access_token;
-        } else {
-            throw new Error("未获取到access_token");
-        }
-    } catch (error) {
-        console.error("处理失败:", error);
-        throw error;
-    }
-}
-
-async function fetchProgress(sortedData, clientId, token) {
-    let tmdbIdPromises = sortedData.map(async (item) => {
+async function fetchTmdbIdsFromTraktUrls(traktUrls) {
+    let tmdbIdPromises = traktUrls.map(async (url) => {
         try {
-            const url = `https://api.trakt.tv/shows/${item.show.ids.slug}/progress/watched`;
-            const detailResponse = await Widget.http.get(url, {
+            let detailResponse = await Widget.http.get(url, {
                 headers: {
                     "User-Agent":
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "trakt-api-key": clientId,
-                    "Authorization": "Bearer " + token,
+                    "Cache-Control": "no-cache, no-store, must-revalidate",
+                    "Pragma": "no-cache",
+                    "Expires": "0",
                 },
             });
 
-            return detailResponse.data.aired !== detailResponse.data.completed ? `show.${item.show.ids.tmdb}` : null;
+            let detailDoc = Widget.dom.parse(detailResponse.data);
+            let tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+
+            if (!tmdbLinkEl) return null;
+
+            let href = Widget.dom.attr(tmdbLinkEl, 'href');
+            let match = href.match(/\/(tv|movie)\/(\d+)/);
+
+            return match ? `${match[1]}.${match[2]}` : null;
         } catch {
             return null; // 忽略单个失败请求
         }
@@ -171,77 +123,46 @@ async function fetchProgress(sortedData, clientId, token) {
 async function loadInterestItems(params = {}) {
     try {
         const page = params.page;
-        const clientId = params.client_id || "";
-        const clientSecret = params.client_secret || "";
-        const code = params.code || "";
+        const userName = params.user_name || "";
         const status = params.status || "";
-        const limit = 20;
+        const count = 20
+        const minNum = (page - 1) * count + 1
+        const maxNum = (page) * count
+        const traktPage = (page - 1) / 3 + 1
 
-        if (!clientId || !clientSecret || !code) {
-            throw new Error("必须先填写client_id、client_secret和code");
+        if (!userName) {
+            throw new Error("必须提供 Trakt 用户名");
         }
 
-        const token = await fetchToken(clientId, clientSecret, code);
+        let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
+        let response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Pragma": "no-cache",
+                "Expires": "0",
+            },
+        });
 
-        let url = '';
-        let type = 'movie';
-        if (status === "watchlist") {
-            url = `https://api.trakt.tv/sync/watchlist/all/rank/asc?page=${page}&limit=${limit}`;
-        } else if (status === "progress") {
-            url = `https://api.trakt.tv/sync/watched/shows?extended=noseasons`;
-            type = 'show';
-        } else if (status === "watched-movie") {
-            url = `https://api.trakt.tv/sync/watched/movies`;
-        } else if (status === "watched-show") {
-            url = `https://api.trakt.tv/sync/watched/shows?extended=noseasons`;
-            type = 'show';
+        console.log("请求结果:", response.data);
+
+        let html = response.data;
+        let metaRegex = /<meta[^>]+content="(https:\/\/trakt\.tv\/[^"]*)"[^>]*>/gi;
+        let metaMatches = html.matchAll(metaRegex);
+
+        let metaElements = Array.from(metaMatches, match => ({ content: match[1] }));
+
+        if (!metaElements || metaElements.length === 0) {
+            throw new Error("未找到任何 meta content 链接");
         }
 
-        // watchlist的任何page都需要请求，其他只请求page=1
-        if (!(status !== "watchlist" && page > 1)) {
-            const response = await Widget.http.get(url, {
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "trakt-api-key": clientId,
-                    "Authorization": "Bearer " + token,
-                },
-            });
+        let traktUrls = Array.from(new Set(metaElements
+            .map(el => el.content)
+            .filter(Boolean)))
+            .slice(minNum - 1, maxNum);
 
-            console.log("请求结果:", response.data);
-
-            // watched-movie需要用last_updated_at字段进行时间排序
-            let sortedData = response.data;
-            if (status === "watched-movie") {
-                sortedData = response.data.sort((a, b) => {
-                    return new Date(b.last_updated_at) - new Date(a.last_updated_at);
-                });
-            }
-
-            // progress过滤出最近半年，且未看完的show，之所以是最近半年，是怕电视太多，超请求了
-            if (status === "progress") {
-                return await fetchProgress(sortedData);
-            }
-
-            if (sortedData) {
-                const items = sortedData;
-                let tmdbIds = [];
-                if (status === "watchlist") {
-                    tmdbIds = items.map((item) => ({
-                        id: item.type + item[item.type]?.tmdb,
-                        type: "tmdb",
-                    }));
-                } else {
-                    tmdbIds = items.map((item) => ({
-                        id: type + item[type]?.tmdb,
-                        type: "tmdb",
-                    }));
-                }
-                return tmdbIds;
-            }
-            return [];
-        }
-        return [];
+        return await fetchTmdbIdsFromTraktUrls(traktUrls);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -250,36 +171,44 @@ async function loadInterestItems(params = {}) {
 
 async function loadSuggestionItems(params = {}) {
     const page = params.page;
-    const clientId = params.client_id || "";
-    const clientSecret = params.client_secret || "";
-    const code = params.code || "";
+    const cookie = params.cookie || "";
     const type = params.type || "";
-    const limit = 20;
+    const count = 20;
+    const minNum = (page - 1) * count + 1
+    const maxNum = (page) * count
 
-    if (!clientId || !clientSecret || !code) {
-        throw new Error("必须先填写client_id、client_secret和code");
+    if (!cookie) {
+        throw new Error("必须提供用户Cookie");
     }
 
-    const token = await fetchToken(clientId, clientSecret, code);
-
-    let url = `https://api.trakt.tv/recommendations/${type}s?page=${page}&limit=${limit}`;
-    const response = await Widget.http.get(url, {
+    let url = `https://trakt.tv/${type}/recommendations`;
+    let response = await Widget.http.get(url, {
         headers: {
+            Cookie: cookie,
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            "trakt-api-key": clientId,
-            "Authorization": "Bearer " + token,
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
         },
     });
 
     console.log("请求结果:", response.data);
-    if (response.data) {
-        const items = response.data;
-        const tmdbIds = items.filter((item) => item.ids.tmdb != null).map((item) => ({
-            id: type + item.ids.tmdb,
-            type: "tmdb",
-        }));
-        return tmdbIds;
+
+    let html = response.data;
+    let metaRegex = /<meta[^>]+content="(https:\/\/trakt\.tv\/[^"]*)"[^>]*>/gi;
+    let metaMatches = html.matchAll(metaRegex);
+
+    let metaElements = Array.from(metaMatches, match => ({ content: match[1] }));
+
+    if (!metaElements || metaElements.length === 0) {
+        throw new Error("未找到任何 meta content 链接");
     }
-    return [];
+
+    let traktUrls = Array.from(new Set(metaElements
+        .map(el => el.content)
+        .filter(Boolean)))
+        .slice(minNum - 1, maxNum);
+
+    return await fetchTmdbIdsFromTraktUrls(traktUrls);
 }
