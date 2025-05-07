@@ -102,7 +102,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.10",
+    version: "1.0.11",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -116,8 +116,10 @@ async function fetchToken(clientId, clientSecret, code) {
             client_id: clientId,
             client_secret: clientSecret,
             redirect_uri: "urn:ietf:wg:oauth:2.0:oob",
-            grant_type: "authorization_code"
+            grant_type: "authorization_code",
         };
+        const jsonData = JSON.stringify(data);
+        console.log("请求jsonData:", jsonData);
         const response = await Widget.http.post("https://api.trakt.tv/oauth/token", {
             headers: {
                 "Content-Type": "application/json"
