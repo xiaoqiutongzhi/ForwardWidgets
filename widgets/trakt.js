@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.13",
+    version: "1.0.14",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -98,12 +98,13 @@ async function fetchTmdbIdsFromTraktUrls(traktUrls) {
                 },
             });
 
-            let detailDoc = Widget.dom.parse(detailResponse.data);
-            let tmdbLinkEl = Widget.dom.select(detailDoc, 'a#external-link-tmdb')[0];
+            let html = detailResponse.data;
+            let linkRegex = /<a[^>]+id="external-link-tmdb"[^>]+href="(.*?)"[^>]*>/i;
+            let linkMatch = html.match(linkRegex);
 
-            if (!tmdbLinkEl) return null;
+            if (!linkMatch) return null;
 
-            let href = Widget.dom.attr(tmdbLinkEl, 'href');
+            let href = linkMatch[1];
             let match = href.match(/\/(tv|movie)\/(\d+)/);
 
             return match ? `${match[1]}.${match[2]}` : null;
