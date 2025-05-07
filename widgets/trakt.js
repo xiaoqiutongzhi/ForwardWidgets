@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.14",
+    version: "1.0.15",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -90,11 +90,9 @@ async function fetchTmdbIdsFromTraktUrls(traktUrls) {
         try {
             let detailResponse = await Widget.http.get(url, {
                 headers: {
+                    Referer: `https://trakt.tv/users/huangxd/lists`,
                     "User-Agent":
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Cache-Control": "no-cache, no-store, must-revalidate",
-                    "Pragma": "no-cache",
-                    "Expires": "0",
                 },
             });
 
@@ -138,11 +136,9 @@ async function loadInterestItems(params = {}) {
         let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
         let response = await Widget.http.get(url, {
             headers: {
+                Referer: `https://trakt.tv/users/huangxd/lists`,
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                "Pragma": "no-cache",
-                "Expires": "0",
             },
         });
 
@@ -185,12 +181,10 @@ async function loadSuggestionItems(params = {}) {
     let url = `https://trakt.tv/${type}/recommendations`;
     let response = await Widget.http.get(url, {
         headers: {
+            Referer: `https://trakt.tv/users/huangxd/lists`,
             Cookie: cookie,
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0",
         },
     });
 
