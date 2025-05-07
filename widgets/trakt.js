@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.15",
+    version: "1.0.16",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -88,7 +88,7 @@ WidgetMetadata = {
 async function fetchTmdbIdsFromTraktUrls(traktUrls) {
     let tmdbIdPromises = traktUrls.map(async (url) => {
         try {
-            let detailResponse = await Widget.http.get(url, {
+            let detailResponse = await Widget.http.get(url+`?timestamp=${Date.now()}`, {
                 headers: {
                     Referer: `https://trakt.tv/users/huangxd/lists`,
                     "User-Agent":
@@ -133,7 +133,7 @@ async function loadInterestItems(params = {}) {
             throw new Error("必须提供 Trakt 用户名");
         }
 
-        let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}`;
+        let url = `https://trakt.tv/users/${userName}/${status}?page=${traktPage}&timestamp=${Date.now()}`;
         let response = await Widget.http.get(url, {
             headers: {
                 Referer: `https://trakt.tv/users/huangxd/lists`,
@@ -178,7 +178,7 @@ async function loadSuggestionItems(params = {}) {
         throw new Error("必须提供用户Cookie");
     }
 
-    let url = `https://trakt.tv/${type}/recommendations`;
+    let url = `https://trakt.tv/${type}/recommendations?timestamp=${Date.now()}`;
     let response = await Widget.http.get(url, {
         headers: {
             Referer: `https://trakt.tv/users/huangxd/lists`,
