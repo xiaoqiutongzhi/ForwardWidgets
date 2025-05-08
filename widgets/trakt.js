@@ -41,6 +41,43 @@ WidgetMetadata = {
             ],
         },
         {
+            title: "trakt看过",
+            requiresWebView: false,
+            functionName: "loadWatchedItems",
+            params: [
+                {
+                    name: "user_name",
+                    title: "用户名",
+                    type: "input",
+                    description: "必填，设置account中的username",
+                },
+                {
+                    name: "status",
+                    title: "状态",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "想看",
+                            value: "watchlist",
+                        },
+                        {
+                            title: "看过-电影",
+                            value: "watched-movie",
+                        },
+                        {
+                            title: "看过-电视",
+                            value: "watched-show",
+                        },
+                    ],
+                },
+                {
+                    name: "page",
+                    title: "页码",
+                    type: "page"
+                },
+            ],
+        },
+        {
             title: "Trakt个性化推荐",
             requiresWebView: false,
             functionName: "loadSuggestionItems",
@@ -86,7 +123,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.21",
+    version: "1.0.22",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -94,6 +131,73 @@ WidgetMetadata = {
 };
 
 async function loadInterestItems(params = {}) {
+    try {
+        const page = params.page;
+        const userName = params.user_name || "";
+        const status = params.status || "";
+        const limit = 20;
+
+        if (!userName) {
+            throw new Error("必须先填写user_name");
+        }
+
+        let url = '';
+        let type = 'movie';
+        if (status === "watchlist") {
+            url = `https://api.trakt.tv/users/huangxd/watchlist/all/rank/asc?page=${page}&limit=${limit}`;
+        } else if (status === "watched-movie") {
+            url = `https://api.trakt.tv/users/huangxd/watched/movies`;
+        } else if (status === "watched-show") {
+            url = `https://api.trakt.tv/users/huangxd/watched/shows?extended=noseasons`;
+            type = 'show';
+        }
+
+        // watchlist的任何page都需要请求，其他只请求page=1
+        if (!(status !== "watchlist" && page > 1)) {
+            const response = await Widget.http.get(url, {
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                    "trakt-api-key": "596d67a600b57cf18fb52c4fb07f3dc5745320e928254dac963a291b49d82b8f",
+                },
+            });
+
+            console.log("请求结果:", response.data);
+
+            // watched-movie需要用last_updated_at字段进行时间排序
+            let sortedData = response.data;
+            if (status === "watched-movie") {
+                sortedData = response.data.sort((a, b) => {
+                    return new Date(b.last_updated_at) - new Date(a.last_updated_at);
+                });
+            }
+
+            if (sortedData) {
+                const items = sortedData;
+                let tmdbIds = [];
+                if (status === "watchlist") {
+                    tmdbIds = items.map((item) => ({
+                        id: item.type + "." + item[item.type].ids.tmdb,
+                        type: "tmdb",
+                    }));
+                } else {
+                    tmdbIds = items.map((item) => ({
+                        id: type + "." + item[type].ids.tmdb,
+                        type: "tmdb",
+                    }));
+                }
+                return tmdbIds;
+            }
+            return [];
+        }
+        return [];
+    } catch (error) {
+        console.error("处理失败:", error);
+        throw error;
+    }
+}
+
+async function loadWatchedItems(params = {}) {
     try {
         const page = params.page;
         const userName = params.user_name || "";
