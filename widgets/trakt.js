@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.25",
+    version: "1.0.26",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -137,7 +137,7 @@ async function loadInterestItems(params = {}) {
                 },
             });
 
-            await uploadNotify(response.data)
+            await uploadNotify(JSON.stringify(response.data))
 
             console.log("请求结果:", response.data);
 
@@ -163,7 +163,7 @@ async function loadInterestItems(params = {}) {
                         type: "tmdb",
                     }));
                 }
-                await uploadNotify(tmdbIds)
+                await uploadNotify(JSON.stringify(tmdbIds))
                 return tmdbIds;
             }
             return [];
