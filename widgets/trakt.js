@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.20",
+    version: "1.0.21",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -107,11 +107,11 @@ async function loadInterestItems(params = {}) {
         let url = '';
         let type = 'movie';
         if (status === "watchlist") {
-            url = `https://vercel-proxy-zeta-six.vercel.app/https://api.trakt.tv/users/huangxd/watchlist/all/rank/asc?page=${page}&limit=${limit}`;
+            url = `https://api.trakt.tv/users/huangxd/watchlist/all/rank/asc?page=${page}&limit=${limit}`;
         } else if (status === "watched-movie") {
-            url = `https://vercel-api-proxy-red-mu.vercel.app/https://api.trakt.tv/users/huangxd/watched/movies`;
+            url = `https://api.trakt.tv/users/huangxd/watched/movies`;
         } else if (status === "watched-show") {
-            url = `https://full-forward-proxy-tomorrow.dongdongbo.workers.dev/https://api.trakt.tv/users/huangxd/watched/shows?extended=noseasons`;
+            url = `https://api.trakt.tv/users/huangxd/watched/shows?extended=noseasons`;
             type = 'show';
         }
 
