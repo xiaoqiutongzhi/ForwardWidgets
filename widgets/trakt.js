@@ -85,18 +85,6 @@ WidgetMetadata = {
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
-async function uploadNotify(text) {
-    const url = `https://api2.pushdeer.com/message/push?pushkey=PDU33181ThsLBiASqrbT0uqdEP1BJ7HilvlS2Wih8&text=${text}`;
-    const response = await Widget.http.get(url, {
-        headers: {
-            "User-Agent":
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        },
-    });
-
-    console.log("uploadNotify请求结果:", response.data);
-}
-
 function extractTraktUrlsFromResponse(responseData, minNum, maxNum) {
     let docId = Widget.dom.parse(responseData);
     let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
@@ -175,7 +163,6 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
       id: item,
       type: "imdb",
     }));
-    await uploadNotify(JSON.stringify(imdbIds))
     console.log("请求imdbIds:", imdbIds)
     return imdbIds;
 }
@@ -204,8 +191,6 @@ async function loadInterestItems(params = {}) {
                 "Expires": "0",
             },
         });
-
-        await uploadNotify(JSON.stringify(response.data))
 
         console.log("请求结果:", response.data);
 
@@ -246,8 +231,6 @@ async function loadSuggestionItems(params = {}) {
             "Expires": "0",
         },
     });
-
-    await uploadNotify(JSON.stringify(response.data))
 
     console.log("请求结果:", response.data);
 
