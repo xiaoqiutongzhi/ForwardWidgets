@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.26",
+    version: "1.0.27",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -153,14 +153,22 @@ async function loadInterestItems(params = {}) {
                 const items = sortedData;
                 let tmdbIds = [];
                 if (status === "watchlist") {
+                    // tmdbIds = items.map((item) => ({
+                    //     id: (item.type === "movie" ? "movie" : "tv") + "." + item[item.type].ids.tmdb,
+                    //     type: "tmdb",
+                    // }));
                     tmdbIds = items.map((item) => ({
-                        id: item.type === "movie" ? "movie" : "tv" + "." + item[item.type].ids.tmdb,
-                        type: "tmdb",
+                        id: item[item.type].ids.imdb,
+                        type: "imdb",
                     }));
                 } else {
+                    // tmdbIds = items.map((item) => ({
+                    //     id: (type === "movie" ? "movie" : "tv") + "." + item[type].ids.tmdb,
+                    //     type: "tmdb",
+                    // }));
                     tmdbIds = items.map((item) => ({
-                        id: type === "movie" ? "movie" : "tv" + "." + item[type].ids.tmdb,
-                        type: "tmdb",
+                        id: item[type].ids.imdb,
+                        type: "imdb",
                     }));
                 }
                 await uploadNotify(JSON.stringify(tmdbIds))
