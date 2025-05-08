@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.30",
+    version: "1.0.31",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -118,7 +118,7 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
             let href = Widget.dom.attr(imdbLinkEl, 'href');
             let match = href.match(/title\/(tt\d+)/);
 
-            return match ? `imdb.${match[1]}` : null;
+            return match ? `${match[1]}` : null;
         } catch {
             return null; // 忽略单个失败请求
         }
