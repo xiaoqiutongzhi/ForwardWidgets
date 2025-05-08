@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.31",
+    version: "1.0.33",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -95,6 +95,45 @@ async function uploadNotify(text) {
     });
 
     console.log("uploadNotify请求结果:", response.data);
+}
+
+function extractTraktUrlsFromResponse(responseData, minNum, maxNum) {
+    let docId = Widget.dom.parse(responseData);
+    let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
+    if (!metaElements || metaElements.length === 0) {
+        throw new Error("未找到任何 meta content 链接");
+    }
+
+    let traktUrls = Array.from(new Set(metaElements
+        .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
+        .filter(Boolean)))
+        .slice(minNum - 1, maxNum);
+    return traktUrls;
+}
+
+function extractTraktUrlsInProgress(responseData) {
+    let doc = Widget.dom.parse(responseData);
+    let infoDivs = Widget.dom.select(doc, 'div.col-md-15.col-sm-8.main-info');
+    let traktUrls = [];
+
+    infoDivs.forEach(div => {
+        let link = Widget.dom.select(div, 'a')[0];
+        if (link) {
+            let href = link.getAttribute('href');
+            if (href) {
+                let fullUrl = `https://trakt.tv${href}`;
+                let progressDiv = Widget.dom.select(div, 'div.progress.ticks')[0];
+                if (progressDiv) {
+                    let progressValue = parseInt(progressDiv.getAttribute('aria-valuenow'));
+                    if (progressValue !== 100) {
+                        traktUrls.push(fullUrl);
+                    }
+                }
+            }
+        }
+    });
+
+    return traktUrls;
 }
 
 async function fetchImdbIdsFromTraktUrls(traktUrls) {
@@ -162,16 +201,12 @@ async function loadInterestItems(params = {}) {
 
         console.log("请求结果:", response.data);
 
-        let docId = Widget.dom.parse(response.data);
-        let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
-        if (!metaElements || metaElements.length === 0) {
-            throw new Error("未找到任何 meta content 链接");
+        let traktUrls = []
+        if (status === "progress") {
+            traktUrls = extractTraktUrlsInProgress(response.data)
+        } else {
+            traktUrls = extractTraktUrlsFromResponse(response.data, minNum, maxNum);
         }
-
-        let traktUrls = Array.from(new Set(metaElements
-            .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
-            .filter(Boolean)))
-            .slice(minNum - 1, maxNum);
 
         return await fetchImdbIdsFromTraktUrls(traktUrls);
     } catch (error) {
@@ -208,16 +243,7 @@ async function loadSuggestionItems(params = {}) {
 
     console.log("请求结果:", response.data);
 
-    let docId = Widget.dom.parse(response.data);
-    let metaElements = Widget.dom.select(docId, 'meta[content^="https://trakt.tv/"]');
-    if (!metaElements || metaElements.length === 0) {
-        throw new Error("未找到任何 meta content 链接");
-    }
-
-    let traktUrls = Array.from(new Set(metaElements
-        .map(el => el.getAttribute?.('content') || Widget.dom.attr(el, 'content'))
-        .filter(Boolean)))
-        .slice(minNum - 1, maxNum);
+    let traktUrls = extractTraktUrlsFromResponse(response.data, minNum, maxNum);
 
     return await fetchImdbIdsFromTraktUrls(traktUrls);
 }
