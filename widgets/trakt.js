@@ -78,7 +78,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.33",
+    version: "1.0.34",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -112,28 +112,36 @@ function extractTraktUrlsFromResponse(responseData, minNum, maxNum) {
 }
 
 function extractTraktUrlsInProgress(responseData) {
-    let doc = Widget.dom.parse(responseData);
-    let infoDivs = Widget.dom.select(doc, 'div.col-md-15.col-sm-8.main-info');
-    let traktUrls = [];
+    let docId = Widget.dom.parse(responseData);
+    let mainInfoElements = Widget.dom.select(docId, 'div.col-md-15.col-sm-8.main-info');
+    
+    if (!mainInfoElements || mainInfoElements.length === 0) {
+        throw new Error("未找到任何 main-info 元素");
+    }
 
-    infoDivs.forEach(div => {
-        let link = Widget.dom.select(div, 'a')[0];
-        if (link) {
-            let href = link.getAttribute('href');
-            if (href) {
-                let fullUrl = `https://trakt.tv${href}`;
-                let progressDiv = Widget.dom.select(div, 'div.progress.ticks')[0];
-                if (progressDiv) {
-                    let progressValue = parseInt(progressDiv.getAttribute('aria-valuenow'));
-                    if (progressValue !== 100) {
-                        traktUrls.push(fullUrl);
-                    }
-                }
-            }
+    let traktUrls = [];
+    mainInfoElements.forEach(element => {
+        // 提取 href 值
+        let linkElement = Widget.dom.select(element, 'a[href^="/shows/"]')[0];
+        if (!linkElement) return;
+        
+        let href = linkElement.getAttribute?.('href') || Widget.dom.attr(linkElement, 'href');
+        if (!href) return;
+        
+        // 提取 progress 值
+        let progressElement = Widget.dom.select(element, 'div.progress.ticks')[0];
+        let progressValue = progressElement 
+            ? parseInt(progressElement.getAttribute?.('aria-valuenow') || Widget.dom.attr(progressElement, 'aria-valuenow') || '0')
+            : 0;
+            
+        // 如果 progress 不是 100，添加 URL
+        if (progressValue !== 100) {
+            let fullUrl = `https://trakt.tv${href}`;
+            traktUrls.push(fullUrl);
         }
     });
-
-    return traktUrls;
+    
+    return Array.from(new Set(traktUrls));
 }
 
 async function fetchImdbIdsFromTraktUrls(traktUrls) {
