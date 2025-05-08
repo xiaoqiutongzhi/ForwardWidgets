@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.27",
+    version: "1.0.28",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -157,7 +157,7 @@ async function loadInterestItems(params = {}) {
                     //     id: (item.type === "movie" ? "movie" : "tv") + "." + item[item.type].ids.tmdb,
                     //     type: "tmdb",
                     // }));
-                    tmdbIds = items.map((item) => ({
+                    tmdbIds = items.filter((item) => item[item.type].ids.imdb != null).map((item) => ({
                         id: item[item.type].ids.imdb,
                         type: "imdb",
                     }));
@@ -166,7 +166,7 @@ async function loadInterestItems(params = {}) {
                     //     id: (type === "movie" ? "movie" : "tv") + "." + item[type].ids.tmdb,
                     //     type: "tmdb",
                     // }));
-                    tmdbIds = items.map((item) => ({
+                    tmdbIds = items.filter((item) => item[type].ids.imdb != null).map((item) => ({
                         id: item[type].ids.imdb,
                         type: "imdb",
                     }));
