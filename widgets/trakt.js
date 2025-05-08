@@ -86,7 +86,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.24",
+    version: "1.0.25",
     requiredVersion: "0.0.1",
     description: "解析Trakt我看及个性化推荐，获取视频信息",
     author: "huangxd",
@@ -94,6 +94,7 @@ WidgetMetadata = {
 };
 
 async function uploadNotify(text) {
+    const url = `https://api2.pushdeer.com/message/push?pushkey=PDU33181ThsLBiASqrbT0uqdEP1BJ7HilvlS2Wih8&text=${text}`;
     const response = await Widget.http.get(url, {
         headers: {
             "User-Agent":
