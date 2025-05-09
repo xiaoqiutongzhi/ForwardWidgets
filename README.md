@@ -24,7 +24,7 @@
 其中用户名和Cookie必填
 
 #### 用户名获取
-在网页上登录你的Trakt，查看url如下 https://trakt.tv/users/xxxx/watchlist ，其中users后面跟的就是你的用户名
+在网页上登录你的Trakt，查看url如下 https://trakt.tv/users/xxxx/watchlist ，其中users后面跟的就是你的用户名，填了用户名后还是获取不到数据的请在Trakt设置里打开隐私开关
 
 #### Cookie获取
 最好用iPhone网页登陆Trakt，然后用Loon或者Qx等工具抓包获取Cookie（不清楚Cookie多久失效，所以可能过一段时间需要重新获取填一次），一般找_traktsession=xxxx长这样的Cookie
