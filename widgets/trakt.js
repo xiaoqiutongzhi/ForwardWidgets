@@ -12,7 +12,7 @@ WidgetMetadata = {
                     name: "user_name",
                     title: "用户名",
                     type: "input",
-                    description: "未填写情况下接口不可用",
+                    description: "需在Trakt设置里打开隐私开关，未填写情况下接口不可用",
                 },
                 {
                     name: "status",
@@ -53,7 +53,7 @@ WidgetMetadata = {
                     name: "cookie",
                     title: "用户Cookie",
                     type: "input",
-                    description: "未填写情况下接口不可用；可登陆网页后，通过loon，Qx等软件抓包获取cookie",
+                    description: "_traktsession=xxxx，未填写情况下接口不可用；可登陆网页后，通过loon，Qx等软件抓包获取Cookie",
                 },
                 {
                     name: "type",

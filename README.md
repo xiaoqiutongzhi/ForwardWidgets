@@ -2,6 +2,10 @@
 
 <p align="center">
   <img src="https://i.miji.bid/2025/05/08/a7472460007b57687f659b8727f52755.md.jpeg" alt="欢迎使用我的五折码" width="300px"/>
+  <br>
+  五折码：CHEAP.5
+  <br>
+  七折码：CHEAP
 </p>
 
 ### 一、豆瓣我看&豆瓣个性化推荐
