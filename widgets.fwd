@@ -1,12 +1,12 @@
 {
   "title": "huangxd's Widgets",
-  "description": "A collection of widgets created by huangxd",
+  "description": "【五折码：CHEAP.5;七折码：CHEAP】A collection of widgets created by huangxd",
   "icon": "https://github.com/huangxd-/ForwardWidgets/raw/main/icon.png",
   "widgets": [
     {
       "id": "douban",
       "title": "豆瓣我看&豆瓣个性化推荐",
-      "description": "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐",
+      "description": "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
       "requiredVersion": "0.0.1",
       "version": "1.0.2",
       "author": "huangxd",
@@ -15,7 +15,7 @@
     {
       "id": "trakt",
       "title": "Trakt我看&Trakt个性化推荐",
-      "description": "解析Trakt想看、在看、已看以及根据个人数据生成的个性化推荐",
+      "description": "解析Trakt想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
       "requiredVersion": "0.0.1",
       "version": "1.0.2",
       "author": "huangxd",

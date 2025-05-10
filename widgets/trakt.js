@@ -80,7 +80,7 @@ WidgetMetadata = {
     ],
     version: "1.0.2",
     requiredVersion: "0.0.1",
-    description: "解析Trakt我看及个性化推荐，获取视频信息",
+    description: "解析Trakt想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
