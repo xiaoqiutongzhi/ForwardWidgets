@@ -34,6 +34,8 @@ def search_trakt(title, douban_year, douban_type):
             year = int(douban_year)
             for item in response.json():
                 trakt_year = item[trakt_type]["year"]
+                if not trakt_year:
+                    continue
                 if (trakt_year - 1) <= year <= (trakt_year + 1):
                     return item[trakt_type]["ids"]["slug"]
         else:
@@ -108,10 +110,10 @@ def migrate_douban_to_trakt():
             slug = search_trakt(title, douban_year, douban_type)
             if slug:
                 mark_trakt(mark_type, slug, douban_type, watched_time)
-                time.sleep(2)  # Prevent rate-limiting
+                time.sleep(4)  # Prevent rate-limiting
                 if item['rating']:
                     rate_trakt(item['rating']['value'], slug, douban_type)
-                    time.sleep(2)  # Prevent rate-limiting
+                    time.sleep(4)  # Prevent rate-limiting
             else:
                 print(f"❓ Could not find '{title} {douban_year} {douban_type}' on Trakt.")
         start += count
