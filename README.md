@@ -33,9 +33,32 @@
 #### Cookie获取
 最好用iPhone网页登陆Trakt，然后用Loon或者Qx等工具抓包获取Cookie（不清楚Cookie多久失效，所以可能过一段时间需要重新获取填一次），一般找_traktsession=xxxx长这样的Cookie
 
+### 三、豆瓣想看/已看数据迁移Trakt脚本
+
+#### 使用教程
+`说明：可能有部分会迁移失败`
+1. 先将`douban2trakt.py`脚本中的几个必填参数填上
 ```shell
-几点说明：
-1. 之所以不用官方trakt api，是因为尝试后发现目前生成的token 24小时之后会过期，如果要继续使用，需用上一次返回的refresh_token重新生成，当前插件也没有好的保存方式
+# 豆瓣用户ID
+DOUBAN_USER_ID = ""
+# TRAKT API APPS的Client ID，请前往 https://trakt.tv/oauth/applications/new 创建
+TRAKT_CLIENT_ID = ""
+# TRAKT抓包获取的x-csrf-token，需有增删改操作的接口才有
+TRAKT_X_CSRF_TOKEN = ""
+# TRAKT抓包获取的cookie
+TRAKT_COOKIE = ""
+```
+2. 执行脚本
+```shell
+# 迁移想看列表
+python douban2trakt.py --type watchlist
+# 迁移已看列表和打分，因为豆瓣是5分制，Trakt是10分制，所以会做乘以2操作后打分
+python douban2trakt.py --type watched
+```
+
+### 几点说明：
+```shell
+1. trakt.js之所以不用官方trakt api，是因为尝试后发现目前生成的token 24小时之后会过期，如果要继续使用，需用上一次返回的refresh_token重新生成，当前插件也没有好的保存方式
 2. trakt看过里是包含看了一半的电视的，也就是说正在看的电视也会出现在 看过-电视 里
 3. 尝试后发现当前ForwardWidget插件的数据模型里如果type是tmdb，貌似有数据会被缓存覆盖的问题，douban和imdb类型不存在该问题
 ```
