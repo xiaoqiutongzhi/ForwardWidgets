@@ -8,7 +8,7 @@
       "title": "Trakt我看&Trakt个性化推荐",
       "description": "解析Trakt想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
       "requiredVersion": "0.0.1",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "author": "huangxd",
       "url": "https://raw.githubusercontent.com/huangxd-/ForwardWidgets/refs/heads/trakt_new/widgets/trakt_new.js"
     }

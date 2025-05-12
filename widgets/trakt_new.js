@@ -95,21 +95,6 @@ WidgetMetadata = {
                     description: "如：latest-4k-releases，未填写情况下接口不可用",
                 },
                 {
-                    name: "type",
-                    title: "类型",
-                    type: "enumeration",
-                    enumOptions: [
-                        {
-                            title: "电影",
-                            value: "movies",
-                        },
-                        {
-                            title: "电视",
-                            value: "shows",
-                        },
-                    ],
-                },
-                {
                     name: "page",
                     title: "页码",
                     type: "page"
@@ -129,9 +114,9 @@ WidgetMetadata = {
                 },
                 {
                     name: "start_date",
-                    title: "开始日期",
+                    title: "开始日期：n天前（0表示今天，-1表示昨天，1表示明天）",
                     type: "input",
-                    description: "如：2025-05-01，未填写情况下接口不可用",
+                    description: "0表示今天，-1表示昨天，1表示明天，未填写情况下接口不可用",
                 },
                 {
                     name: "days",
@@ -157,7 +142,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -346,15 +331,27 @@ async function loadListItems(params = {}) {
 async function loadCalendarItems(params = {}) {
     try {
         const cookie = params.cookie || "";
-        const startDate = params.start_date || "";
+        const startDateInput = params.start_date || "";
         const days = params.days || "";
         const order = params.order || "";
 
-        if (!cookie || !startDate || !days || !order) {
+        if (!cookie || !startDateInput || !days || !order) {
             throw new Error("必须提供用户Cookie、开始日期、天数及排序方式");
         }
 
-        let url = `https://trakt.tv/calendars/my/shows-movies/${startDate}/${days}`;
+        const startDateOffset = parseInt(startDateInput, 10);
+        if (isNaN(startDateOffset)) {
+            throw new Error("开始日期必须是有效的数字");
+        }
+
+        const today = new Date();
+        const startDate = new Date(today);
+        startDate.setDate(today.getDate() + startDateOffset);
+
+        // Format date as YYYY-MM-DD
+        const formattedStartDate = startDate.toISOString().split('T')[0];
+
+        let url = `https://trakt.tv/calendars/my/shows-movies/${formattedStartDate}/${days}`;
         return await fetchTraktData(url, { Cookie: cookie }, "", 1, 100, order);
     } catch (error) {
         console.error("处理失败:", error);
