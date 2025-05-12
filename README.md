@@ -38,6 +38,12 @@
 
 Trakt追剧日历会将个人watched, collected, or watchlisted中的节目在日历中呈现，具体可查看https://trakt.tv/calendars/my/shows-movies
 
+片单示例 
+https://trakt.tv/users/giladg/lists/latest-4k-releases?sort=added,asc
+
+用户名：giladg
+片单列表名：latest-4k-releases
+
 <img src="https://i.miji.bid/2025/05/12/d88147b5a3764acc1037a16ac736835b.png" style="width:200px" /><img src="https://i.miji.bid/2025/05/12/a918ef099ae6b3c0babb6ce2b6eb071d.png" style="width:200px" />
 
 其中用户名/片单列表名/Cookie同上，另外追剧日历中新增参数开始日期/天数/排序方式
