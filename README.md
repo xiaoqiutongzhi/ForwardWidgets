@@ -35,6 +35,7 @@
 
 ### 三、Trakt片单&Trakt追剧日历
 `说明：追剧日历只是尝鲜版，j佬到时候应该会在APP内嵌追剧功能 :)`
+Trakt追剧日历会将个人watched, collected, or watchlisted中的节目在日历中呈现，具体可查看https://trakt.tv/calendars/my/shows-movies
 
 <img src="https://i.miji.bid/2025/05/12/d88147b5a3764acc1037a16ac736835b.png" style="width:200px" /><img src="https://i.miji.bid/2025/05/12/a918ef099ae6b3c0babb6ce2b6eb071d.png" style="width:200px" />
 
