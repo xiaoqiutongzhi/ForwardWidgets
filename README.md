@@ -42,6 +42,7 @@ Trakt追剧日历会将个人watched, collected, or watchlisted中的节目在�
 https://trakt.tv/users/giladg/lists/latest-4k-releases?sort=added,asc
 
 用户名：giladg
+
 片单列表名：latest-4k-releases
 
 <img src="https://i.miji.bid/2025/05/12/d88147b5a3764acc1037a16ac736835b.png" style="width:200px" /><img src="https://i.miji.bid/2025/05/12/a918ef099ae6b3c0babb6ce2b6eb071d.png" style="width:200px" />
