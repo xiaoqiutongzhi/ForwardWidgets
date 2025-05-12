@@ -95,6 +95,56 @@ WidgetMetadata = {
                     description: "如：latest-4k-releases，未填写情况下接口不可用",
                 },
                 {
+                    name: "sort_by",
+                    title: "排序依据",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "排名算法",
+                            value: "rank",
+                        },
+                        {
+                            title: "添加时间",
+                            value: "added",
+                        },
+                        {
+                            title: "标题",
+                            value: "title",
+                        },
+                        {
+                            title: "发布日期",
+                            value: "released",
+                        },
+                        {
+                            title: "内容时长",
+                            value: "runtime",
+                        },
+                        {
+                            title: "流行度",
+                            value: "popularity",
+                        },
+                        {
+                            title: "随机",
+                            value: "random",
+                        },
+                    ],
+                },
+                {
+                    name: "sort_how",
+                    title: "排序方向",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "正序",
+                            value: "asc",
+                        },
+                        {
+                            title: "反序",
+                            value: "desc",
+                        },
+                    ],
+                },
+                {
                     name: "page",
                     title: "页码",
                     type: "page"
@@ -142,7 +192,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看、片单、追剧日历以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -312,6 +362,8 @@ async function loadListItems(params = {}) {
         const page = params.page;
         const userName = params.user_name || "";
         const listName = params.list_name || "";
+        const sortBy = params.sort_by || "";
+        const sortHow = params.sort_how || "";
         const count = 20
         const minNum = (page - 1) * count + 1
         const maxNum = (page) * count
@@ -320,7 +372,7 @@ async function loadListItems(params = {}) {
             throw new Error("必须提供 Trakt 用户名 和 片单列表名");
         }
 
-        let url = `https://trakt.tv/users/${userName}/lists/${listName}?sort=added,asc`;
+        let url = `https://trakt.tv/users/${userName}/lists/${listName}?sort=${sortBy},${sortHow}`;
         return await fetchTraktData(url, {}, "", minNum, maxNum);
     } catch (error) {
         console.error("处理失败:", error);

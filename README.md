@@ -36,18 +36,33 @@
 ### 三、Trakt片单&Trakt追剧日历
 `说明：追剧日历只是尝鲜版，j佬到时候应该会在APP内嵌追剧功能 :)`
 
-Trakt追剧日历会将个人watched, collected, or watchlisted中的节目在日历中呈现，具体可查看https://trakt.tv/calendars/my/shows-movies
-
-片单示例 
-https://trakt.tv/users/giladg/lists/latest-4k-releases?sort=added,asc
-
-用户名：giladg
-
-片单列表名：latest-4k-releases
-
 <img src="https://i.miji.bid/2025/05/12/d88147b5a3764acc1037a16ac736835b.png" style="width:200px" /><img src="https://i.miji.bid/2025/05/12/a918ef099ae6b3c0babb6ce2b6eb071d.png" style="width:200px" />
 
 其中用户名/片单列表名/Cookie同上，另外追剧日历中新增参数开始日期/天数/排序方式
+
+> 片单示例 
+https://trakt.tv/users/giladg/lists/latest-4k-releases?sort=added,asc
+
+```shell
+用户名：giladg
+片单列表名：latest-4k-releases
+```
+
+#### 排序依据
+```shell
+rank：排名算法
+added：添加时间
+title：标题
+released：发布日期
+runtime：内容时长
+popularity：流行度
+random：随机
+```
+
+#### 排序方向
+asc：正序 or desc：反序
+
+> Trakt追剧日历会将个人watched, collected, or watchlisted中的节目在日历中呈现，具体可查看 https://trakt.tv/calendars/my/shows-movies
 
 #### 开始日期
 填数字，0表示今天，-1表示昨天，1表示明天，插件内会自动转换成相应日期
