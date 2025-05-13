@@ -192,7 +192,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.4",
+    version: "1.0.5",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看、片单、追剧日历以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -322,7 +322,7 @@ async function loadInterestItems(params = {}) {
         const count = 20
         const minNum = (page - 1) * count + 1
         const maxNum = (page) * count
-        const traktPage = (page - 1) / 3 + 1
+        const traktPage = Math.floor((page - 1) / 3) + 1
 
         if (!userName) {
             throw new Error("必须提供 Trakt 用户名");
@@ -350,7 +350,7 @@ async function loadSuggestionItems(params = {}) {
         }
 
         let url = `https://trakt.tv/${type}/recommendations`;
-        return await fetchTraktData(url, { Cookie: cookie }, "", minNum, maxNum);
+        return await fetchTraktData(url, {Cookie: cookie}, "", minNum, maxNum);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -367,12 +367,13 @@ async function loadListItems(params = {}) {
         const count = 20
         const minNum = (page - 1) * count + 1
         const maxNum = (page) * count
+        const traktPage = Math.floor((page - 1) / 6) + 1
 
         if (!userName || !listName) {
             throw new Error("必须提供 Trakt 用户名 和 片单列表名");
         }
 
-        let url = `https://trakt.tv/users/${userName}/lists/${listName}?sort=${sortBy},${sortHow}`;
+        let url = `https://trakt.tv/users/${userName}/lists/${listName}?page=${traktPage}&sort=${sortBy},${sortHow}`;
         return await fetchTraktData(url, {}, "", minNum, maxNum);
     } catch (error) {
         console.error("处理失败:", error);
@@ -404,7 +405,7 @@ async function loadCalendarItems(params = {}) {
         const formattedStartDate = startDate.toISOString().split('T')[0];
 
         let url = `https://trakt.tv/calendars/my/shows-movies/${formattedStartDate}/${days}`;
-        return await fetchTraktData(url, { Cookie: cookie }, "", 1, 100, order);
+        return await fetchTraktData(url, {Cookie: cookie}, "", 1, 100, order);
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
