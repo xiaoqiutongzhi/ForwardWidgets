@@ -192,7 +192,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.6",
+    version: "1.0.7",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看、片单、追剧日历以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -321,8 +321,8 @@ async function loadInterestItems(params = {}) {
         const status = params.status || "";
         const count = 20
         const size = status === "watchlist" ? 6 : 3
-        const minNum = (page - 1) * count + 1
-        const maxNum = (page) * count
+        const minNum = ((page % size) - 1) * count + 1
+        const maxNum = (page % size) * count
         const traktPage = Math.floor((page - 1) / size) + 1
 
         if (!userName) {
@@ -366,8 +366,8 @@ async function loadListItems(params = {}) {
         const sortBy = params.sort_by || "";
         const sortHow = params.sort_how || "";
         const count = 20
-        const minNum = (page - 1) * count + 1
-        const maxNum = (page) * count
+        const minNum = ((page % 6) - 1) * count + 1
+        const maxNum = (page % 6) * count
         const traktPage = Math.floor((page - 1) / 6) + 1
 
         if (!userName || !listName) {
