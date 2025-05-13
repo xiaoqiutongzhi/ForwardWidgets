@@ -102,7 +102,7 @@ def migrate_douban_to_trakt():
             print(f"index: {start + index}")
             title = item['subject']['title']
             douban_type = item['subject']['type']
-            if douban_type == "book":
+            if douban_type == "book" or douban_type == "music":
                 continue
             douban_year = item['subject']['year']
             watched_time = item['create_time']

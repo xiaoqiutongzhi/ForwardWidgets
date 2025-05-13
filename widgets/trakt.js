@@ -192,7 +192,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.5",
+    version: "1.0.6",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看、片单、追剧日历以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -213,7 +213,7 @@ function extractTraktUrlsFromResponse(responseData, minNum, maxNum) {
     return traktUrls;
 }
 
-function extractTraktUrlsInProgress(responseData) {
+function extractTraktUrlsInProgress(responseData, minNum, maxNum) {
     let docId = Widget.dom.parse(responseData);
     let mainInfoElements = Widget.dom.select(docId, 'div.col-md-15.col-sm-8.main-info');
 
@@ -222,7 +222,7 @@ function extractTraktUrlsInProgress(responseData) {
     }
 
     let traktUrls = [];
-    mainInfoElements.forEach(element => {
+    mainInfoElements.slice(minNum - 1, maxNum).forEach(element => {
         // 提取 href 值
         let linkElement = Widget.dom.select(element, 'a[href^="/shows/"]')[0];
         if (!linkElement) return;
@@ -298,7 +298,7 @@ async function fetchTraktData(url, headers = {}, status, minNum, maxNum, order =
 
         let traktUrls = [];
         if (status === "progress") {
-            traktUrls = extractTraktUrlsInProgress(response.data);
+            traktUrls = extractTraktUrlsInProgress(response.data, minNum, maxNum);
         } else {
             traktUrls = extractTraktUrlsFromResponse(response.data, minNum, maxNum);
         }
@@ -320,9 +320,10 @@ async function loadInterestItems(params = {}) {
         const userName = params.user_name || "";
         const status = params.status || "";
         const count = 20
+        const size = status === "watchlist" ? 6 : 3
         const minNum = (page - 1) * count + 1
         const maxNum = (page) * count
-        const traktPage = Math.floor((page - 1) / 3) + 1
+        const traktPage = Math.floor((page - 1) / size) + 1
 
         if (!userName) {
             throw new Error("必须提供 Trakt 用户名");
