@@ -321,7 +321,7 @@ async function loadInterestItems(params = {}) {
         const status = params.status || "";
         const count = 20
         const size = status === "watchlist" ? 6 : 3
-        const minNum = ((page % size) - 1) * count + 1
+        const minNum = ((page - 1) % size) * count + 1
         const maxNum = (page % size) * count
         const traktPage = Math.floor((page - 1) / size) + 1
 
@@ -366,7 +366,7 @@ async function loadListItems(params = {}) {
         const sortBy = params.sort_by || "";
         const sortHow = params.sort_how || "";
         const count = 20
-        const minNum = ((page % 6) - 1) * count + 1
+        const minNum = ((page - 1) % 6) * count + 1
         const maxNum = (page % 6) * count
         const traktPage = Math.floor((page - 1) / 6) + 1
 
