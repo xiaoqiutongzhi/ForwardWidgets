@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.7",
+    version: "1.0.8",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -181,32 +181,40 @@ function parseM3UContent(content) {
 
 
 async function loadDetail(link) {
-    // const response = await Widget.http.get(link, {
-    //     headers: {
-    //         "User-Agent": "AptvPlayer/1.4.6",
-    //     },
-    // });
-    // //get hls with regex var hlsUrl = 'https://hot-box-gen.mushroomtrack.com/hls/TJHqwWuFPCwYqa4hyv1cCg/1746892414/50000/50377/50377.m3u8';
-    // console.log(response.data)
-    //
-    // const hlsUrl = response.data.match(/var hlsUrl = '(.*?)';/)[1];
-    // if (!hlsUrl) {
-    //     throw new Error("无法获取有效的HLS URL");
-    // }
-    // console.log("hlsUrl:", hlsUrl);
+    // 发送请求，不自动跟随重定向
+    const response = await Widget.http.get(link, {
+        maxRedirects: 0, // 禁止自动跳转，获取302响应
+        validateStatus: (status) => status >= 200 && status < 400, // 允许302被处理
+        headers: {
+            "User-Agent": "AptvPlayer/1.4.6",
+        },
+    });
+
+    let videoUrl = link;
+
+    // 检查是否是302并且有Location头
+    if (response.status === 302 && response.headers?.location) {
+        const location = response.headers.location;
+        if (location.includes(".m3u8")) {
+            videoUrl = location;
+        }
+    }
+
     const item = {
         id: link,
         type: "detail",
-        videoUrl: link,
+        videoUrl: videoUrl,
         customHeaders: {
             "Referer": link,
             "User-Agent": "AptvPlayer/1.4.6",
         },
     };
-    await sendMSG(JSON.stringify(item))
+
+    await sendMSG(JSON.stringify(item));
 
     return item;
 }
+
 
 
 function groupByCategory(items) {
