@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.5",
+    version: "1.0.6",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -150,7 +150,7 @@ function parseM3UContent(content) {
                 durationText: currentItem.duration === "-1" ? "直播" : `${currentItem.duration}秒`,
                 backdropPath: currentItem.cover,
                 previewUrl: "", // 直播通常没有预览URL
-                // link: url,
+                link: url,
                 // 额外的元数据
                 metadata: {
                     group: currentItem.group,
@@ -168,36 +168,36 @@ function parseM3UContent(content) {
 }
 
 
-// async function loadDetail(link) {
-//     const response = await Widget.http.get(link, {
-//         headers: {
-//             "User-Agent": "AptvPlayer/1.4.6",
-//         },
-//     });
-//     //get hls with regex var hlsUrl = 'https://hot-box-gen.mushroomtrack.com/hls/TJHqwWuFPCwYqa4hyv1cCg/1746892414/50000/50377/50377.m3u8';
-//     console.log(response.data)
-//
-//     const hlsUrl = response.data.match(/var hlsUrl = '(.*?)';/)[1];
-//     if (!hlsUrl) {
-//         throw new Error("无法获取有效的HLS URL");
-//     }
-//     console.log("hlsUrl:", hlsUrl);
-//     const item = {
-//         id: link,
-//         type: "detail",
-//         videoUrl: hlsUrl,
-//         customHeaders: {
-//             "Referer": link,
-//             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-//         },
-//     };
-//     const sections = await parseHtml(response.data);
-//     const items = sections.flatMap((section) => section.childItems);
-//     if (items.length > 0) {
-//         item.childItems = items;
-//     }
-//     return item;
-// }
+async function loadDetail(link) {
+    // const response = await Widget.http.get(link, {
+    //     headers: {
+    //         "User-Agent": "AptvPlayer/1.4.6",
+    //     },
+    // });
+    // //get hls with regex var hlsUrl = 'https://hot-box-gen.mushroomtrack.com/hls/TJHqwWuFPCwYqa4hyv1cCg/1746892414/50000/50377/50377.m3u8';
+    // console.log(response.data)
+    //
+    // const hlsUrl = response.data.match(/var hlsUrl = '(.*?)';/)[1];
+    // if (!hlsUrl) {
+    //     throw new Error("无法获取有效的HLS URL");
+    // }
+    // console.log("hlsUrl:", hlsUrl);
+    const item = {
+        id: link,
+        type: "detail",
+        videoUrl: link,
+        customHeaders: {
+            "Referer": link,
+            "User-Agent": "AptvPlayer/1.4.6",
+        },
+    };
+    const sections = await parseHtml(response.data);
+    const items = sections.flatMap((section) => section.childItems);
+    if (items.length > 0) {
+        item.childItems = items;
+    }
+    return item;
+}
 
 
 function groupByCategory(items) {
