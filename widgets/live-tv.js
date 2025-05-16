@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -75,11 +75,10 @@ async function fetchM3UContent(url) {
 
         console.log("请求结果:", response.data);
 
-        if (response.status === 200) {
+        if (response.data && response.data.includes("#EXTINF")) {
             return response.data;
         }
 
-        console.error(`获取M3U内容失败，状态码: ${response.status}`);
         return null;
     } catch (error) {
         console.error(`获取M3U内容时出错: ${error.message}`);
