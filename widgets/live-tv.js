@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.8",
+    version: "1.0.9",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -191,6 +191,9 @@ async function loadDetail(link) {
     });
 
     let videoUrl = link;
+
+    await sendMSG(JSON.stringify(response.status));
+    await sendMSG(JSON.stringify(response.headers));
 
     // 检查是否是302并且有Location头
     if (response.status === 302 && response.headers?.location) {
