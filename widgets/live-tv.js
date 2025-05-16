@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.11",
+    version: "1.0.12",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -183,11 +183,10 @@ function parseM3UContent(content) {
 async function loadDetail(link) {
     // 发送请求，不自动跟随重定向
     const response = await Widget.http.get(link, {
-        maxRedirects: 0, // 禁止自动跳转，获取302响应
-        validateStatus: (status) => status >= 200 && status < 400, // 允许302被处理
         headers: {
             "User-Agent": "AptvPlayer/1.4.6",
         },
+        redirect: 'manual' // Prevent automatic redirect to get 302 location
     });
 
     let videoUrl = link;
