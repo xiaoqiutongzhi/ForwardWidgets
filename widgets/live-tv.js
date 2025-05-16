@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.12",
+    version: "1.0.13",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -181,13 +181,32 @@ function parseM3UContent(content) {
 
 
 async function loadDetail(link) {
+    // 发送请求，禁止自动跟随重定向
+        const response = await fetch(link, {
+            method: 'GET',
+            redirect: 'manual' // 阻止自动重定向
+        });
+
+        // 检查状态码是否为重定向(3xx)
+        if (response.status >= 300 && response.status < 400) {
+            // 获取重定向的Location头
+            const redirectUrl = response.headers.get('location');
+            if (redirectUrl) {
+                return redirectUrl;
+            } else {
+                throw new Error('重定向响应中缺少Location头');
+            }
+        } else {
+            throw new Error(`未发生重定向，状态码: ${response.status}`);
+        }
+
     // 发送请求，不自动跟随重定向
-    const response = await Widget.http.get(link, {
-        headers: {
-            "User-Agent": "AptvPlayer/1.4.6",
-        },
-        redirect: 'manual' // Prevent automatic redirect to get 302 location
-    });
+    // const response = await Widget.http.get(link, {
+    //     headers: {
+    //         "User-Agent": "AptvPlayer/1.4.6",
+    //     },
+    //     redirect: 'manual' // Prevent automatic redirect to get 302 location
+    // });
 
     let videoUrl = link;
 
