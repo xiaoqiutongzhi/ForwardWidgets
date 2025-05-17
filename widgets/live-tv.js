@@ -178,7 +178,7 @@ async function loadDetail(link) {
 
     await sendMSG(link);
 
-    const formats = ['m3u8', 'mp4', 'mp3', 'flv'];
+    const formats = ['m3u8', 'mp4', 'mp3', 'flv', 'avi', 'mov', 'wmv', 'webm', 'ogg', 'mkv', 'ts'];
     if (!formats.some(format => link.includes(format))) {
         // 获取重定向location
         const url = `https://redirect-check.hxd.ip-ddns.com/redirect-check?url=${link}`;
