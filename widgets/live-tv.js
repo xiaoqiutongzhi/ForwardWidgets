@@ -19,15 +19,15 @@ WidgetMetadata = {
                             value: "https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u"
                         },
                         {
-                            title: "Live",
+                            title: "网络直播",
                             value: "https://tv.iill.top/m3u/Live"
                         },
                         {
-                            title: "Gather1",
+                            title: "YanG-Gather1",
                             value: "https://tv.iill.top/m3u/Gather"
                         },
                         {
-                            title: "Gather2",
+                            title: "YanG-Gather2",
                             value: "https://raw.githubusercontent.com/YanG-1989/m3u/main/Gather.m3u"
                         },
                         {
@@ -63,7 +63,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.29",
+    version: "1.0.30",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -133,7 +133,7 @@ async function fetchM3UContent(url) {
     try {
         const response = await Widget.http.get(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'User-Agent': 'AptvPlayer/1.4.6',
             }
         });
 
