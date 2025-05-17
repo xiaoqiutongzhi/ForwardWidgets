@@ -24,7 +24,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.23",
+    version: "1.0.24",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -216,8 +216,11 @@ async function loadDetail(link) {
             "Referer": link,
             "User-Agent": "AptvPlayer/1.4.6",
         },
-        childItems: childItems,
     };
+
+    if (childItems) {
+        item.childItems = childItems;
+    }
 
     await sendMSG(JSON.stringify(item));
 
