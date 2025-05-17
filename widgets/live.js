@@ -1,18 +1,18 @@
 // 电视直播插件
 WidgetMetadata = {
-    id: "live-tv",
-    title: "电视直播",
+    id: "live",
+    title: "直播(电视+网络)",
     modules: [
         {
-            title: "电视直播",
+            title: "直播(电视+网络)",
             requiresWebView: false,
-            functionName: "loadLiveTvItems",
+            functionName: "loadLiveItems",
             params: [
                 {
                     name: "url",
                     title: "订阅链接",
                     type: "input",
-                    description: "输入电视直播订阅链接地址",
+                    description: "输入直播订阅链接地址",
                     placeholders: [
                         {
                             title: "Kimentanm",
@@ -63,9 +63,9 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.30",
+    version: "1.0.31",
     requiredVersion: "0.0.1",
-    description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
+    description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
@@ -83,7 +83,7 @@ async function sendMSG(text) {
 }
 
 
-async function loadLiveTvItems(params = {}) {
+async function loadLiveItems(params = {}) {
     try {
         const url = params.url || "";
         const groupFilter = params.group_filter || "";
@@ -211,8 +211,8 @@ function parseM3UContent(content) {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
-                backdropPath: "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
+                posterPath: currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                backdropPath: currentItem.cover || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
