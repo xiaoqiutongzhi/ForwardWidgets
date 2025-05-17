@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.16",
+    version: "1.0.17",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -211,6 +211,15 @@ async function loadDetail(link) {
     };
 
     await sendMSG(JSON.stringify(item));
+
+    const xxx = {
+        id: videoUrl,
+        type: "url",
+        title: "测试一下",
+        link: videoUrl,
+    };
+
+    item.childItems = [xxx]
 
     return item;
 }
