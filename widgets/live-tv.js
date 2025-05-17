@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.14",
+    version: "1.0.15",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -183,51 +183,19 @@ function parseM3UContent(content) {
 async function loadDetail(link) {
     let videoUrl = link;
 
-    try {
-        // 发送请求，禁止自动跟随重定向
-        const response = await fetch(link, {
-            method: 'GET',
-            redirect: 'manual' // 阻止自动重定向
-        });
+    const response = await Widget.http.get(link, {
+        headers: {
+            "User-Agent": "AptvPlayer/1.4.6",
+        },
+    });
 
-        await sendMSG(JSON.stringify(response.data));
-        await sendMSG(JSON.stringify(response.headers));
+    await sendMSG(JSON.stringify(response.data));
 
-        // 检查状态码是否为重定向(3xx)
-        if (response.status >= 300 && response.status < 400) {
-            // 获取重定向的Location头
-            const redirectUrl = response.headers.get('location');
-            if (redirectUrl) {
-                videoUrl = redirectUrl;
-            } else {
-                await sendMSG('重定向响应中缺少Location头');
-                throw new Error('重定向响应中缺少Location头');
-            }
-        } else {
-            await sendMSG(`未发生重定向，状态码: ${response.status}`);
-            throw new Error(`未发生重定向，状态码: ${response.status}`);
-        }
-    } catch (error) {
-        await sendMSG(`获取重定向URL失败:${error}`);
-        console.error('获取重定向URL失败:', error);
-        throw error;
+    console.log(response.data)
+
+    if (response.data && response.data.location && response.data.location.includes("m3u8")) {
+        videoUrl = response.data.location;
     }
-
-    // 发送请求，不自动跟随重定向
-    // const response = await Widget.http.get(link, {
-    //     headers: {
-    //         "User-Agent": "AptvPlayer/1.4.6",
-    //     },
-    //     redirect: 'manual' // Prevent automatic redirect to get 302 location
-    // });
-
-    // 检查是否是302并且有Location头
-    // if (response.status === 302 && response.headers?.location) {
-    //     const location = response.headers.location;
-    //     if (location.includes(".m3u8")) {
-    //         videoUrl = location;
-    //     }
-    // }
 
     const item = {
         id: link,
