@@ -177,7 +177,9 @@ async function loadDetail(link) {
     let childItems = []
 
     await sendMSG(link);
-    if (!link.includes("m3u8") || !link.includes("mp4") || !link.includes("mp3")) {
+
+    const formats = ['m3u8', 'mp4', 'mp3', 'flv'];
+    if (!formats.some(format => link.includes(format))) {
         // 获取重定向location
         const url = `https://redirect-check.hxd.ip-ddns.com/redirect-check?url=${link}`;
 
@@ -191,7 +193,7 @@ async function loadDetail(link) {
 
         console.log(response.data)
 
-        if (response.data && response.data.location && response.data.location.includes("m3u8")) {
+        if (response.data && response.data.location && formats.some(format => link.includes(format))) {
             videoUrl = response.data.location;
         }
 
