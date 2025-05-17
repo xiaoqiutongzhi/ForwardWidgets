@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.19",
+    version: "1.0.20",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -159,8 +159,8 @@ function parseM3UContent(content) {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: "https://i.miji.bid/2025/05/17/fdcc336d8fa3b7a7be51d68afd9a14a3.png",
-                backdropPath: "https://i.miji.bid/2025/05/17/b9a7164abacc63bc9ea260fa8a18eaf8.png",
+                posterPath: "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                backdropPath: "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
