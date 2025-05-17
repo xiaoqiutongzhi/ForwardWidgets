@@ -24,7 +24,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.21",
+    version: "1.0.22",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -47,7 +47,7 @@ async function sendMSG(text) {
 async function loadLiveTvItems(params = {}) {
     try {
         const url = params.url || "";
-        const count = 20
+
 
         // 从URL获取M3U内容
         const response = await this.fetchM3UContent(url);
@@ -61,7 +61,7 @@ async function loadLiveTvItems(params = {}) {
         //     return items.filter(options.filter);
         // }
 
-        return items.slice;
+        return items;
     } catch (error) {
         console.error(`解析电视直播链接时出错: ${error.message}`);
         return [];
