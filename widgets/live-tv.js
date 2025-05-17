@@ -24,7 +24,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.26",
+    version: "1.0.27",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -193,7 +193,7 @@ async function loadDetail(link) {
 
         console.log(response.data)
 
-        if (response.data && response.data.location && formats.some(format => link.includes(format))) {
+        if (response.data && response.data.location && formats.some(format => response.data.location.includes(format))) {
             videoUrl = response.data.location;
         }
 
