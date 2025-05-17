@@ -21,11 +21,6 @@ WidgetMetadata = {
                         {title: "suxuang", value: "https://bit.ly/suxuang"}
                     ]
                 },
-                {
-                    name: "page",
-                    title: "页码",
-                    type: "page"
-                },
             ],
         },
     ],
@@ -51,11 +46,8 @@ async function sendMSG(text) {
 
 async function loadLiveTvItems(params = {}) {
     try {
-        const page = params.page;
         const url = params.url || "";
         const count = 20
-        const start = (page - 1) * count
-        const end = page * count
 
         // 从URL获取M3U内容
         const response = await this.fetchM3UContent(url);
@@ -69,7 +61,6 @@ async function loadLiveTvItems(params = {}) {
         //     return items.filter(options.filter);
         // }
 
-        // return items.slice(start, end);
         return items.slice;
     } catch (error) {
         console.error(`解析电视直播链接时出错: ${error.message}`);
