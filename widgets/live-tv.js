@@ -24,7 +24,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.22",
+    version: "1.0.23",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -174,7 +174,9 @@ function parseM3UContent(content) {
 
 async function loadDetail(link) {
     let videoUrl = link;
+    let childItems = []
 
+    await sendMSG(link);
     if (!link.includes("m3u8") || !link.includes("mp4") || !link.includes("mp3")) {
         // 获取重定向location
         const url = `https://redirect-check.hxd.ip-ddns.com/redirect-check?url=${link}`;
@@ -192,6 +194,18 @@ async function loadDetail(link) {
         if (response.data && response.data.location && response.data.location.includes("m3u8")) {
             videoUrl = response.data.location;
         }
+
+        if (response.data && response.data.error && response.data.error.includes("超时")) {
+            const hint_item = {
+                id: videoUrl,
+                type: "url",
+                title: "超时/上面直播不可用",
+                posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
+                backdropPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
+                link: videoUrl,
+            };
+            childItems = [hint_item]
+        }
     }
 
     const item = {
@@ -202,21 +216,10 @@ async function loadDetail(link) {
             "Referer": link,
             "User-Agent": "AptvPlayer/1.4.6",
         },
+        childItems: childItems,
     };
 
     await sendMSG(JSON.stringify(item));
-
-    if (response.data && response.data.error && response.data.error.includes("超时")) {
-        const hint_item = {
-            id: videoUrl,
-            type: "url",
-            title: "超时/上面直播不可用",
-            posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
-            backdropPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
-            link: videoUrl,
-        };
-        item.childItems = [hint_item]
-    }
 
     return item;
 }
