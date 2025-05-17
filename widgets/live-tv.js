@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.18",
+    version: "1.0.19",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -62,7 +62,7 @@ async function loadLiveTvItems(params = {}) {
         if (!response) return [];
 
         // 解析M3U内容
-        const items = await parseM3UContent(response);
+        const items = parseM3UContent(response);
 
         // 应用过滤器
         // if (options.filter) {
@@ -99,30 +99,7 @@ async function fetchM3UContent(url) {
 }
 
 
-async function fetchImage(text, width, height) {
-    let url = `https://www.flamingtext.com/net-fu/image_output.cgi?script=matrix-logo&text=${text}&symbol_tagname=popular&fontsize=50&fontname=Miltown&ext=png&jpgQuality=85&doScale=on&scaleWidth=${width}&scaleHeight=${height}`;
-    try {
-        const response = await Widget.http.get(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            }
-        });
-
-        console.log("请求结果:", response.data);
-
-        if (response.data && response.data.src) {
-            return response.data.src;
-        }
-
-        return null;
-    } catch (error) {
-        console.error(`获取图片出错: ${error.message}`);
-        return null;
-    }
-}
-
-
-async function parseM3UContent(content) {
+function parseM3UContent(content) {
     if (!content || !content.trim()) return [];
 
     const lines = content.split(/\r?\n/);
@@ -177,16 +154,13 @@ async function parseM3UContent(content) {
         else if (currentItem && line && !line.startsWith('#')) {
             const url = line;
 
-            const posterImg = await fetchImage(currentItem.title, 120, 240)
-            const backdropImg = await fetchImage(currentItem.title, 240, 120)
-
             // 构建最终的项目对象
             const item = {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: posterImg,
-                backdropPath: backdropImg,
+                posterPath: "https://i.miji.bid/2025/05/17/fdcc336d8fa3b7a7be51d68afd9a14a3.png",
+                backdropPath: "https://i.miji.bid/2025/05/17/b9a7164abacc63bc9ea260fa8a18eaf8.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
