@@ -29,7 +29,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.20",
+    version: "1.0.21",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -53,9 +53,9 @@ async function loadLiveTvItems(params = {}) {
     try {
         const page = params.page;
         const url = params.url || "";
-        const count = 10
-        start = (page - 1) * count
-        end = page * count
+        const count = 20
+        const start = (page - 1) * count
+        const end = page * count
 
         // 从URL获取M3U内容
         const response = await this.fetchM3UContent(url);
@@ -69,7 +69,8 @@ async function loadLiveTvItems(params = {}) {
         //     return items.filter(options.filter);
         // }
 
-        return items.slice(start, end);
+        // return items.slice(start, end);
+        return items.slice;
     } catch (error) {
         console.error(`解析电视直播链接时出错: ${error.message}`);
         return [];
@@ -183,21 +184,23 @@ function parseM3UContent(content) {
 async function loadDetail(link) {
     let videoUrl = link;
 
-    // 获取重定向location
-    const url = `https://redirect-check.hxd.ip-ddns.com/redirect-check?url=${link}`;
+    if (!link.includes("m3u8") || !link.includes("mp4") || !link.includes("mp3")) {
+        // 获取重定向location
+        const url = `https://redirect-check.hxd.ip-ddns.com/redirect-check?url=${link}`;
 
-    const response = await Widget.http.get(url, {
-        headers: {
-            "User-Agent": "AptvPlayer/1.4.6",
-        },
-    });
+        const response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent": "AptvPlayer/1.4.6",
+            },
+        });
 
-    await sendMSG(JSON.stringify(response.data));
+        await sendMSG(JSON.stringify(response.data));
 
-    console.log(response.data)
+        console.log(response.data)
 
-    if (response.data && response.data.location && response.data.location.includes("m3u8")) {
-        videoUrl = response.data.location;
+        if (response.data && response.data.location && response.data.location.includes("m3u8")) {
+            videoUrl = response.data.location;
+        }
     }
 
     const item = {
