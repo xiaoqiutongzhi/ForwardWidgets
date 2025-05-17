@@ -21,10 +21,22 @@ WidgetMetadata = {
                         {title: "suxuang", value: "https://bit.ly/suxuang"}
                     ]
                 },
+                {
+                    name: "group_filter",
+                    title: "按组关键字过滤(选填)，如央视，会过滤所有group-title中包含央视的频道",
+                    type: "input",
+                    description: "输入组关键字，如央视，会过滤所有group-title中包含央视的频道",
+                },
+                {
+                    name: "name_filter",
+                    title: "按频道名关键字过滤(选填)，如卫视，会过滤所有频道名中包含卫视的频道",
+                    type: "input",
+                    description: "输入频道名关键字过滤(选填)，如卫视，会过滤所有频道名中包含卫视的频道",
+                },
             ],
         },
     ],
-    version: "1.0.27",
+    version: "1.0.28",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -47,7 +59,12 @@ async function sendMSG(text) {
 async function loadLiveTvItems(params = {}) {
     try {
         const url = params.url || "";
+        const groupFilter = params.group_filter || "";
+        const nameFilter = params.name_filter || "";
 
+        if (!url) {
+            throw new Error("必须提供电视直播订阅链接");
+        }
 
         // 从URL获取M3U内容
         const response = await this.fetchM3UContent(url);
@@ -57,11 +74,18 @@ async function loadLiveTvItems(params = {}) {
         const items = parseM3UContent(response);
 
         // 应用过滤器
-        // if (options.filter) {
-        //     return items.filter(options.filter);
-        // }
+        return items.filter(item => {
+            // 组过滤（大小写无关）
+            const groupMatch = !groupFilter ||
+                (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
 
-        return items;
+            // 名称过滤（大小写无关）
+            const nameMatch = !nameFilter ||
+                (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase());
+
+            // 只有当两个条件都满足时才返回 true
+            return groupMatch && nameMatch;
+        });
     } catch (error) {
         console.error(`解析电视直播链接时出错: ${error.message}`);
         return [];
