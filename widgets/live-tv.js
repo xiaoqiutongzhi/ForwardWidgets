@@ -18,25 +18,52 @@ WidgetMetadata = {
                             title: "Kimentanm",
                             value: "https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u"
                         },
-                        {title: "suxuang", value: "https://bit.ly/suxuang"}
+                        {
+                            title: "Live",
+                            value: "https://tv.iill.top/m3u/Live"
+                        },
+                        {
+                            title: "Gather1",
+                            value: "https://tv.iill.top/m3u/Gather"
+                        },
+                        {
+                            title: "Gather2",
+                            value: "https://raw.githubusercontent.com/YanG-1989/m3u/main/Gather.m3u"
+                        },
+                        {
+                            title: "suxuang",
+                            value: "https://bit.ly/suxuang"
+                        },
+                        {
+                            title: "IPTV1",
+                            value: "https://raw.githubusercontent.com/skddyj/iptv/main/IPTV.m3u"
+                        },
+                        {
+                            title: "IPTV2-CN",
+                            value: "https://iptv-org.github.io/iptv/countries/cn.m3u"
+                        },
+                        {
+                            title: "IPTV3",
+                            value: "https://cdn.jsdelivr.net/gh/Guovin/iptv-api@gd/output/result.m3u"
+                        },
                     ]
                 },
                 {
                     name: "group_filter",
-                    title: "按组关键字过滤(选填)，如央视，会过滤所有group-title中包含央视的频道",
+                    title: "按组关键字过滤(选填)，如央视，会筛选出所有group-title中包含央视的频道",
                     type: "input",
-                    description: "输入组关键字，如央视，会过滤所有group-title中包含央视的频道",
+                    description: "输入组关键字，如央视，会筛选出所有group-title中包含央视的频道",
                 },
                 {
                     name: "name_filter",
-                    title: "按频道名关键字过滤(选填)，如卫视，会过滤所有频道名中包含卫视的频道",
+                    title: "按频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
                     type: "input",
-                    description: "输入频道名关键字过滤(选填)，如卫视，会过滤所有频道名中包含卫视的频道",
+                    description: "输入频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
                 },
             ],
         },
     ],
-    version: "1.0.28",
+    version: "1.0.29",
     requiredVersion: "0.0.1",
     description: "解析电视直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -74,7 +101,7 @@ async function loadLiveTvItems(params = {}) {
         const items = parseM3UContent(response);
 
         // 应用过滤器
-        return items.filter(item => {
+        const filteredItems = items.filter(item => {
             // 组过滤（大小写无关）
             const groupMatch = !groupFilter ||
                 (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
@@ -86,6 +113,15 @@ async function loadLiveTvItems(params = {}) {
             // 只有当两个条件都满足时才返回 true
             return groupMatch && nameMatch;
         });
+
+        // 获取过滤后的总数
+        const totalCount = filteredItems.length;
+
+        // 为每个频道的标题添加 (x/y) 标记
+        return filteredItems.map((item, index) => ({
+            ...item,
+            title: `${item.title} (${index + 1}/${totalCount})`
+        }));
     } catch (error) {
         console.error(`解析电视直播链接时出错: ${error.message}`);
         return [];
@@ -248,21 +284,4 @@ async function loadDetail(link) {
     await sendMSG(JSON.stringify(item));
 
     return item;
-}
-
-
-function groupByCategory(items) {
-    const groupedItems = {};
-
-    items.forEach(item => {
-        const category = item.metadata.group || '未分类';
-
-        if (!groupedItems[category]) {
-            groupedItems[category] = [];
-        }
-
-        groupedItems[category].push(item);
-    });
-
-    return groupedItems;
 }
