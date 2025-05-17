@@ -71,18 +71,6 @@ WidgetMetadata = {
 };
 
 
-async function sendMSG(text) {
-    const url = `https://api2.pushdeer.com/message/push?pushkey=PDU33181ThsLBiASqrbT0uqdEP1BJ7HilvlS2Wih8&text=${text}`;
-    const response = await Widget.http.get(url, {
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        }
-    });
-
-    console.log("请求结果:", response.data);
-}
-
-
 async function loadLiveItems(params = {}) {
     try {
         const url = params.url || "";
@@ -236,8 +224,6 @@ async function loadDetail(link) {
     let videoUrl = link;
     let childItems = []
 
-    await sendMSG(link);
-
     const formats = ['m3u8', 'mp4', 'mp3', 'flv', 'avi', 'mov', 'wmv', 'webm', 'ogg', 'mkv', 'ts'];
     if (!formats.some(format => link.includes(format))) {
         // 获取重定向location
@@ -248,8 +234,6 @@ async function loadDetail(link) {
                 "User-Agent": "AptvPlayer/1.4.6",
             },
         });
-
-        await sendMSG(JSON.stringify(response.data));
 
         console.log(response.data)
 
@@ -280,8 +264,6 @@ async function loadDetail(link) {
         },
         childItems: childItems,
     };
-
-    await sendMSG(JSON.stringify(item));
 
     return item;
 }
