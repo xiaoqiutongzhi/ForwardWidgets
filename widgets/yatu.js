@@ -78,8 +78,73 @@ WidgetMetadata = {
                 },
             ],
         },
+        {
+            title: "点播排行榜",
+            requiresWebView: false,
+            functionName: "loadClickItems",
+            params: [
+                {
+                    name: "genre",
+                    title: "类型",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "连载动漫",
+                            value: "dm-lz",
+                        },
+                        {
+                            title: "剧场动漫",
+                            value: "dm-jc",
+                        },
+                        {
+                            title: "电影",
+                            value: "dy",
+                        },
+                        {
+                            title: "香港电影",
+                            value: "dy-xianggan",
+                        },
+                        {
+                            title: "欧美电影",
+                            value: "dy-om",
+                        },
+                        {
+                            title: "电视剧",
+                            value: "tv",
+                        },
+                        {
+                            title: "美剧",
+                            value: "tv-meiju",
+                        },
+                        {
+                            title: "综艺",
+                            value: "tv-zy",
+                        },
+                    ],
+                },
+                {
+                    name: "time",
+                    title: "时间",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "今日",
+                            value: "db_lz1",
+                        },
+                        {
+                            title: "本月",
+                            value: "db_lz2",
+                        },
+                        {
+                            title: "历史",
+                            value: "db_lz3",
+                        },
+                    ],
+                },
+            ],
+        },
     ],
-    version: "1.0.17",
+    version: "1.0.18",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -223,13 +288,10 @@ async function loadLatestItems(params = {}) {
             sin3: 'tv',
         };
 
-        const response = await Widget.http.get("http://www.yatu.tv:2082/zuijin.asp", {
+        const response = await Widget.http.get("https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/zuijin.asp", {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                "Content-Type": "text/html",
-                "Accept": "text/html",
-                "Accept-Encoding": "gzip, deflate",
             },
         });
 
@@ -243,7 +305,88 @@ async function loadLatestItems(params = {}) {
             // 模拟API请求
             const tmdbDatas = await fetchTmdbData(itemInfo.title, mediaTypeDict[genre])
 
-            if (tmdbDatas.length != 0) {
+            if (tmdbDatas.length !== 0) {
+                return {
+                    id: tmdbDatas[0].id,
+                    type: "tmdb",
+                    title: tmdbDatas[0].title ?? tmdbDatas[0].name,
+                    description: tmdbDatas[0].overview,
+                    releaseDate: tmdbDatas[0].release_date ?? tmdbDatas[0].first_air_date,
+                    backdropPath: tmdbDatas[0].backdrop_path,
+                    posterPath: tmdbDatas[0].poster_path,
+                    rating: tmdbDatas[0].vote_average,
+                    mediaType: mediaTypeDict[genre],
+                };
+            } else {
+                return null;
+            }
+        });
+
+        // 等待所有请求完成
+        const items = (await Promise.all(promises)).filter(Boolean);
+
+        console.log(items)
+
+        return items;
+    } catch (error) {
+        console.error("处理失败:", error);
+        throw error;
+    }
+}
+
+function getClickItemInfos(data, time) {
+    let docId = Widget.dom.parse(data);
+
+    let tables = Widget.dom.select(docId, `table#${time}`);
+
+    if (!tables || tables.length === 0) {
+        console.error(`没有解析到相应table`);
+        return null;
+    }
+
+    return Array.from(
+        Widget.dom.select(tables[0], 'td[nowrap="nowrap"]')
+    ).map(td => Widget.dom.text(td).trim());
+}
+
+async function loadClickItems(params = {}) {
+    try {
+        const genre = params.genre || "";
+        const time = params.time || "";
+
+        if (!genre || !time) {
+            throw new Error("必须提供分类、时间");
+        }
+
+        const mediaTypeDict = {
+            'dm-lz': 'tv',
+            'dm-jc': 'movie',
+            'dy': 'movie',
+            'dy-xianggan': 'movie',
+            'dy-om': 'movie',
+            'tv': 'tv',
+            'tv-meiju': 'tv',
+            'tv-zy': 'tv',
+        };
+
+        const response = await Widget.http.get(`http://www.yatu.tv:2082/top/${genre}.htm`, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            },
+        });
+
+        console.log("请求结果:", response.data);
+
+        const itemInfos = getClickItemInfos(response.data, time);
+
+        console.log("itemInfos:", itemInfos)
+
+        const promises = itemInfos.map(async (title) => {
+            // 模拟API请求
+            const tmdbDatas = await fetchTmdbData(title, mediaTypeDict[genre])
+
+            if (tmdbDatas.length !== 0) {
                 return {
                     id: tmdbDatas[0].id,
                     type: "tmdb",
