@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.11",
+    version: "1.0.12",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -243,14 +243,14 @@ async function loadLatestItems(params = {}) {
 
             if (tmdbDatas.length != 0) {
                 return {
-                    id: tmdbData[0].id,
+                    id: tmdbDatas[0].id,
                     type: "tmdb",
-                    title: tmdbData[0].title ?? tmdbData[0].name,
-                    description: tmdbData[0].overview,
-                    releaseDate: tmdbData[0].release_date ?? tmdbData[0].first_air_date,
-                    backdropPath: tmdbData[0].backdrop_path,
-                    posterPath: tmdbData[0].poster_path,
-                    rating: tmdbData[0].vote_average,
+                    title: tmdbDatas[0].title ?? tmdbDatas[0].name,
+                    description: tmdbDatas[0].overview,
+                    releaseDate: tmdbDatas[0].release_date ?? tmdbDatas[0].first_air_date,
+                    backdropPath: tmdbDatas[0].backdrop_path,
+                    posterPath: tmdbDatas[0].poster_path,
+                    rating: tmdbDatas[0].vote_average,
                     mediaType: mediaTypeDict[genre],
                 };
             } else {
