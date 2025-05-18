@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.9",
+    version: "1.0.10",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -174,11 +174,11 @@ function getItemInfos(data, startDateInput, days, genre) {
 
     // 计算开始和结束日期
     let startDate = new Date(today);
-    startDate.setDate(today.getDate() + startDateInput);
+    startDate.setDate(today.getDate() + Number(startDateInput));
     startDate.setHours(0, 0, 0, 0);
 
     let endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + days - 1);
+    endDate.setDate(startDate.getDate() + Number(days) - 1);
     endDate.setHours(0, 0, 0, 0);
 
     console.log("startDate: ", startDate);
@@ -191,11 +191,12 @@ function getItemInfos(data, startDateInput, days, genre) {
             return false;
         }
 
-        // 解析日期
-        let [day, month, year] = item.time.split('/').map(Number);
+        // 解析日期，假设格式为 YY/MM/DD
+        let [year, month, day] = item.time.split('/').map(Number);
         let currentYear = new Date().getFullYear();
         let century = Math.floor(currentYear / 100) * 100;
-        let fullYear = year < (currentYear % 100 + 10) ? century + year : century - 100 + year;
+        // 如果年份小于等于当前年份的两位数，假设是 2000 年代
+        let fullYear = year <= (currentYear % 100) ? century + year : century - 100 + year;
         let itemDate = new Date(fullYear, month - 1, day);
 
         // 检查日期有效性
