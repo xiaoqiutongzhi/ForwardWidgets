@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.16",
+    version: "1.0.17",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -228,10 +228,12 @@ async function loadLatestItems(params = {}) {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
                 "Content-Type": "text/html",
+                "Accept": "text/html",
+                "Accept-Encoding": "gzip, deflate",
             },
         });
 
-        console.log("请求结果:", response.text());
+        console.log("请求结果:", response.data);
 
         const itemInfos = getItemInfos(response.data, startDateInput, days, genre);
 
