@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.7",
+    version: "1.0.8",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -167,6 +167,8 @@ function getItemInfos(data, startDateInput, days, genre) {
             fullContent: tdContent
         });
     });
+
+    console.log("results: ", results)
 
     // Calculate the start date based on startDateInput
     let startDate = new Date(today);
