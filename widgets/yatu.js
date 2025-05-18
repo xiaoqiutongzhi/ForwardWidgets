@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.8",
+    version: "1.0.9",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -170,21 +170,39 @@ function getItemInfos(data, startDateInput, days, genre) {
 
     console.log("results: ", results)
 
-    // Calculate the start date based on startDateInput
+    today.setHours(0, 0, 0, 0); // 规范化时间
+
+    // 计算开始和结束日期
     let startDate = new Date(today);
     startDate.setDate(today.getDate() + startDateInput);
+    startDate.setHours(0, 0, 0, 0);
 
-    // Calculate the end date (startDate + days - 1)
     let endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + days - 1);
+    endDate.setHours(0, 0, 0, 0);
 
-    // Filter results
+    console.log("startDate: ", startDate);
+    console.log("endDate: ", endDate);
+
+    // 过滤结果
     return results.filter(item => {
-        // Parse item.time (format: 25/5/17)
-        let [year, month, day] = item.time.split('/').map(Number);
-        let itemDate = new Date(2000 + year, month - 1, day); // Year is two digits, add 2000
+        // 验证日期格式
+        if (!item.time || !/^\d{1,2}\/\d{1,2}\/\d{2}$/.test(item.time)) {
+            return false;
+        }
 
-        // Check if itemDate is within startDate and endDate
+        // 解析日期
+        let [day, month, year] = item.time.split('/').map(Number);
+        let currentYear = new Date().getFullYear();
+        let century = Math.floor(currentYear / 100) * 100;
+        let fullYear = year < (currentYear % 100 + 10) ? century + year : century - 100 + year;
+        let itemDate = new Date(fullYear, month - 1, day);
+
+        // 检查日期有效性
+        if (isNaN(itemDate)) return false;
+
+        itemDate.setHours(0, 0, 0, 0);
+        console.log("itemDate: ", itemDate)
         return itemDate >= startDate && itemDate <= endDate;
     });
 }
