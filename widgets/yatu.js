@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.0",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -107,7 +107,10 @@ function getItemInfos(data, startDateInput, days, genre) {
 
     let table = Widget.dom.select(docId, `table#${genre}`)[0];
 
-    if (!table) return null; // Return null if table is not found
+    if (!table) {
+        console.error(`没有解析到相应table`);
+        return null;
+    }
 
     let tdElements = Widget.dom.select(table, 'td');
 
