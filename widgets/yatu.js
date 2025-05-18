@@ -1,7 +1,7 @@
 // 雅图组件
 WidgetMetadata = {
     id: "yatu",
-    title: "雅图(每日放送+点播排行榜)",
+    title: "雅图(每日放送+点播排行榜+评分排行榜)",
     modules: [
         {
             title: "每日放送",
@@ -143,8 +143,57 @@ WidgetMetadata = {
                 },
             ],
         },
+        {
+            title: "评分排行榜",
+            requiresWebView: false,
+            functionName: "loadScoreItems",
+            params: [
+                {
+                    name: "genre",
+                    title: "类型",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "动漫",
+                            value: "p-dm",
+                        },
+                        {
+                            title: "电影",
+                            value: "p-dy",
+                        },
+                        {
+                            title: "电视剧",
+                            value: "p-tv",
+                        },
+                    ],
+                },
+                {
+                    name: "level",
+                    title: "等级",
+                    type: "enumeration",
+                    enumOptions: [
+                        {
+                            title: "非常好看",
+                            value: "tv1",
+                        },
+                        {
+                            title: "好看",
+                            value: "tv2",
+                        },
+                        {
+                            title: "一般",
+                            value: "tv3",
+                        },
+                        {
+                            title: "烂片",
+                            value: "tv4",
+                        },
+                    ],
+                },
+            ],
+        },
     ],
-    version: "1.0.18",
+    version: "1.0.19",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -334,10 +383,10 @@ async function loadLatestItems(params = {}) {
     }
 }
 
-function getClickItemInfos(data, time) {
+function getClickItemInfos(data, typ) {
     let docId = Widget.dom.parse(data);
 
-    let tables = Widget.dom.select(docId, `table#${time}`);
+    let tables = Widget.dom.select(docId, `table#${typ}`);
 
     if (!tables || tables.length === 0) {
         console.error(`没有解析到相应table`);
@@ -345,8 +394,8 @@ function getClickItemInfos(data, time) {
     }
 
     return Array.from(
-        Widget.dom.select(tables[0], 'td[nowrap="nowrap"]')
-    ).map(td => Widget.dom.text(td).trim());
+        Widget.dom.select(tables[0], 'a[target="_blank"]')
+    ).map(a => Widget.dom.text(a).trim());
 }
 
 async function loadClickItems(params = {}) {
@@ -369,7 +418,7 @@ async function loadClickItems(params = {}) {
             'tv-zy': 'tv',
         };
 
-        const response = await Widget.http.get(`http://www.yatu.tv:2082/top/${genre}.htm`, {
+        const response = await Widget.http.get(`https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/top/${genre}.htm`, {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -379,6 +428,67 @@ async function loadClickItems(params = {}) {
         console.log("请求结果:", response.data);
 
         const itemInfos = getClickItemInfos(response.data, time);
+
+        console.log("itemInfos:", itemInfos)
+
+        const promises = itemInfos.map(async (title) => {
+            // 模拟API请求
+            const tmdbDatas = await fetchTmdbData(title, mediaTypeDict[genre])
+
+            if (tmdbDatas.length !== 0) {
+                return {
+                    id: tmdbDatas[0].id,
+                    type: "tmdb",
+                    title: tmdbDatas[0].title ?? tmdbDatas[0].name,
+                    description: tmdbDatas[0].overview,
+                    releaseDate: tmdbDatas[0].release_date ?? tmdbDatas[0].first_air_date,
+                    backdropPath: tmdbDatas[0].backdrop_path,
+                    posterPath: tmdbDatas[0].poster_path,
+                    rating: tmdbDatas[0].vote_average,
+                    mediaType: mediaTypeDict[genre],
+                };
+            } else {
+                return null;
+            }
+        });
+
+        // 等待所有请求完成
+        const items = (await Promise.all(promises)).filter(Boolean);
+
+        console.log(items)
+
+        return items;
+    } catch (error) {
+        console.error("处理失败:", error);
+        throw error;
+    }
+}
+
+async function loadScoreItems(params = {}) {
+    try {
+        const genre = params.genre || "";
+        const level = params.level || "";
+
+        if (!genre || !level) {
+            throw new Error("必须提供分类、等级");
+        }
+
+        const mediaTypeDict = {
+            'p-dm': 'tv',
+            'p-dy': 'movie',
+            'p-tv': 'tv',
+        };
+
+        const response = await Widget.http.get(`https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/top/${genre}.htm`, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            },
+        });
+
+        console.log("请求结果:", response.data);
+
+        const itemInfos = getClickItemInfos(response.data, level);
 
         console.log("itemInfos:", itemInfos)
 
