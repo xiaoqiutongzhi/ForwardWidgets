@@ -53,7 +53,7 @@ WidgetMetadata = {
                 },
                 {
                     name: "days",
-                    title: "天数",
+                    title: "天数（从开始日期开始的后面m天）",
                     type: "input",
                     description: "如：3，会返回从开始日期起的3天内的节目，未填写情况下接口不可用",
                     value: "1",
@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.12",
+    version: "1.0.13",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -95,10 +95,10 @@ async function fetchTmdbData(key, mediaType) {
         }
     });
     //打印结果
-    console.log("搜索内容：" + key)
-    console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
-    console.log("tmdbResults.total_results:" + tmdbResults.total_results);
-    console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
+    // console.log("搜索内容：" + key)
+    // console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
+    // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
+    // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
     return tmdbResults.results;
 }
 
@@ -203,7 +203,6 @@ function getItemInfos(data, startDateInput, days, genre) {
         if (isNaN(itemDate)) return false;
 
         itemDate.setHours(0, 0, 0, 0);
-        console.log("itemDate: ", itemDate)
         return itemDate >= startDate && itemDate <= endDate;
     });
 }
@@ -224,7 +223,7 @@ async function loadLatestItems(params = {}) {
             sin3: 'tv',
         };
 
-        const response = await Widget.http.get("https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/zuijin.asp", {
+        const response = await Widget.http.get("http://www.yatu.tv:2082/zuijin.asp", {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
