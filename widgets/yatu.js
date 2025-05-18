@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.10",
+    version: "1.0.11",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -99,7 +99,7 @@ async function fetchTmdbData(key, mediaType) {
     console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
     console.log("tmdbResults.total_results:" + tmdbResults.total_results);
     console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
-    return tmdbResults[0];
+    return tmdbResults.results;
 }
 
 function getItemInfos(data, startDateInput, days, genre) {
@@ -239,23 +239,27 @@ async function loadLatestItems(params = {}) {
 
         const promises = itemInfos.map(async (itemInfo) => {
             // 模拟API请求
-            const tmdbData = await fetchTmdbData(itemInfo.title, mediaTypeDict[genre])
+            const tmdbDatas = await fetchTmdbData(itemInfo.title, mediaTypeDict[genre])
 
-            return {
-                id: tmdbData.id,
-                type: "tmdb",
-                title: tmdbData.title ?? tmdbData.name,
-                description: tmdbData.overview,
-                releaseDate: tmdbData.release_date ?? tmdbData.first_air_date,
-                backdropPath: tmdbData.backdrop_path,
-                posterPath: tmdbData.poster_path,
-                rating: tmdbData.vote_average,
-                mediaType: mediaTypeDict[genre],
-            };
+            if (tmdbDatas.length != 0) {
+                return {
+                    id: tmdbData[0].id,
+                    type: "tmdb",
+                    title: tmdbData[0].title ?? tmdbData[0].name,
+                    description: tmdbData[0].overview,
+                    releaseDate: tmdbData[0].release_date ?? tmdbData[0].first_air_date,
+                    backdropPath: tmdbData[0].backdrop_path,
+                    posterPath: tmdbData[0].poster_path,
+                    rating: tmdbData[0].vote_average,
+                    mediaType: mediaTypeDict[genre],
+                };
+            } else {
+                return null;
+            }
         });
 
         // 等待所有请求完成
-        const items = await Promise.all(promises);
+        const items = (await Promise.all(promises)).filter(Boolean);
 
         console.log(items)
 
