@@ -79,7 +79,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -105,7 +105,7 @@ async function fetchTmdbData(key, mediaType) {
 function getItemInfos(data, startDateInput, days, genre) {
     let docId = Widget.dom.parse(data);
 
-    let table = Widget.dom.select(docId, `table#${genre}`)[0];
+    let table = Widget.dom.select(docId, "table#sin1")[0];
 
     if (!table) {
         console.error(`没有解析到相应table`);
