@@ -53,7 +53,7 @@ WidgetMetadata = {
                 },
                 {
                     name: "days",
-                    title: "天数（从开始日期开始的后面m天）",
+                    title: "天数（从开始日期开始的后面m天的数据）",
                     type: "input",
                     description: "如：3，会返回从开始日期起的3天内的节目，未填写情况下接口不可用",
                     value: "1",
@@ -193,7 +193,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.20",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
