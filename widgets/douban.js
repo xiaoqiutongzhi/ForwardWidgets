@@ -144,7 +144,7 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.4",
+  version: "1.0.5",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -218,7 +218,7 @@ async function fetchTmdbData(key, mediaType) {
     });
     //打印结果
     // console.log("搜索内容：" + key)
-    // console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
+    console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
     // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
     // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
     return tmdbResults.results;
@@ -263,6 +263,7 @@ async function loadItemsFromApi(params = {}) {
 
     const promises = scItems.map(async (scItem) => {
         // 模拟API请求
+        console.log("title: ", scItem.title, " ; type: ", scItem.type);
         const tmdbDatas = await fetchTmdbData(scItem.title, scItem.type)
 
         if (tmdbDatas.length !== 0) {
