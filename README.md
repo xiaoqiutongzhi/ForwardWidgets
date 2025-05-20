@@ -24,6 +24,7 @@
 #### 增加豆瓣片单(TMDB版)
 因为type为douban类型的items里依赖豆瓣数据里包含imdb_id，但很多综艺没有设置imdb_id，导致综艺片单识别到的只有个别，所以加了直接查询tmdb的版本
 豆瓣的综艺title一般都包含第x季字样，所以用replace做了删除操作
+修复下一页
 
 ### 二、Trakt我看&Trakt个性化推荐
 
