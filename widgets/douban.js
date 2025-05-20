@@ -131,20 +131,14 @@ WidgetMetadata = {
           ],
         },
         {
-          name: "start",
-          title: "开始",
-          type: "count",
-        },
-        {
-          name: "limit",
-          title: "每页数量",
-          type: "constant",
-          value: "20",
+          name: "page",
+          title: "页码",
+          type: "page"
         },
       ],
     },
   ],
-  version: "1.0.3",
+  version: "1.0.4",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -183,7 +177,7 @@ async function loadSuggestionItems(params = {}) {
   const cookie = params.cookie || "";
   const type = params.type || "";
   const count = 20
-  start = (page - 1) * count
+  const start = (page - 1) * count
   const ckMatch = cookie.match(/ck=([^;]+)/);
   const ckValue = ckMatch ? ckMatch[1] : null;
   let url = `https://m.douban.com/rexxar/api/v2/${type}/suggestion?start=${start}&count=${count}&new_struct=1&with_review=1&ck=${ckValue}`;
@@ -305,9 +299,10 @@ async function loadSubjectCollection(params = {}) {
     throw new Error("无法获取合集 ID");
   }
 
-  const start = params.start || 0;
-  const limit = params.limit || 20;
-  let pageUrl = `https://m.douban.com/rexxar/api/v2/subject_collection/${listId}/items?start=${start}&count=${limit}&updated_at&items_only=1&type_tag&for_mobile=1`;
+  const page = params.page;
+  const count = 20
+  const start = (page - 1) * count
+  let pageUrl = `https://m.douban.com/rexxar/api/v2/subject_collection/${listId}/items?start=${start}&count=${count}&updated_at&items_only=1&type_tag&for_mobile=1`;
   if (params.type) {
     pageUrl += `&type=${params.type}`;
   }
