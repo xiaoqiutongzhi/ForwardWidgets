@@ -21,6 +21,9 @@
 #### Cookie获取
 最好用iPhone网页登陆豆瓣，然后用Loon或者Qx等工具抓包获取Cookie（不清楚Cookie多久失效，所以可能过一段时间需要重新获取填一次）
 
+#### 增加豆瓣片单(TMDB版)
+因为type为douban类型的items里依赖豆瓣数据里包含imdb_id，但很多综艺没有设置imdb_id，导致综艺片单识别到的只有个别，所以加了直接查询tmdb的版本
+
 ### 二、Trakt我看&Trakt个性化推荐
 
 ```shell
