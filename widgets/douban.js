@@ -85,6 +85,18 @@ WidgetMetadata = {
           description: "豆瓣片单地址",
           placeholders: [
             {
+              title: "豆瓣热门电影",
+              value: "https://m.douban.com/subject_collection/movie_hot_gaia",
+            },
+            {
+              title: "热播新剧",
+              value: "https://m.douban.com/subject_collection/tv_hot",
+            },
+            {
+              title: "热播综艺",
+              value: "https://m.douban.com/subject_collection/show_hot",
+            },
+            {
               title: "影院热映",
               value: "https://m.douban.com/subject_collection/movie_showing",
             },
@@ -95,10 +107,6 @@ WidgetMetadata = {
             {
               title: "实时热门电视",
               value: "https://m.douban.com/subject_collection/tv_real_time_hotest",
-            },
-            {
-              title: "实时热门综艺",
-              value: "https://m.douban.com/subject_collection/show_hot",
             },
             {
               title: "豆瓣 Top 250",
@@ -138,7 +146,7 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.4",
+  version: "1.0.3",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
