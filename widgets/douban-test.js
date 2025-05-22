@@ -157,6 +157,169 @@ WidgetMetadata = {
         },
       ],
     },
+    {
+      title: "电影推荐(TMDB版)",
+      requiresWebView: false,
+      functionName: "loadRecommendMovies",
+      params: [
+        {
+          name: "category",
+          title: "分类",
+          type: "enumeration",
+          enumOptions: [
+            {
+              title: "全部",
+              value: "all",
+            },
+            {
+              title: "热门电影",
+              value: "热门",
+            },
+            {
+              title: "最新电影",
+              value: "最新",
+            },
+            {
+              title: "豆瓣高分",
+              value: "豆瓣高分",
+            },
+            {
+              title: "冷门佳片",
+              value: "冷门佳片",
+            },
+          ],
+        },
+        {
+          name: "type",
+          title: "类型",
+          type: "enumeration",
+          belongTo: {
+            paramName: "category",
+            value: ["热门", "最新", "豆瓣高分", "冷门佳片"],
+          },
+          enumOptions: [
+            {
+              title: "全部",
+              value: "全部",
+            },
+            {
+              title: "华语",
+              value: "华语",
+            },
+            {
+              title: "欧美",
+              value: "欧美",
+            },
+            {
+              title: "韩国",
+              value: "韩国",
+            },
+            {
+              title: "日本",
+              value: "日本",
+            },
+          ],
+        },
+        {
+          name: "page",
+          title: "页码",
+          type: "page"
+        },
+      ],
+    },
+    {
+      title: "剧集推荐(TMDB版)",
+      requiresWebView: false,
+      functionName: "loadRecommendShows",
+      params: [
+        {
+          name: "category",
+          title: "分类",
+          type: "enumeration",
+          enumOptions: [
+            {
+              title: "全部",
+              value: "all",
+            },
+            {
+              title: "热门剧集",
+              value: "tv",
+            },
+            {
+              title: "热门综艺",
+              value: "show",
+            },
+          ],
+        },
+        {
+          name: "type",
+          title: "类型",
+          type: "enumeration",
+          belongTo: {
+            paramName: "category",
+            value: ["tv"],
+          },
+          enumOptions: [
+            {
+              title: "综合",
+              value: "tv",
+            },
+            {
+              title: "国产剧",
+              value: "tv_domestic",
+            },
+            {
+              title: "欧美剧",
+              value: "tv_american",
+            },
+            {
+              title: "日剧",
+              value: "tv_japanese",
+            },
+            {
+              title: "韩剧",
+              value: "tv_korean",
+            },
+            {
+              title: "动画",
+              value: "tv_animation",
+            },
+            {
+              title: "纪录片",
+              value: "tv_documentary",
+            },
+          ],
+        },
+        {
+          name: "type",
+          title: "类型",
+          type: "enumeration",
+          belongTo: {
+            paramName: "category",
+            value: ["show"],
+          },
+          enumOptions: [
+            {
+              title: "综合",
+              value: "show",
+            },
+            {
+              title: "国内",
+              value: "show_domestic",
+            },
+            {
+              title: "国外",
+              value: "show_foreign",
+            },
+          ],
+        },
+        {
+          name: "page",
+          title: "页码",
+          type: "page"
+        },
+      ],
+    },
   ],
   version: "1.0.4",
   requiredVersion: "0.0.1",
@@ -399,4 +562,43 @@ async function loadSubjectCollection(params = {}) {
   }
   params.url = pageUrl;
   return await loadItemsFromApi(params);
+}
+
+async function loadRecommendMovies(params = {}) {
+  return await loadRecommendItems(params, "movie");
+}
+
+async function loadRecommendShows(params = {}) {
+  return await loadRecommendItems(params, "tv");
+}
+
+async function loadRecommendItems(params = {}, type = "movie") {
+  const page = params.page;
+  const count = 20
+  const start = (page - 1) * count
+  const category = params.category || "";
+  const categoryType = params.type || "";
+  let url = `https://m.douban.com/rexxar/api/v2/subject/recent_hot/${type}?start=${start}&limit=${count}&category=${category}&type=${categoryType}`;
+  if (category == "all") {
+    url = `https://m.douban.com/rexxar/api/v2/${type}/recommend?refresh=0&start=${start}&count=${count}&selected_categories=%7B%7D&uncollect=false&score_range=0,10&tags=`;
+  }
+  const response = await Widget.http.get(url, {
+    headers: {
+      Referer: `https://movie.douban.com/${type}`,
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    },
+  });
+
+  console.log("请求结果:", response.data);
+  if (response.data && response.data.items) {
+    const recItems = response.data.items;
+
+    const items = await fetchImdbItems(recItems);
+
+    console.log(items)
+
+    return items;
+  }
+  return [];
 }
