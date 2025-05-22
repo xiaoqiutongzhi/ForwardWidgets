@@ -407,6 +407,9 @@ async function fetchTmdbData(key, mediaType) {
 async function fetchImdbItems(scItems) {
   const promises = scItems.map(async (scItem) => {
     // 模拟API请求
+    if (!scItem || !scItem.title) {
+      return null;
+    }
     const title = scItem.title.replace(/ 第[^季]*季/, '');
     console.log("title: ", title, " ; type: ", scItem.type);
     const tmdbDatas = await fetchTmdbData(title, scItem.type)
