@@ -23,8 +23,15 @@
 
 #### 增加豆瓣片单(TMDB版)
 因为type为douban类型的items里依赖豆瓣数据里包含imdb_id，但很多综艺没有设置imdb_id，导致综艺片单识别到的只有个别，所以加了直接查询tmdb的版本
+
 豆瓣的综艺title一般都包含第x季字样，所以用replace做了删除操作
+
 修复下一页
+
+增加doulist支持，并新增下拉选项片单[IMDB MOVIE TOP 250]/[IMDB TV TOP 250]/[意外结局电影]
+
+#### 增加电影推荐(TMDB版)/剧集推荐(TMDB版)
+（说明：由于用title查询TMDB，所以不一定能准确匹配正确影片）
 
 ### 二、Trakt我看&Trakt个性化推荐
 
@@ -118,9 +125,11 @@ python douban2trakt.py --type watched
 没有统一ping，不知道哪些会超时，也没预览
 没有分类显示的地方
 小组件已经添加的情况下，没有搜索入口
-有些源播放会闪退，不知道是什么原因，可能是缓冲太大？
-插件有缓存，如果不清缓存，会老是打开同一个时间点
+#有些源播放会闪退，不知道是什么原因，可能是缓冲太大？#
+#插件有缓存，如果不清缓存，会老是打开同一个时间点#
 ```
+当前支持直播源内没有自带台标的情况下引用台名对应台标
+
 <img src="https://i.miji.bid/2025/05/17/31b417b1edf82192b1edaa752aa18504.jpeg" style="width:200px" /><img src="https://i.miji.bid/2025/05/17/9685eb351a2c5892b647dbd9c33532f5.jpeg" style="width:200px" /><img src="https://i.miji.bid/2025/05/17/fe4ed1f17a9fb5e2b3808b4f6a0c7ae2.jpeg" style="width:600px" /><img src="https://i.miji.bid/2025/05/17/bc5bbe2a8efa99eba6ca0c72e4681a79.jpeg" style="width:600px" />
 
 #### 订阅链接
@@ -129,12 +138,14 @@ python douban2trakt.py --type watched
 #### 按组关键字过滤
 一个订阅链接可能有上百上千个频道，可以按组名关键字筛选，至于有哪些组，需要自己打开订阅链接看下
 
+增加了正则过滤，如`.*(央视|卫视).*`
+
 #### 按频道名关键字过滤
 一个订阅链接可能有上百上千个频道，可以按频道名称关键字筛选，至于有哪些频道，需要自己打开订阅链接看下
 
-### 六、雅图(每日放送+点播排行榜+评分排行榜)
-`接口+tmdb查询挺慢的，不过等等还是会出现的 :)`
+增加了正则过滤，如`.*(B站|虎牙|斗鱼).*`
 
+### 六、雅图(每日放送+点播排行榜+评分排行榜)
 <img src="https://i.miji.bid/2025/05/18/6c97648fe9aed6398c76c56b28bdd3e5.jpeg" style="width:200px" />
 
 #### 每日放送
