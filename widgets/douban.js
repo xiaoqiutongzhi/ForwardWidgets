@@ -424,7 +424,7 @@ async function fetchImdbItems(scItems) {
         backdropPath: tmdbDatas[0].backdrop_path,
         posterPath: tmdbDatas[0].poster_path,
         rating: tmdbDatas[0].vote_average,
-        mediaType: tmdbDatas[0].media_type,
+        mediaType: scItem.type !== "multi" ? scItem.type : tmdbDatas[0].media_type,
       };
     } else {
       return null;
