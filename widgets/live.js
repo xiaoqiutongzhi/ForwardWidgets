@@ -32,7 +32,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "suxuang",
-                            value: "https://bit.ly/suxuang"
+                            value: "https://bit.ly/suxuang-v4"
                         },
                         {
                             title: "IPTV1",
@@ -53,17 +53,61 @@ WidgetMetadata = {
                     title: "按组关键字过滤(选填)，如央视，会筛选出所有group-title中包含央视的频道",
                     type: "input",
                     description: "输入组关键字，如央视，会筛选出所有group-title中包含央视的频道",
+                    placeholders: [
+                        {
+                            title: "全部",
+                            value: "",
+                        },
+                        {
+                            title: "央视&卫视",
+                            value: ".*(央视|卫视).*",
+                        },
+                        {
+                            title: "央视",
+                            value: "央视",
+                        },
+                        {
+                            title: "卫视",
+                            value: "卫视",
+                        },
+                    ]
                 },
                 {
                     name: "name_filter",
                     title: "按频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
                     type: "input",
                     description: "输入频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
+                    placeholders: [
+                        {
+                            title: "全部",
+                            value: "",
+                        },
+                        {
+                            title: "B站&虎牙&斗鱼",
+                            value: ".*(B站|虎牙|斗鱼).*",
+                        },
+                        {
+                            title: "英雄联盟",
+                            value: "英雄联盟",
+                        },
+                        {
+                            title: "王者荣耀",
+                            value: "王者荣耀",
+                        },
+                        {
+                            title: "绝地求生",
+                            value: "绝地求生",
+                        },
+                        {
+                            title: "和平精英",
+                            value: "和平精英",
+                        },
+                    ]
                 },
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -85,18 +129,37 @@ async function loadLiveItems(params = {}) {
         const response = await this.fetchM3UContent(url);
         if (!response) return [];
 
+        // 获取台标数据
+        const iconList = await this.fetchIconList(url);
+
         // 解析M3U内容
-        const items = parseM3UContent(response);
+        const items = parseM3UContent(response, iconList);
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
-            // 组过滤（大小写无关）
-            const groupMatch = !groupFilter ||
-                (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
+            // 组过滤（支持正则表达式）
+            const groupMatch = !groupFilter || (() => {
+                try {
+                    // 尝试将输入作为正则表达式解析
+                    const regex = new RegExp(groupFilter, 'i');
+                    return regex.test(item.metadata?.group || '');
+                } catch (e) {
+                    // 若解析失败则回退到普通字符串包含检查（大小写无关）
+                    return (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
+                }
+            })();
 
-            // 名称过滤（大小写无关）
-            const nameMatch = !nameFilter ||
-                (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase());
+            // 名称过滤（支持正则表达式）
+            const nameMatch = !nameFilter || (() => {
+                try {
+                    // 尝试将输入作为正则表达式解析
+                    const regex = new RegExp(nameFilter, 'i');
+                    return regex.test(item.title || '');
+                } catch (e) {
+                    // 若解析失败则回退到普通字符串包含检查（大小写无关）
+                    return (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase());
+                }
+            })();
 
             // 只有当两个条件都满足时才返回 true
             return groupMatch && nameMatch;
@@ -139,7 +202,29 @@ async function fetchM3UContent(url) {
 }
 
 
-function parseM3UContent(content) {
+async function fetchIconList() {
+    try {
+        const response = await Widget.http.get("https://api.github.com/repos/fanmingming/live/contents/tv", {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+            }
+        });
+
+        console.log("请求结果:", response.data);
+
+        const iconList = response.data.map(item => item.name.replace('.png', ''));
+
+        console.log("iconList:", iconList); // ["4K电影"]
+
+        return iconList;
+    } catch (error) {
+        console.error(`获取台标数据时出错: ${error.message}`);
+        return [];
+    }
+}
+
+
+function parseM3UContent(content, iconList) {
     if (!content || !content.trim()) return [];
 
     const lines = content.split(/\r?\n/);
@@ -193,14 +278,19 @@ function parseM3UContent(content) {
         // 匹配直播URL行
         else if (currentItem && line && !line.startsWith('#')) {
             const url = line;
+            console.log(currentItem.title);
+            const icon = iconList.includes(currentItem.title)
+                ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
+                : "";
+            console.log("icon:", icon);
 
             // 构建最终的项目对象
             const item = {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
-                backdropPath: currentItem.cover || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
+                posterPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                backdropPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
