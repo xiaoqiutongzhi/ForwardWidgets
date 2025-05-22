@@ -55,16 +55,20 @@ WidgetMetadata = {
                     description: "输入组关键字，如央视，会筛选出所有group-title中包含央视的频道",
                     placeholders: [
                         {
+                            title: "全部",
+                            value: "",
+                        },
+                        {
+                            title: "央视&卫视",
+                            value: ".*(央视|卫视).*",
+                        },
+                        {
                             title: "央视",
                             value: "央视",
                         },
                         {
                             title: "卫视",
                             value: "卫视",
-                        },
-                        {
-                            title: "央视&卫视",
-                            value: ".*(央视|卫视).*",
                         },
                     ]
                 },
@@ -74,6 +78,10 @@ WidgetMetadata = {
                     type: "input",
                     description: "输入频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
                     placeholders: [
+                        {
+                            title: "全部",
+                            value: "",
+                        },
                         {
                             title: "B站&虎牙&斗鱼",
                             value: ".*(B站|虎牙|斗鱼).*",
