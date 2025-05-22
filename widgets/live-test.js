@@ -129,8 +129,11 @@ async function loadLiveItems(params = {}) {
         const response = await this.fetchM3UContent(url);
         if (!response) return [];
 
+        // 获取台标数据
+        const iconList = await this.fetchIconList(url);
+
         // 解析M3U内容
-        const items = parseM3UContent(response);
+        const items = parseM3UContent(response, iconList);
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
@@ -199,7 +202,29 @@ async function fetchM3UContent(url) {
 }
 
 
-function parseM3UContent(content) {
+async function fetchIconList() {
+    try {
+        const response = await Widget.http.get("https://api.github.com/repos/fanmingming/live/contents/tv", {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+            }
+        });
+
+        console.log("请求结果:", response.data);
+
+        const iconList = response.data.map(item => item.name.replace('.png', ''));
+
+        console.log("iconList:", iconList); // ["4K电影"]
+
+        return iconList;
+    } catch (error) {
+        console.error(`获取台标数据时出错: ${error.message}`);
+        return [];
+    }
+}
+
+
+function parseM3UContent(content, iconList) {
     if (!content || !content.trim()) return [];
 
     const lines = content.split(/\r?\n/);
@@ -253,14 +278,17 @@ function parseM3UContent(content) {
         // 匹配直播URL行
         else if (currentItem && line && !line.startsWith('#')) {
             const url = line;
+            const icon = iconList.includes(currentItem.title)
+                ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
+                : "";
 
             // 构建最终的项目对象
             const item = {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
-                backdropPath: currentItem.cover || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
+                posterPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                backdropPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
