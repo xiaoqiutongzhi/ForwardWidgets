@@ -278,9 +278,11 @@ function parseM3UContent(content, iconList) {
         // 匹配直播URL行
         else if (currentItem && line && !line.startsWith('#')) {
             const url = line;
+            console.log(currentItem.title);
             const icon = iconList.includes(currentItem.title)
                 ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
                 : "";
+            console.log("icon:", icon);
 
             // 构建最终的项目对象
             const item = {
