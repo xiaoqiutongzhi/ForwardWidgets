@@ -304,10 +304,10 @@ async function loadDefaultList(params = {}) {
   }
 
   const page = params.page;
-  const count = 20
+  const count = 25
   const start = (page - 1) * count
   // 构建片单页面 URL
-  const pageUrl = `https://www.douban.com/doulist/${listId}/?start=${start}&limit=${count}`;
+  const pageUrl = `https://www.douban.com/doulist/${listId}/?start=${start}&sort=seq&playable=0&sub_type=`;
 
   console.log("请求片单页面:", pageUrl);
   // 发送请求获取片单页面

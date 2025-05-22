@@ -73,6 +73,28 @@ WidgetMetadata = {
                     title: "按频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
                     type: "input",
                     description: "输入频道名关键字过滤(选填)，如卫视，会筛选出所有频道名中包含卫视的频道",
+                    placeholders: [
+                        {
+                            title: "B站&虎牙&斗鱼",
+                            value: ".*(B站|虎牙|斗鱼).*",
+                        },
+                        {
+                            title: "英雄联盟",
+                            value: "英雄联盟",
+                        },
+                        {
+                            title: "王者荣耀",
+                            value: "王者荣耀",
+                        },
+                        {
+                            title: "绝地求生",
+                            value: "绝地求生",
+                        },
+                        {
+                            title: "和平精英",
+                            value: "和平精英",
+                        },
+                    ]
                 },
             ],
         },
