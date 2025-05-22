@@ -53,6 +53,20 @@ WidgetMetadata = {
                     title: "按组关键字过滤(选填)，如央视，会筛选出所有group-title中包含央视的频道",
                     type: "input",
                     description: "输入组关键字，如央视，会筛选出所有group-title中包含央视的频道",
+                    placeholders: [
+                        {
+                            title: "央视",
+                            value: "央视",
+                        },
+                        {
+                            title: "卫视",
+                            value: "卫视",
+                        },
+                        {
+                            title: "央视&卫视",
+                            value: ".*(央视|卫视).*",
+                        },
+                    ]
                 },
                 {
                     name: "name_filter",
@@ -63,7 +77,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -90,19 +104,31 @@ async function loadLiveItems(params = {}) {
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
-            // 组过滤（支持正则表达式，大小写无关）
-            const groupMatch = !groupFilter ||
-                (groupFilter instanceof RegExp
-                    ? groupFilter.test(item.metadata?.group || '')
-                    : (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase()));
+            // 组过滤（支持正则表达式）
+            const groupMatch = !groupFilter || (() => {
+                try {
+                    // 尝试将输入作为正则表达式解析
+                    const regex = new RegExp(groupFilter, 'i');
+                    return regex.test(item.metadata?.group || '');
+                } catch (e) {
+                    // 若解析失败则回退到普通字符串包含检查（大小写无关）
+                    return (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
+                }
+            })();
 
-            // 名称过滤（支持正则表达式，大小写无关）
-            const nameMatch = !nameFilter ||
-                (nameFilter instanceof RegExp
-                    ? nameFilter.test(item.title || '')
-                    : (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase()));
+            // 名称过滤（支持正则表达式）
+            const nameMatch = !nameFilter || (() => {
+                try {
+                    // 尝试将输入作为正则表达式解析
+                    const regex = new RegExp(nameFilter, 'i');
+                    return regex.test(item.title || '');
+                } catch (e) {
+                    // 若解析失败则回退到普通字符串包含检查（大小写无关）
+                    return (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase());
+                }
+            })();
 
-            // 只有两个条件都满足时返回 true
+            // 只有当两个条件都满足时才返回 true
             return groupMatch && nameMatch;
         });
 

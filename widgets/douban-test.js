@@ -136,6 +136,18 @@ WidgetMetadata = {
               title: "第97届奥斯卡",
               value: "https://m.douban.com/subject_collection/EC7I7ZDRA?type=rank",
             },
+            {
+              title: "IMDB MOVIE TOP 250",
+              value: "https://m.douban.com/doulist/1518184",
+            },
+            {
+              title: "IMDB TV TOP 250",
+              value: "https://m.douban.com/doulist/41573512",
+            },
+            {
+              title: "意外结局电影",
+              value: "https://m.douban.com/doulist/11324",
+            },
           ],
         },
         {
@@ -146,7 +158,7 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.3",
+  version: "1.0.4",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
