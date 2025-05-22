@@ -337,7 +337,7 @@ async function loadLatestItems(params = {}) {
             sin3: 'tv',
         };
 
-        const response = await Widget.http.get("https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/zuijin.asp", {
+        const response = await Widget.http.get("http://www.yatu.tv:2082/zuijin.asp", {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -399,7 +399,7 @@ function getClickItemInfos(data, typ) {
 }
 
 async function fetchFinalItems(genre, typ, mediaTypeDict) {
-    const response = await Widget.http.get(`https://headless-html.hxd.ip-ddns.com/try?url=http://www.yatu.tv:2082/top/${genre}.htm`, {
+    const response = await Widget.http.get(`http://www.yatu.tv:2082/top/${genre}.htm`, {
         headers: {
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",

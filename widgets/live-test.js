@@ -32,7 +32,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "suxuang",
-                            value: "https://bit.ly/suxuang"
+                            value: "https://bit.ly/suxuang-v4"
                         },
                         {
                             title: "IPTV1",
@@ -90,15 +90,19 @@ async function loadLiveItems(params = {}) {
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
-            // 组过滤（大小写无关）
+            // 组过滤（支持正则表达式，大小写无关）
             const groupMatch = !groupFilter ||
-                (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase());
+                (groupFilter instanceof RegExp
+                    ? groupFilter.test(item.metadata?.group || '')
+                    : (item.metadata?.group?.toLowerCase() || '').includes(groupFilter.toLowerCase()));
 
-            // 名称过滤（大小写无关）
+            // 名称过滤（支持正则表达式，大小写无关）
             const nameMatch = !nameFilter ||
-                (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase());
+                (nameFilter instanceof RegExp
+                    ? nameFilter.test(item.title || '')
+                    : (item.title?.toLowerCase() || '').includes(nameFilter.toLowerCase()));
 
-            // 只有当两个条件都满足时才返回 true
+            // 只有两个条件都满足时返回 true
             return groupMatch && nameMatch;
         });
 

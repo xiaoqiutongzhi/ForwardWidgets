@@ -229,6 +229,35 @@ async function fetchTmdbData(key, mediaType) {
     return tmdbResults.results;
 }
 
+async function fetchImdbItems(scItems) {
+  const promises = scItems.map(async (scItem) => {
+    // 模拟API请求
+    const title = scItem.title.replace(/ 第[^季]*季/, '');
+    console.log("title: ", title, " ; type: ", scItem.type);
+    const tmdbDatas = await fetchTmdbData(title, scItem.type)
+
+    if (tmdbDatas.length !== 0) {
+      return {
+        id: tmdbDatas[0].id,
+        type: "tmdb",
+        title: tmdbDatas[0].title ?? tmdbDatas[0].name,
+        description: tmdbDatas[0].overview,
+        releaseDate: tmdbDatas[0].release_date ?? tmdbDatas[0].first_air_date,
+        backdropPath: tmdbDatas[0].backdrop_path,
+        posterPath: tmdbDatas[0].poster_path,
+        rating: tmdbDatas[0].vote_average,
+        mediaType: scItem.type,
+      };
+    } else {
+      return null;
+    }
+  });
+
+  // 等待所有请求完成
+  const items = (await Promise.all(promises)).filter(Boolean);
+  return items;
+}
+
 // 解析豆瓣片单
 async function loadCardItems(params = {}) {
   try {
@@ -241,13 +270,79 @@ async function loadCardItems(params = {}) {
       throw new Error("缺少片单 URL");
     }
     // 验证 URL 格式
-    if (url.includes("douban.com/subject_collection/")) {
+    if (url.includes("douban.com/doulist/")) {
+      return loadDefaultList(params);
+    } else if (url.includes("douban.com/subject_collection/")) {
       return loadSubjectCollection(params);
     }
   } catch (error) {
     console.error("解析豆瓣片单失败:", error);
     throw error;
   }
+}
+
+async function loadDefaultList(params = {}) {
+  const url = params.url;
+  // 提取片单 ID
+  const listId = url.match(/doulist\/(\d+)/)?.[1];
+  console.debug("片单 ID:", listId);
+  if (!listId) {
+    console.error("无法获取片单 ID");
+    throw new Error("无法获取片单 ID");
+  }
+
+  const page = params.page;
+  const count = 20
+  const start = (page - 1) * count
+  // 构建片单页面 URL
+  const pageUrl = `https://www.douban.com/doulist/${listId}/?start=${start}&limit=${count}`;
+
+  console.log("请求片单页面:", pageUrl);
+  // 发送请求获取片单页面
+  const response = await Widget.http.get(pageUrl, {
+    headers: {
+      Referer: `https://movie.douban.com/explore`,
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    },
+  });
+
+  if (!response || !response.data) {
+    throw new Error("获取片单数据失败");
+  }
+
+  console.log("片单页面数据长度:", response.data.length);
+  console.log("开始解析");
+
+  // 解析 HTML 得到文档 ID
+  const docId = Widget.dom.parse(response.data);
+  if (docId < 0) {
+    throw new Error("解析 HTML 失败");
+  }
+  console.log("解析成功:", docId);
+
+  // 获取所有视频项，得到元素ID数组
+  const videoElementIds = Widget.dom.select(docId, ".doulist-item .title a");
+
+  console.log("items:", videoElementIds);
+
+  let doubanIds = [];
+  for (const itemId of videoElementIds) {
+    const link = await Widget.dom.attr(itemId, "href");
+    // 获取元素文本内容并分割
+    const text = await Widget.dom.text(itemId);
+    // 按空格分割文本并取第一部分
+    const chineseTitle = text.trim().split(' ')[0];
+    if (chineseTitle) {
+      doubanIds.push({ title: chineseTitle, type: "multi" });
+    }
+  }
+
+  const items = await fetchImdbItems(doubanIds);
+
+  console.log(items)
+
+  return items;
 }
 
 async function loadItemsFromApi(params = {}) {
@@ -266,31 +361,7 @@ async function loadItemsFromApi(params = {}) {
   if (response.data && response.data.subject_collection_items) {
     const scItems = response.data.subject_collection_items;
 
-    const promises = scItems.map(async (scItem) => {
-        // 模拟API请求
-        const title = scItem.title.replace(/ 第[^季]*季/, '');
-        console.log("title: ", title, " ; type: ", scItem.type);
-        const tmdbDatas = await fetchTmdbData(title, scItem.type)
-
-        if (tmdbDatas.length !== 0) {
-            return {
-                id: tmdbDatas[0].id,
-                type: "tmdb",
-                title: tmdbDatas[0].title ?? tmdbDatas[0].name,
-                description: tmdbDatas[0].overview,
-                releaseDate: tmdbDatas[0].release_date ?? tmdbDatas[0].first_air_date,
-                backdropPath: tmdbDatas[0].backdrop_path,
-                posterPath: tmdbDatas[0].poster_path,
-                rating: tmdbDatas[0].vote_average,
-                mediaType: scItem.type,
-            };
-        } else {
-            return null;
-        }
-    });
-
-    // 等待所有请求完成
-    const items = (await Promise.all(promises)).filter(Boolean);
+    const items = await fetchImdbItems(scItems);
 
     console.log(items)
 
