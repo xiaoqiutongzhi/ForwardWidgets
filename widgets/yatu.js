@@ -274,7 +274,7 @@ function getItemInfos(data, startDateInput, days, genre) {
         let episodeText = episodeSpan ? Widget.dom.text(episodeSpan).trim() : '';
 
         results.push({
-            title: linkText,
+            title: linkText.replace(/ *第[^季]*季| *\d+~\d+季| *\d+季/, ''),
             link: linkHref,
             episodes: episodeText,
             time: processedTime,
