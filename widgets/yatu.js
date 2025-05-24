@@ -400,8 +400,8 @@ function getClickItemInfos(data, typ) {
     )];
 }
 
-async function fetchFinalItems(genre, typ, mediaTypeDict) {
-    const response = await Widget.http.get(`http://www.yatu.tv:2082/top/${genre}.html`, {
+async function fetchFinalItems(genre, typ, mediaTypeDict, suffix) {
+    const response = await Widget.http.get(`http://www.yatu.tv:2082/top/${genre}.${suffix}`, {
         headers: {
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -462,7 +462,7 @@ async function loadClickItems(params = {}) {
             'tv-zy': 'tv',
         };
 
-        return await fetchFinalItems(genre, typ, mediaTypeDict);
+        return await fetchFinalItems(genre, typ, mediaTypeDict, "html");
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
@@ -484,7 +484,7 @@ async function loadScoreItems(params = {}) {
             'p-tv': 'tv',
         };
 
-        return await fetchFinalItems(genre, typ, mediaTypeDict);
+        return await fetchFinalItems(genre, typ, mediaTypeDict, "htm");
     } catch (error) {
         console.error("处理失败:", error);
         throw error;
