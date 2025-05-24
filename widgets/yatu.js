@@ -466,7 +466,7 @@ async function loadClickItems(params = {}) {
             'dm-lz': 'htm',
             'dm-jc': 'htm',
             'dy': 'htm',
-            'dy-xianggan': 'htm',
+            'dy-xianggan': 'html',
             'dy-om': 'htm',
             'tv': 'htm',
             'tv-meiju': 'html',
