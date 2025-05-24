@@ -23,6 +23,10 @@ WidgetMetadata = {
                             value: "https://tv.iill.top/m3u/Live"
                         },
                         {
+                            title: "smart(港澳台)",
+                            value: "https://smart.pendy.dpdns.org/m3u/merged_judy.m3u"
+                        },
+                        {
                             title: "YanG-Gather1",
                             value: "https://tv.iill.top/m3u/Gather"
                         },
