@@ -393,9 +393,11 @@ function getClickItemInfos(data, typ) {
         return null;
     }
 
-    return Array.from(
-        Widget.dom.select(tables[0], 'a[target="_blank"]')
-    ).map(a => Widget.dom.text(a).trim().replace(/ *第[^季]*季| *\d+~\d+季| *\d+季/, ''));
+    return [...new Set(
+        Array.from(
+            Widget.dom.select(tables[0], 'a[target="_blank"]')
+        ).map(a => Widget.dom.text(a).trim().replace(/ *第[^季]*季| *\d+~\d+季| *\d+季/, ''))
+    )];
 }
 
 async function fetchFinalItems(genre, typ, mediaTypeDict) {
