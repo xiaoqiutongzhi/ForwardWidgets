@@ -193,7 +193,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -274,7 +274,7 @@ function getItemInfos(data, startDateInput, days, genre) {
         let episodeText = episodeSpan ? Widget.dom.text(episodeSpan).trim() : '';
 
         results.push({
-            title: linkText.replace(/ *第[^季]*季| *\d+~\d+季| *\d+季/, ''),
+            title: linkText.replace(/ *第[^季]*季(?:~\d+季)?| *\d+~\d+季| *\d+季/, ''),
             link: linkHref,
             episodes: episodeText,
             time: processedTime,
@@ -396,7 +396,7 @@ function getClickItemInfos(data, typ) {
     return [...new Set(
         Array.from(
             Widget.dom.select(tables[0], 'a[target="_blank"]')
-        ).map(a => Widget.dom.text(a).trim().replace(/ *第[^季]*季| *\d+~\d+季| *\d+季/, ''))
+        ).map(a => Widget.dom.text(a).trim().replace(/ *第[^季]*季(?:~\d+季)?| *\d+~\d+季| *\d+季/, ''))
     )];
 }
 

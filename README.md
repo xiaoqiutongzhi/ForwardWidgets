@@ -149,6 +149,7 @@ python douban2trakt.py --type watched
 <img src="https://i.miji.bid/2025/05/18/6c97648fe9aed6398c76c56b28bdd3e5.jpeg" style="width:200px" />
 
 #### 每日放送
+`说明：最新的数据只到今天以及前面m天的数据，可以参考官网 http://www.yatu.tv:2082/zuijin.asp `
 ```shell
 类型：动漫/电影/电视剧
 开始日期：n天前，0表示今天，-1表示昨天，以此类推
