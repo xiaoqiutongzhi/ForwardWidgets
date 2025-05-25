@@ -135,6 +135,21 @@ python douban2trakt.py --type watched
 #### 订阅链接
 内嵌了几个公开源，也可以自定义
 
+新增PlutoTV源
+```shell
+PlutoTV-阿根廷 (Argentina)
+PlutoTV-巴西 (Brazil)
+PlutoTV-加拿大 (Canada)
+PlutoTV-智利 (Chile)
+PlutoTV-德国 (Germany)
+PlutoTV-西班牙 (Spain)
+PlutoTV-法国 (France)
+PlutoTV-英国 (Great Britain)
+PlutoTV-意大利 (Italy)
+PlutoTV-墨西哥 (Mexico)
+PlutoTV-美国 (United States)
+```
+
 #### 按组关键字过滤
 一个订阅链接可能有上百上千个频道，可以按组名关键字筛选，至于有哪些组，需要自己打开订阅链接看下
 
