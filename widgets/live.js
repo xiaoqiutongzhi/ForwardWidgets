@@ -39,6 +39,10 @@ WidgetMetadata = {
                             value: "https://bit.ly/suxuang-v4"
                         },
                         {
+                            title: "PlutoTV",
+                            value: "https://raw.githubusercontent.com/HelmerLuzo/PlutoTV_HL/refs/heads/main/tv/m3u/PlutoTV_tv_US.m3u"
+                        },
+                        {
                             title: "IPTV1",
                             value: "https://raw.githubusercontent.com/skddyj/iptv/main/IPTV.m3u"
                         },
