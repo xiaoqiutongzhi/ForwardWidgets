@@ -33,6 +33,11 @@
 #### 增加电影推荐(TMDB版)/剧集推荐(TMDB版)
 （说明：由于用title查询TMDB，所以不一定能准确匹配正确影片）
 
+#### 增加观影偏好(TMDB版)
+又名`找电影/找电视`
+
+应网友要求进行搬迁，详情请看issue：https://github.com/huangxd-/ForwardWidgets/issues/6
+
 ### 二、Trakt我看&Trakt个性化推荐
 
 ```shell

@@ -320,8 +320,120 @@ WidgetMetadata = {
         },
       ],
     },
+    {
+      title: "观影偏好(TMDB版)",
+      description: "根据个人偏好推荐影视作品",
+      requiresWebView: false,
+      functionName: "getPreferenceRecommendations",
+      params: [
+        {
+          name: "mediaType",
+          title: "类别",
+          type: "enumeration",
+          enumOptions: [
+            { title: "剧集", value: "tv" },
+            { title: "电影", value: "movie" }
+          ]
+        },
+        {
+          name: "genre",
+          title: "类型",
+          type: "enumeration",
+          enumOptions: [
+            { title: "全部", value: "" },
+            { title: "喜剧", value: "喜剧" },
+            { title: "爱情", value: "爱情" },
+            { title: "动作", value: "动作" },
+            { title: "科幻", value: "科幻" },
+            { title: "动画", value: "动画" },
+            { title: "悬疑", value: "悬疑" },
+            { title: "犯罪", value: "犯罪" },
+            { title: "音乐", value: "音乐" },
+            { title: "历史", value: "历史" },
+            { title: "奇幻", value: "奇幻" },
+            { title: "恐怖", value: "恐怖" },
+            { title: "战争", value: "战争" },
+            { title: "西部", value: "西部" },
+            { title: "歌舞", value: "歌舞" },
+            { title: "传记", value: "传记" },
+            { title: "武侠", value: "武侠" },
+            { title: "纪录片", value: "纪录片" },
+            { title: "短片", value: "短片" },
+
+          ]
+        },
+        {
+          name: "region",
+          title: "地区",
+          type: "enumeration",
+          enumOptions: [
+            { title: "全部地区", value: "" },
+            { title: "华语", value: "华语" },
+            { title: "欧美", value: "欧美" },
+            { title: "韩国", value: "韩国" },
+            { title: "日本", value: "日本" },
+            { title: "中国大陆", value: "中国大陆" },
+            { title: "中国香港", value: "中国香港" },
+            { title: "中国台湾", value: "中国台湾" },
+            { title: "美国", value: "美国" },
+            { title: "英国", value: "英国" },
+            { title: "法国", value: "法国" },
+            { title: "德国", value: "德国" },
+            { title: "意大利", value: "意大利" },
+            { title: "西班牙", value: "西班牙" },
+            { title: "印度", value: "印度" },
+            { title: "泰国", value: "泰国" }
+          ]
+        },
+        {
+          name: "year",
+          title: "年份",
+          type: "enumeration",
+          enumOptions: [
+            { title: "全部年份", value: "" },
+            { title: "2025", value: "2025" },
+            { title: "2024", value: "2024" },
+            { title: "2023", value: "2023" },
+            { title: "2022", value: "2022" },
+            { title: "2021", value: "2021" },
+            { title: "2020年代", value: "2020年代" },
+            { title: "2010年代", value: "2010年代" },
+            { title: "2000年代", value: "2000年代" }
+
+          ]
+        },
+        {
+          name: "sortBy",
+          title: "排序",
+          type: "enumeration",
+          enumOptions: [
+            { title: "综合排序", value: "T" },
+            { title: "近期热度", value: "U" },
+            { title: "首映时间", value: "R" },
+            { title: "高分优选", value: "S" }
+          ]
+        },
+        {
+          name: "tags",
+          title: "标签",
+          type: "input",
+          description: "设置自定义标签，例如：丧尸"
+        },
+        {
+          name: "rating",
+          title: "评分",
+          type: "input",
+          description: "设置最低评分过滤，例如：6"
+        },
+        {
+          name: "offset",
+          title: "起始位置",
+          type: "offset"
+        }
+      ]
+    },
   ],
-  version: "1.0.4",
+  version: "1.0.5",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -604,4 +716,57 @@ async function loadRecommendItems(params = {}, type = "movie") {
     return items;
   }
   return [];
+}
+
+// 观影偏好
+async function getPreferenceRecommendations(params = {}) {
+    try {
+        const rating = params.rating || "0";
+        if (!/^\d$/.test(String(rating))) throw new Error("评分必须为 0～9 的整数");
+
+        const selectedCategories = {
+            "类型": params.genre || "",
+            "地区": params.region || ""
+        };
+
+        const tags_sub = [];
+        if (params.genre) tags_sub.push(params.genre);
+        if (params.region) tags_sub.push(params.region);
+        if (params.year) {
+            if (params.year.includes("年代")) {
+                tags_sub.push(params.year);
+            } else {
+                tags_sub.push(`${params.year}年`);
+            }
+        }
+        if (params.tags) {
+          const customTagsArray = params.tags.split(',').filter(tag => tag.trim() !== '');
+          tags_sub.push(...customTagsArray);
+        }
+
+        const limit = 20;
+        const offset = Number(params.offset);
+        const url = `https://m.douban.com/rexxar/api/v2/${params.mediaType}/recommend?refresh=0&start=${offset}&count=${Number(offset) + limit}&selected_categories=${encodeURIComponent(JSON.stringify(selectedCategories))}&uncollect=false&score_range=${rating},10&tags=${encodeURIComponent(tags_sub.join(","))}&sort=${params.sortBy}`;
+
+        const response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "Referer": "https://movie.douban.com/explore"
+            }
+        });
+
+        if (!response.data?.items?.length) throw new Error("未找到匹配的影视作品");
+
+        const validItems = response.data.items.filter(item => item.card === "subject");
+
+        if (!validItems.length) throw new Error("未找到有效的影视作品");
+
+        const items = await fetchImdbItems(validItems);
+
+        console.log(items)
+
+        return items;
+    } catch (error) {
+        throw error;
+    }
 }
