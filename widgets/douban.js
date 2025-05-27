@@ -515,6 +515,10 @@ WidgetMetadata = {
           value: "",
           placeholders: [
             {
+              title: "空",
+              value: "",
+            },
+            {
               title: "推理,悬疑",
               value: "推理,悬疑",
             },
@@ -557,39 +561,46 @@ WidgetMetadata = {
           title: "评分",
           type: "input",
           description: "设置最低评分过滤，例如：6",
-          value: "0",
           placeholders: [
             {
-              title: "9",
-              value: "9",
+              title: "0",
+              value: "0",
             },
             {
-              title: "8",
-              value: "8",
+              title: "1",
+              value: "1",
             },
             {
-              title: "7",
-              value: "7",
-            },
-            {
-              title: "6",
-              value: "6",
-            },
-            {
-              title: "5",
-              value: "5",
-            },
-            {
-              title: "4",
-              value: "4",
+              title: "2",
+              value: "2",
             },
             {
               title: "3",
               value: "3",
             },
             {
-              title: "2",
-              value: "2",
+              title: "4",
+              value: "4",
+            },
+            {
+              title: "5",
+              value: "5",
+            },
+            {
+              title: "6",
+              value: "6",
+            },
+            {
+              title: "7",
+              value: "7",
+            },
+            {
+              title: "8",
+              value: "8",
+            },
+            {
+              title: "9",
+              value: "9",
             },
           ]
         },
@@ -601,7 +612,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.7",
+  version: "1.0.6",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -713,7 +724,17 @@ async function fetchImdbItems(scItems) {
 
   // 等待所有请求完成
   const items = (await Promise.all(promises)).filter(Boolean);
-  const uniqueItems = [...new Set(items)];
+
+  // 去重：保留第一次出现的 title
+  const seenTitles = new Set();
+  const uniqueItems = items.filter((item) => {
+    if (seenTitles.has(item.title)) {
+      return false;
+    }
+    seenTitles.add(item.title);
+    return true;
+  });
+
   return uniqueItems;
 }
 
