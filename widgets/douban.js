@@ -331,14 +331,18 @@ WidgetMetadata = {
           title: "类别",
           type: "enumeration",
           enumOptions: [
+            { title: "电影", value: "movie" },
             { title: "剧集", value: "tv" },
-            { title: "电影", value: "movie" }
           ]
         },
         {
-          name: "genre",
+          name: "movieGenre",
           title: "类型",
           type: "enumeration",
+          belongTo: {
+            paramName: "mediaType",
+            value: ["movie"],
+          },
           enumOptions: [
             { title: "全部", value: "" },
             { title: "喜剧", value: "喜剧" },
@@ -359,7 +363,69 @@ WidgetMetadata = {
             { title: "武侠", value: "武侠" },
             { title: "纪录片", value: "纪录片" },
             { title: "短片", value: "短片" },
-
+          ]
+        },
+        {
+          name: "tvModus",
+          title: "形式",
+          type: "enumeration",
+          belongTo: {
+            paramName: "mediaType",
+            value: ["tv"],
+          },
+          enumOptions: [
+            { title: "全部", value: "" },
+            { title: "电视剧", value: "电视剧" },
+            { title: "综艺", value: "综艺" },
+          ]
+        },
+        {
+          name: "tvGenre",
+          title: "类型",
+          type: "enumeration",
+          belongTo: {
+            paramName: "tvModus",
+            value: ["电视剧"],
+          },
+          enumOptions: [
+            { title: "全部", value: "" },
+            { title: "喜剧", value: "喜剧" },
+            { title: "爱情", value: "爱情" },
+            { title: "悬疑", value: "悬疑" },
+            { title: "动画", value: "动画" },
+            { title: "武侠", value: "武侠" },
+            { title: "古装", value: "古装" },
+            { title: "家庭", value: "家庭" },
+            { title: "犯罪", value: "犯罪" },
+            { title: "科幻", value: "科幻" },
+            { title: "恐怖", value: "恐怖" },
+            { title: "历史", value: "历史" },
+            { title: "战争", value: "战争" },
+            { title: "动作", value: "动作" },
+            { title: "冒险", value: "冒险" },
+            { title: "传记", value: "传记" },
+            { title: "剧情", value: "剧情" },
+            { title: "奇幻", value: "奇幻" },
+            { title: "惊悚", value: "惊悚" },
+            { title: "灾难", value: "灾难" },
+            { title: "歌舞", value: "歌舞" },
+            { title: "音乐", value: "音乐" },
+          ]
+        },
+        {
+          name: "zyGenre",
+          title: "类型",
+          type: "enumeration",
+          belongTo: {
+            paramName: "tvModus",
+            value: ["综艺"],
+          },
+          enumOptions: [
+            { title: "全部", value: "" },
+            { title: "真人秀", value: "真人秀" },
+            { title: "脱口秀", value: "脱口秀" },
+            { title: "音乐", value: "音乐" },
+            { title: "歌舞", value: "歌舞" },
           ]
         },
         {
@@ -824,14 +890,18 @@ async function getPreferenceRecommendations(params = {}) {
         if (!/^\d$/.test(String(rating))) throw new Error("评分必须为 0～9 的整数");
 
         const selectedCategories = {
-            "类型": params.genre || "",
-            "地区": params.region || ""
+            "类型": params.movieGenre || params.tvGenre || params.zyGenre || "",
+            "地区": params.region || "",
+            "形式": params.tvModus || "",
         };
 
         const tags_sub = [];
-        if (params.genre) tags_sub.push(params.genre);
+        if (params.movieGenre) tags_sub.push(params.movieGenre);
+        if (params.tvGenre) tags_sub.push(params.tvGenre);
+        if (params.zyGenre) tags_sub.push(params.zyGenre);
         if (params.region) tags_sub.push(params.region);
         if (params.year) tags_sub.push(params.year);
+        if (params.platform) tags_sub.push(params.platform);
         if (params.tags) {
           const customTagsArray = params.tags.split(',').filter(tag => tag.trim() !== '');
           tags_sub.push(...customTagsArray);
