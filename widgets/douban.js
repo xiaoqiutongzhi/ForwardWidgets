@@ -512,6 +512,7 @@ WidgetMetadata = {
           title: "自定义标签",
           type: "input",
           description: "设置自定义标签，例如：丧尸,推理",
+          value: "",
           placeholders: [
             {
               title: "推理,悬疑",
@@ -556,6 +557,7 @@ WidgetMetadata = {
           title: "评分",
           type: "input",
           description: "设置最低评分过滤，例如：6",
+          value: "0",
           placeholders: [
             {
               title: "9",
@@ -599,7 +601,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.6",
+  version: "1.0.7",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -711,7 +713,8 @@ async function fetchImdbItems(scItems) {
 
   // 等待所有请求完成
   const items = (await Promise.all(promises)).filter(Boolean);
-  return items;
+  const uniqueItems = [...new Set(items)];
+  return uniqueItems;
 }
 
 // 解析豆瓣片单
