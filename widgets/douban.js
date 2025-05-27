@@ -398,9 +398,36 @@ WidgetMetadata = {
             { title: "2021", value: "2021" },
             { title: "2020年代", value: "2020年代" },
             { title: "2010年代", value: "2010年代" },
-            { title: "2000年代", value: "2000年代" }
-
+            { title: "2000年代", value: "2000年代" },
+            { title: "90年代", value: "90年代" },
+            { title: "80年代", value: "80年代" },
+            { title: "70年代", value: "70年代" },
+            { title: "60年代", value: "60年代" },
+            { title: "更早", value: "更早" },
           ]
+        },
+        {
+          name: "platform",
+          title: "平台",
+          type: "enumeration",
+          belongTo: {
+            paramName: "mediaType",
+            value: ["tv"],
+          },
+          enumOptions: [
+            { title: "全部", value: "" },
+            { title: "腾讯视频", value: "腾讯视频" },
+            { title: "爱奇艺", value: "爱奇艺" },
+            { title: "优酷", value: "优酷" },
+            { title: "湖南卫视", value: "湖南卫视" },
+            { title: "Netflix", value: "Netflix" },
+            { title: "HBO", value: "HBO" },
+            { title: "BBC", value: "BBC" },
+            { title: "NHK", value: "NHK" },
+            { title: "CBS", value: "CBS" },
+            { title: "NBC", value: "NBC" },
+            { title: "tvN", value: "tvN" },
+          ],
         },
         {
           name: "sortBy",
@@ -415,15 +442,87 @@ WidgetMetadata = {
         },
         {
           name: "tags",
-          title: "标签",
+          title: "自定义标签",
           type: "input",
-          description: "设置自定义标签，例如：丧尸"
+          description: "设置自定义标签，例如：丧尸,推理",
+          placeholders: [
+            {
+              title: "推理,悬疑",
+              value: "推理,悬疑",
+            },
+            {
+              title: "cult",
+              value: "cult",
+            },
+            {
+              title: "经典",
+              value: "经典",
+            },
+            {
+              title: "动作",
+              value: "动作",
+            },
+            {
+              title: "喜剧",
+              value: "喜剧",
+            },
+            {
+              title: "惊悚",
+              value: "惊悚",
+            },
+            {
+              title: "穿越",
+              value: "穿越",
+            },
+            {
+              title: "儿童",
+              value: "儿童",
+            },
+            {
+              title: "战争",
+              value: "战争",
+            },
+          ]
         },
         {
           name: "rating",
           title: "评分",
           type: "input",
-          description: "设置最低评分过滤，例如：6"
+          description: "设置最低评分过滤，例如：6",
+          placeholders: [
+            {
+              title: "9",
+              value: "9",
+            },
+            {
+              title: "8",
+              value: "8",
+            },
+            {
+              title: "7",
+              value: "7",
+            },
+            {
+              title: "6",
+              value: "6",
+            },
+            {
+              title: "5",
+              value: "5",
+            },
+            {
+              title: "4",
+              value: "4",
+            },
+            {
+              title: "3",
+              value: "3",
+            },
+            {
+              title: "2",
+              value: "2",
+            },
+          ]
         },
         {
           name: "offset",
@@ -433,7 +532,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.5",
+  version: "1.0.6",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -732,13 +831,7 @@ async function getPreferenceRecommendations(params = {}) {
         const tags_sub = [];
         if (params.genre) tags_sub.push(params.genre);
         if (params.region) tags_sub.push(params.region);
-        if (params.year) {
-            if (params.year.includes("年代")) {
-                tags_sub.push(params.year);
-            } else {
-                tags_sub.push(`${params.year}年`);
-            }
-        }
+        if (params.year) tags_sub.push(params.year);
         if (params.tags) {
           const customTagsArray = params.tags.split(',').filter(tag => tag.trim() !== '');
           tags_sub.push(...customTagsArray);
