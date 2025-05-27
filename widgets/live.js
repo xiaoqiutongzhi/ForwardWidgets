@@ -155,7 +155,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -337,7 +337,7 @@ function parseM3UContent(content, iconList) {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                // posterPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
                 backdropPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
@@ -384,7 +384,7 @@ async function loadDetail(link) {
                 id: videoUrl,
                 type: "url",
                 title: "超时/上面直播不可用",
-                posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
+                // posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
                 backdropPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
                 link: videoUrl,
             };
