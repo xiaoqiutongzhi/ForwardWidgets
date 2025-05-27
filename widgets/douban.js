@@ -330,6 +330,7 @@ WidgetMetadata = {
           name: "mediaType",
           title: "类别",
           type: "enumeration",
+          value: "movie",
           enumOptions: [
             { title: "电影", value: "movie" },
             { title: "剧集", value: "tv" },
@@ -598,7 +599,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.6",
+  version: "1.0.7",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -897,8 +898,9 @@ async function getPreferenceRecommendations(params = {}) {
 
         const tags_sub = [];
         if (params.movieGenre) tags_sub.push(params.movieGenre);
-        if (params.tvGenre) tags_sub.push(params.tvGenre);
-        if (params.zyGenre) tags_sub.push(params.zyGenre);
+        if (params.tvModus && !params.tvGenre && params.zyGenre) tags_sub.push(params.tvModus);
+        if (params.tvModus && params.tvGenre) tags_sub.push(params.tvGenre);
+        if (params.tvModus && params.zyGenre) tags_sub.push(params.zyGenre);
         if (params.region) tags_sub.push(params.region);
         if (params.year) tags_sub.push(params.year);
         if (params.platform) tags_sub.push(params.platform);
