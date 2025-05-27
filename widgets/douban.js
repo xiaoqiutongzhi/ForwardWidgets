@@ -599,7 +599,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.7",
+  version: "1.0.6",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -895,10 +895,11 @@ async function getPreferenceRecommendations(params = {}) {
             "地区": params.region || "",
             "形式": params.tvModus || "",
         };
+        console.log("selectedCategories: ", selectedCategories);
 
         const tags_sub = [];
         if (params.movieGenre) tags_sub.push(params.movieGenre);
-        if (params.tvModus && !params.tvGenre && params.zyGenre) tags_sub.push(params.tvModus);
+        if (params.tvModus && !params.tvGenre && !params.zyGenre) tags_sub.push(params.tvModus);
         if (params.tvModus && params.tvGenre) tags_sub.push(params.tvGenre);
         if (params.tvModus && params.zyGenre) tags_sub.push(params.zyGenre);
         if (params.region) tags_sub.push(params.region);
@@ -908,6 +909,7 @@ async function getPreferenceRecommendations(params = {}) {
           const customTagsArray = params.tags.split(',').filter(tag => tag.trim() !== '');
           tags_sub.push(...customTagsArray);
         }
+        console.log("tags_sub: ", tags_sub);
 
         const limit = 20;
         const offset = Number(params.offset);
