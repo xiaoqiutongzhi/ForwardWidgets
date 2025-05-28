@@ -331,7 +331,7 @@ function parseM3UContent(content, iconList) {
             //     ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
             //     : "";
             const icon = iconList.includes(currentItem.title)
-                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-ik_canvas,bg-00000000,w-1000,h-500,l-end/${currentItem.title}.png`
+                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-ik_canvas,bg-00000000,w-bw_mul_2,h-bh_mul_2,l-end/${currentItem.title}.png`
                 : "";
             console.log("icon:", icon);
 
