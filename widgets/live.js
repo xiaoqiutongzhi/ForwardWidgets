@@ -155,7 +155,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.4",
+    version: "1.0.5",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -327,8 +327,11 @@ function parseM3UContent(content, iconList) {
         else if (currentItem && line && !line.startsWith('#')) {
             const url = line;
             console.log(currentItem.title);
+            // const icon = iconList.includes(currentItem.title)
+            //     ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
+            //     : "";
             const icon = iconList.includes(currentItem.title)
-                ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
+                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-ik_canvas,bg-00000000,w-1000,h-500,l-end/${currentItem.title}.png`
                 : "";
             console.log("icon:", icon);
 
