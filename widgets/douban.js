@@ -497,7 +497,7 @@ WidgetMetadata = {
           ],
         },
         {
-          name: "sortBy",
+          name: "sort_by",
           title: "排序",
           type: "enumeration",
           enumOptions: [
@@ -612,7 +612,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.6",
+  version: "1.0.7",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -937,7 +937,7 @@ async function getPreferenceRecommendations(params = {}) {
 
         const limit = 20;
         const offset = Number(params.offset);
-        const url = `https://m.douban.com/rexxar/api/v2/${params.mediaType}/recommend?refresh=0&start=${offset}&count=${Number(offset) + limit}&selected_categories=${encodeURIComponent(JSON.stringify(selectedCategories))}&uncollect=false&score_range=${rating},10&tags=${encodeURIComponent(tags_sub.join(","))}&sort=${params.sortBy}`;
+        const url = `https://m.douban.com/rexxar/api/v2/${params.mediaType}/recommend?refresh=0&start=${offset}&count=${Number(offset) + limit}&selected_categories=${encodeURIComponent(JSON.stringify(selectedCategories))}&uncollect=false&score_range=${rating},10&tags=${encodeURIComponent(tags_sub.join(","))}&sort=${params.sort_by}`;
 
         const response = await Widget.http.get(url, {
             headers: {
