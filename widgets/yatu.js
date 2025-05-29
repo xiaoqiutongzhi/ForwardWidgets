@@ -123,7 +123,7 @@ WidgetMetadata = {
                     ],
                 },
                 {
-                    name: "order_by",
+                    name: "sort_by",
                     title: "时间",
                     type: "enumeration",
                     enumOptions: [
@@ -168,7 +168,7 @@ WidgetMetadata = {
                     ],
                 },
                 {
-                    name: "order_by",
+                    name: "sort_by",
                     title: "等级",
                     type: "enumeration",
                     enumOptions: [
@@ -445,7 +445,7 @@ async function fetchFinalItems(genre, typ, mediaTypeDict, suffixDict) {
 async function loadClickItems(params = {}) {
     try {
         const genre = params.genre || "";
-        const typ = params.order_by || "";
+        const typ = params.sort_by || "";
 
         if (!genre || !typ) {
             throw new Error("必须提供分类、时间");
@@ -483,7 +483,7 @@ async function loadClickItems(params = {}) {
 async function loadScoreItems(params = {}) {
     try {
         const genre = params.genre || "";
-        const typ = params.order_by || "";
+        const typ = params.sort_by || "";
 
         if (!genre || !typ) {
             throw new Error("必须提供分类、等级");
