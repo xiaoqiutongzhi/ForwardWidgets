@@ -48,7 +48,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "PlutoTV-意大利",
-                                value: "https://raw.githubusercontent.com/HelmerLuzo/PlutoTV_HL/refs/heads/main/tv/m3u/PlutoTV_tv_IT.m3u"
+                            value: "https://raw.githubusercontent.com/HelmerLuzo/PlutoTV_HL/refs/heads/main/tv/m3u/PlutoTV_tv_IT.m3u"
                         },
                         {
                             title: "PlutoTV-英国",
@@ -152,10 +152,39 @@ WidgetMetadata = {
                         },
                     ]
                 },
+                {
+                    name: "bg_color",
+                    title: "台标背景色",
+                    type: "input",
+                    description: "支持RGB颜色，如DCDCDC",
+                    value: "DCDCDC",
+                    placeholders: [
+                        {
+                            title: "亮灰色",
+                            value: "DCDCDC",
+                        },
+                        {
+                            title: "钢蓝",
+                            value: "4682B4",
+                        },
+                        {
+                            title: "浅海洋蓝",
+                            value: "20B2AA",
+                        },
+                        {
+                            title: "浅粉红",
+                            value: "FFB6C1",
+                        },
+                        {
+                            title: "小麦色",
+                            value: "F5DEB3",
+                        },
+                    ]
+                },
             ],
         },
     ],
-    version: "1.0.5",
+    version: "1.0.6",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -168,6 +197,7 @@ async function loadLiveItems(params = {}) {
         const url = params.url || "";
         const groupFilter = params.group_filter || "";
         const nameFilter = params.name_filter || "";
+        const bgColor = params.bg_color || "";
 
         if (!url) {
             throw new Error("必须提供电视直播订阅链接");
@@ -181,7 +211,7 @@ async function loadLiveItems(params = {}) {
         const iconList = await this.fetchIconList(url);
 
         // 解析M3U内容
-        const items = parseM3UContent(response, iconList);
+        const items = parseM3UContent(response, iconList, bgColor);
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
@@ -272,7 +302,7 @@ async function fetchIconList() {
 }
 
 
-function parseM3UContent(content, iconList) {
+function parseM3UContent(content, iconList, bgColor) {
     if (!content || !content.trim()) return [];
 
     const lines = content.split(/\r?\n/);
@@ -330,18 +360,22 @@ function parseM3UContent(content, iconList) {
             // const icon = iconList.includes(currentItem.title)
             //     ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
             //     : "";
-            const icon = iconList.includes(currentItem.title)
-                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-ik_canvas,bg-00000000,w-bw_mul_2,h-bh_mul_2,l-end/${currentItem.title}.png`
+            const posterIcon = iconList.includes(currentItem.title)
+                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-transparent.png,w-bw_mul_2,h-bh_mul_2,bg-${bgColor},lfo-center,l-image,i-${currentItem.title}.png,lfo-center,l-end,l-end/${currentItem.title}.png`
                 : "";
-            console.log("icon:", icon);
+            console.log("posterIcon:", posterIcon);
+            const backdropIcon = iconList.includes(currentItem.title)
+                ? `https://ik.imagekit.io/huangxd/tr:l-image,i-transparent.png,w-bw_mul_1.5,h-bh_mul_4,bg-${bgColor},lfo-center,l-image,i-${currentItem.title}.png,lfo-center,l-end,l-end/${currentItem.title}.png`
+                : "";
+            console.log("backdropIcon:", backdropIcon);
 
             // 构建最终的项目对象
             const item = {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                // posterPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
-                backdropPath: currentItem.cover || icon || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
+                posterPath: posterIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                backdropPath: backdropIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
                 // 额外的元数据
@@ -387,7 +421,7 @@ async function loadDetail(link) {
                 id: videoUrl,
                 type: "url",
                 title: "超时/上面直播不可用",
-                // posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
+                posterPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
                 backdropPath: "https://i.miji.bid/2025/05/17/561121fb0ba6071d4070627d187b668b.png",
                 link: videoUrl,
             };
