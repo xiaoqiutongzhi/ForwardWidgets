@@ -637,8 +637,12 @@ async function loadInterestItems(params = {}) {
   console.log("请求结果:", response.data);
   if (response.data && response.data.interests) {
     const items = response.data.interests;
-    const doubanIds = items.filter((item) => item.subject.id != null).map((item) => ({
-      id: item.subject.id,
+    const doubanIds = [...new Set(
+      items
+        .filter((item) => item.subject.id != null)
+        .map((item) => item.subject.id)
+    )].map((id) => ({
+      id,
       type: "douban",
     }));
     return doubanIds;

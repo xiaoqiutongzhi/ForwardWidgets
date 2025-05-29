@@ -273,8 +273,12 @@ async function fetchImdbIdsFromTraktUrls(traktUrls) {
         }
     });
 
-    let imdbIds = (await Promise.all(imdbIdPromises)).filter(Boolean).map((item) => ({
-        id: item,
+    let imdbIds = [...new Set(
+        (await Promise.all(imdbIdPromises))
+            .filter(Boolean)
+            .map((item) => item)
+    )].map((id) => ({
+        id,
         type: "imdb",
     }));
     console.log("请求imdbIds:", imdbIds)
