@@ -181,10 +181,21 @@ WidgetMetadata = {
                         },
                     ]
                 },
+                {
+                    name: "direction",
+                    title: "台标优先显示方向",
+                    type: "enumeration",
+                    description: "台标优先显示方向，默认为竖向",
+                    value: "V",
+                    enumOptions: [
+                        {title: "竖向", value: "V"},
+                        {title: "横向", value: "H"},
+                    ]
+                },
             ],
         },
     ],
-    version: "1.0.6",
+    version: "1.0.7",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -198,6 +209,7 @@ async function loadLiveItems(params = {}) {
         const groupFilter = params.group_filter || "";
         const nameFilter = params.name_filter || "";
         const bgColor = params.bg_color || "";
+        const direction = params.direction || "";
 
         if (!url) {
             throw new Error("必须提供电视直播订阅链接");
@@ -211,7 +223,7 @@ async function loadLiveItems(params = {}) {
         const iconList = await this.fetchIconList(url);
 
         // 解析M3U内容
-        const items = parseM3UContent(response, iconList, bgColor);
+        const items = parseM3UContent(response, iconList, bgColor, direction);
 
         // 应用过滤器
         const filteredItems = items.filter(item => {
@@ -302,7 +314,7 @@ async function fetchIconList() {
 }
 
 
-function parseM3UContent(content, iconList, bgColor) {
+function parseM3UContent(content, iconList, bgColor, direction) {
     if (!content || !content.trim()) return [];
 
     const lines = content.split(/\r?\n/);
@@ -377,7 +389,7 @@ function parseM3UContent(content, iconList, bgColor) {
                 id: url,
                 type: "url",
                 title: currentItem.title,
-                posterPath: posterIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
+                // posterPath: posterIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png",
                 backdropPath: backdropIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/c4a0703b68a4d2313a27937d82b72b6a.png",
                 previewUrl: "", // 直播通常没有预览URL
                 link: url,
@@ -388,6 +400,9 @@ function parseM3UContent(content, iconList, bgColor) {
                     tvgId: currentItem.tvgId
                 }
             };
+            if (!direction || direction === "V") {
+                item['posterPath'] = posterIcon || currentItem.cover || "https://i.miji.bid/2025/05/17/343e3416757775e312197588340fc0d3.png";
+            }
 
             items.push(item);
             currentItem = null; // 重置当前项目
