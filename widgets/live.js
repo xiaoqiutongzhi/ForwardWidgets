@@ -360,6 +360,9 @@ function parseM3UContent(content, iconList, bgColor) {
             // const icon = iconList.includes(currentItem.title)
             //     ? `https://live.fanmingming.cn/tv/${currentItem.title}.png`
             //     : "";
+            if (!bgColor) {
+                bgColor = "DCDCDC";
+            }
             const posterIcon = iconList.includes(currentItem.title)
                 ? `https://ik.imagekit.io/huangxd/tr:l-image,i-transparent.png,w-bw_mul_2,h-bh_mul_2,bg-${bgColor},lfo-center,l-image,i-${currentItem.title}.png,lfo-center,l-end,l-end/${currentItem.title}.png`
                 : "";
