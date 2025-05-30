@@ -198,10 +198,12 @@ async function loadTmdbItems(params = {}) {
             data = response.data.find(item => item.title === sort_by);
             items = data.content;
         }
+        console.log("items: ", items);
         const tmdbIds = items.map(item => ({
             id: `${item.isMovie ? 'movie' : 'tv'}.${item.id}`,
             type: "tmdb",
         }));
+        console.log("tmdbIds: ", tmdbIds);
         return tmdbIds;
     }
     return [];
