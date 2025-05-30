@@ -150,7 +150,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -175,6 +175,55 @@ const suffixMap = {};
 Object.entries(API_SUFFIXES).forEach(([suffix, values]) => {
     values.forEach(value => suffixMap[value] = suffix);
 });
+
+// 基础获取TMDB数据方法
+async function fetchTmdbData(id, mediaType) {
+    const tmdbResults = await Widget.tmdb.get(`/${mediaType}/${id}`, {
+        headers: {
+            "User-Agent":
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
+    });
+    //打印结果
+    // console.log("搜索内容：" + key)
+    if (!tmdbResults) {
+        return [];
+    }
+    console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
+    // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
+    // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
+    return tmdbResults.results;
+}
+
+async function fetchImdbItems(scItems) {
+    const promises = scItems.map(async (scItem) => {
+        // 模拟API请求
+        if (!scItem || !scItem.id) {
+            return null;
+        }
+
+        const mediaType = scItem.hasOwnProperty('isMovie') ? (scItem.isMovie ? 'movie' : 'tv') : 'tv';
+
+        const tmdbData = await fetchTmdbData(scItem.id, mediaType)
+
+        return {
+            id: tmdbData.id,
+            type: "tmdb",
+            title: tmdbData.title ?? tmdbData.name,
+            description: tmdbData.overview,
+            releaseDate: tmdbData.release_date ?? tmdbData.first_air_date,
+            backdropPath: tmdbData.backdrop_path,
+            posterPath: tmdbData.poster_path,
+            rating: tmdbData.vote_average,
+            mediaType: mediaType,
+        };
+    });
+
+    // 等待所有请求完成
+    const items = (await Promise.all(promises)).filter(Boolean);
+
+    return items;
+}
 
 async function loadTmdbItems(params = {}) {
     const sort_by = params.sort_by || "";
@@ -204,11 +253,11 @@ async function loadTmdbItems(params = {}) {
             items = data.content;
         }
         console.log("items: ", items);
-        const tmdbIds = items.map(item => ({
-            id: `${item.isMovie ? 'movie' : 'tv'}.${item.id}`,
-            type: "tmdb",
-        }));
+
+        const tmdbIds = await fetchImdbItems(items);
+
         console.log("tmdbIds: ", tmdbIds);
+
         return tmdbIds;
     }
     return [];
