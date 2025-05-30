@@ -145,7 +145,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.0",
+    version: "1.0.1",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -203,6 +203,7 @@ async function loadTmdbItems(params = {}) {
             id: `${item.isMovie ? 'movie' : 'tv'}.${item.id}`,
             type: "tmdb",
             title: item.name ?? item.t1,
+            mediaType: item.hasOwnProperty('isMovie') ? (item.isMovie ? 'movie' : 'tv') : 'tv',
         }));
         console.log("tmdbIds: ", tmdbIds);
         return tmdbIds;
