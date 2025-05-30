@@ -4,6 +4,7 @@ WidgetMetadata = {
     title: "追剧日历(今/明日播出、各项榜单、今日推荐)",
     modules: [
         {
+            id: "todayPlay",
             title: "今日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
@@ -27,6 +28,7 @@ WidgetMetadata = {
             ],
         },
         {
+            id: "tomorrowPlay",
             title: "明日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
@@ -50,6 +52,7 @@ WidgetMetadata = {
             ],
         },
         {
+            id: "todayReCommand",
             title: "今日推荐",
             requiresWebView: false,
             functionName: "loadTmdbItems",
@@ -63,6 +66,7 @@ WidgetMetadata = {
             ],
         },
         {
+            id: "rank",
             title: "各项榜单",
             requiresWebView: false,
             functionName: "loadTmdbItems",
@@ -106,6 +110,7 @@ WidgetMetadata = {
             ],
         },
         {
+            id: "area",
             title: "地区榜单",
             requiresWebView: false,
             functionName: "loadTmdbItems",
@@ -145,7 +150,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
