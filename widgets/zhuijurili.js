@@ -189,13 +189,13 @@ async function loadTmdbItems(params = {}) {
         let data;
         let items;
         if (sort_by === "今日推荐") {
-            data = response.data[0].find(item => item.type === "1s");
+            data = response.data.find(item => item.type === "1s");
             items = data.content;
         } else if (sort_by === "地区榜单") {
-            data = response.data[0].find(item => item.type === "category");
+            data = response.data.find(item => item.type === "category");
             items = data.content.find(item => item.title === sort_by).data;
         } else {
-            data = response.data[0].find(item => item.title === sort_by);
+            data = response.data.find(item => item.title === sort_by);
             items = data.content;
         }
         const tmdbIds = items.map(item => ({
