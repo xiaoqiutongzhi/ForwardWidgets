@@ -150,7 +150,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.4",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -169,6 +169,8 @@ const API_SUFFIXES = {
         "国产剧", "日剧", "英美剧", "番剧", "韩剧", "港台剧"
     ]
 };
+
+const areaTypes = ["国产剧", "日剧", "英美剧", "番剧", "韩剧", "港台剧"];
 
 // 生成反向映射，便于快速查找
 const suffixMap = {};
@@ -207,17 +209,21 @@ async function fetchImdbItems(scItems) {
 
         const tmdbData = await fetchTmdbData(scItem.id, mediaType)
 
-        return {
-            id: tmdbData.id,
-            type: "tmdb",
-            title: tmdbData.title ?? tmdbData.name,
-            description: tmdbData.overview,
-            releaseDate: tmdbData.release_date ?? tmdbData.first_air_date,
-            backdropPath: tmdbData.backdrop_path,
-            posterPath: tmdbData.poster_path,
-            rating: tmdbData.vote_average,
-            mediaType: mediaType,
-        };
+        if (tmdbData) {
+            return {
+                id: tmdbData.id,
+                type: "tmdb",
+                title: tmdbData.title ?? tmdbData.name,
+                description: tmdbData.overview,
+                releaseDate: tmdbData.release_date ?? tmdbData.first_air_date,
+                backdropPath: tmdbData.backdrop_path,
+                posterPath: tmdbData.poster_path,
+                rating: tmdbData.vote_average,
+                mediaType: mediaType,
+            };
+        } else {
+            return null;
+        }
     });
 
     // 等待所有请求完成
@@ -246,7 +252,7 @@ async function loadTmdbItems(params = {}) {
         if (sort_by === "今日推荐") {
             data = response.data.find(item => item.type === "1s");
             items = data.content;
-        } else if (sort_by === "地区榜单") {
+        } else if (areaTypes.includes(sort_by)) {
             data = response.data.find(item => item.type === "category");
             items = data.content.find(item => item.title === sort_by).data;
         } else {
