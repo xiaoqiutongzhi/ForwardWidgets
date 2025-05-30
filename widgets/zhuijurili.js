@@ -1,0 +1,208 @@
+// 追剧日历组件
+WidgetMetadata = {
+    id: "zhuijurili",
+    title: "追剧日历(今/明日播出、各项榜单、今日推荐)",
+    modules: [
+        {
+            title: "今日播出",
+            requiresWebView: false,
+            functionName: "loadTmdbItems",
+            params: [
+                {
+                    name: "sort_by",
+                    title: "类型",
+                    type: "enumeration",
+                    value: "今天播出的剧集",
+                    enumOptions: [
+                        {
+                            title: "剧集",
+                            value: "今天播出的剧集",
+                        },
+                        {
+                            title: "番剧",
+                            value: "今天播出的番剧",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            title: "明日播出",
+            requiresWebView: false,
+            functionName: "loadTmdbItems",
+            params: [
+                {
+                    name: "sort_by",
+                    title: "类型",
+                    type: "enumeration",
+                    value: "明天播出的剧集",
+                    enumOptions: [
+                        {
+                            title: "剧集",
+                            value: "明天播出的剧集",
+                        },
+                        {
+                            title: "番剧",
+                            value: "明天播出的番剧",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            title: "今日推荐",
+            requiresWebView: false,
+            functionName: "loadTmdbItems",
+            params: [
+                {
+                    name: "sort_by",
+                    title: "类型",
+                    type: "constant",
+                    value: "今日推荐",
+                },
+            ],
+        },
+        {
+            title: "各项榜单",
+            requiresWebView: false,
+            functionName: "loadTmdbItems",
+            params: [
+                {
+                    name: "sort_by",
+                    title: "类型",
+                    type: "enumeration",
+                    value: "现正热播",
+                    enumOptions: [
+                        {
+                            title: "现正热播",
+                            value: "现正热播",
+                        },
+                        {
+                            title: "人气 Top 10",
+                            value: "人气 Top 10",
+                        },
+                        {
+                            title: "新剧雷达",
+                            value: "新剧雷达",
+                        },
+                        {
+                            title: "热门国漫",
+                            value: "热门国漫",
+                        },
+                        {
+                            title: "已收官好剧",
+                            value: "已收官好剧",
+                        },
+                        {
+                            title: "华语热门",
+                            value: "华语热门",
+                        },
+                        {
+                            title: "本季新番",
+                            value: "本季新番",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            title: "地区榜单",
+            requiresWebView: false,
+            functionName: "loadTmdbItems",
+            params: [
+                {
+                    name: "sort_by",
+                    title: "地区",
+                    type: "enumeration",
+                    value: "国产剧",
+                    enumOptions: [
+                        {
+                            title: "国产剧",
+                            value: "国产剧",
+                        },
+                        {
+                            title: "日剧",
+                            value: "日剧",
+                        },
+                        {
+                            title: "英美剧",
+                            value: "英美剧",
+                        },
+                        {
+                            title: "番剧",
+                            value: "番剧",
+                        },
+                        {
+                            title: "韩剧",
+                            value: "韩剧",
+                        },
+                        {
+                            title: "港台剧",
+                            value: "港台剧",
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    version: "1.0.0",
+    requiredVersion: "0.0.1",
+    description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
+    author: "huangxd",
+    site: "https://github.com/huangxd-/ForwardWidgets"
+};
+
+const API_SUFFIXES = {
+    home1: [
+        "今天播出的剧集", "今天播出的番剧",
+        "明天播出的剧集", "明天播出的番剧",
+        "现正热播", "人气 Top 10", "新剧雷达",
+        "热门国漫", "已收官好剧"
+    ],
+    home0: [
+        "华语热门", "本季新番", "今日推荐",
+        "国产剧", "日剧", "英美剧", "番剧", "韩剧", "港台剧"
+    ]
+};
+
+// 生成反向映射，便于快速查找
+const suffixMap = {};
+Object.entries(API_SUFFIXES).forEach(([suffix, values]) => {
+    values.forEach(value => suffixMap[value] = suffix);
+});
+
+async function loadTmdbItems(params = {}) {
+    const sort_by = params.sort_by || "";
+
+    const url_prefix = "https://zjrl-1318856176.cos.accelerate.myqcloud.com";
+    let url = `${url_prefix}/${suffixMap[sort_by]}`;
+    const response = await Widget.http.get(url, {
+        headers: {
+            "User-Agent":
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
+    });
+
+    console.log("请求结果:", response.data);
+
+    if (response.data) {
+        let data;
+        let items;
+        if (sort_by === "今日推荐") {
+            data = response.data[0].find(item => item.type === "1s");
+            items = data.content;
+        } else if (sort_by === "地区榜单") {
+            data = response.data[0].find(item => item.type === "category");
+            items = data.content.find(item => item.title === sort_by).data;
+        } else {
+            data = response.data[0].find(item => item.title === sort_by);
+            items = data.content;
+        }
+        const tmdbIds = items.map(item => ({
+            id: `${item.isMovie ? 'movie' : 'tv'}.${item.id}`,
+            type: "tmdb",
+        }));
+        return tmdbIds;
+    }
+    return [];
+}
