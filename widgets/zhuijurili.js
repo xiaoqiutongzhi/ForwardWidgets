@@ -150,7 +150,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -178,7 +178,7 @@ Object.entries(API_SUFFIXES).forEach(([suffix, values]) => {
 
 // 基础获取TMDB数据方法
 async function fetchTmdbData(id, mediaType) {
-    const tmdbResults = await Widget.tmdb.get(`/${mediaType}/${id}`, {
+    const tmdbResult = await Widget.tmdb.get(`/${mediaType}/${id}`, {
         headers: {
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -186,13 +186,14 @@ async function fetchTmdbData(id, mediaType) {
     });
     //打印结果
     // console.log("搜索内容：" + key)
-    if (!tmdbResults) {
-        return [];
+    if (!tmdbResult) {
+        console.log("搜索内容失败：", `/${mediaType}/${id}`);
+        return null;
     }
-    console.log("tmdbResults:" + JSON.stringify(tmdbResults, null, 2));
+    console.log("tmdbResults:" + JSON.stringify(tmdbResult, null, 2));
     // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
     // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
-    return tmdbResults.results;
+    return tmdbResult;
 }
 
 async function fetchImdbItems(scItems) {
