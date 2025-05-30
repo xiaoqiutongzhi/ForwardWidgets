@@ -175,7 +175,7 @@ async function loadTmdbItems(params = {}) {
     const sort_by = params.sort_by || "";
 
     const url_prefix = "https://zjrl-1318856176.cos.accelerate.myqcloud.com";
-    let url = `${url_prefix}/${suffixMap[sort_by]}`;
+    let url = `${url_prefix}/${suffixMap[sort_by]}.json`;
     const response = await Widget.http.get(url, {
         headers: {
             "User-Agent":
