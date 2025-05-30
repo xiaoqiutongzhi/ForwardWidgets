@@ -202,6 +202,7 @@ async function loadTmdbItems(params = {}) {
         const tmdbIds = items.map(item => ({
             id: `${item.isMovie ? 'movie' : 'tv'}.${item.id}`,
             type: "tmdb",
+            title: item.name ?? item.t1,
         }));
         console.log("tmdbIds: ", tmdbIds);
         return tmdbIds;
