@@ -39,6 +39,10 @@ WidgetMetadata = {
                             value: "https://bit.ly/suxuang-v4"
                         },
                         {
+                            title: "feiyang",
+                            value: "https://feiyang.wangdu.site/ALL-Sub.m3u"
+                        },
+                        {
                             title: "PlutoTV-美国",
                             value: "https://raw.githubusercontent.com/HelmerLuzo/PlutoTV_HL/refs/heads/main/tv/m3u/PlutoTV_tv_US.m3u"
                         },
