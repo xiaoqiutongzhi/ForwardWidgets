@@ -203,3 +203,7 @@ PlutoTV-美国 (United States)
 ```
 
 #### 今日推荐
+
+### 📈项目 Star 数增长趋势
+## Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=huangxd-/ForwardWidgets&type=Date)](https://www.star-history.com/#huangxd-/ForwardWidgets&Date)
