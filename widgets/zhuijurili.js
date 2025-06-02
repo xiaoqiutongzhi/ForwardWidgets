@@ -166,9 +166,9 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
-    description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
+    description: "解析追剧日历今/明日播出剧集/番剧国漫/综艺、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
@@ -217,13 +217,13 @@ async function fetchTmdbData(id, mediaType) {
 async function fetchImdbItems(scItems) {
     const promises = scItems.map(async (scItem) => {
         // 模拟API请求
-        if (!scItem || !scItem.id) {
+        if (!scItem || !scItem.id || !scItem.tmdb_id) {
             return null;
         }
 
         const mediaType = scItem.hasOwnProperty('isMovie') ? (scItem.isMovie ? 'movie' : 'tv') : 'tv';
 
-        const tmdbData = await fetchTmdbData(scItem.id, mediaType)
+        const tmdbData = await fetchTmdbData(scItem.id ?? scItem.tmdb_id, mediaType);
 
         if (tmdbData) {
             return {
