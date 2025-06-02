@@ -23,6 +23,14 @@ WidgetMetadata = {
                             title: "番剧",
                             value: "今天播出的番剧",
                         },
+                        {
+                            title: "国漫",
+                            value: "今天播出的国漫",
+                        },
+                        {
+                            title: "综艺",
+                            value: "今天播出的综艺",
+                        },
                     ],
                 },
             ],
@@ -46,6 +54,14 @@ WidgetMetadata = {
                         {
                             title: "番剧",
                             value: "明天播出的番剧",
+                        },
+                        {
+                            title: "国漫",
+                            value: "明天播出的国漫",
+                        },
+                        {
+                            title: "综艺",
+                            value: "明天播出的综艺",
                         },
                     ],
                 },
@@ -150,7 +166,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.1",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
@@ -232,11 +248,10 @@ async function fetchImdbItems(scItems) {
     return items;
 }
 
-async function loadTmdbItems(params = {}) {
-    const sort_by = params.sort_by || "";
-
+async function fetchDefaultData(sort_by) {
     const url_prefix = "https://zjrl-1318856176.cos.accelerate.myqcloud.com";
     let url = `${url_prefix}/${suffixMap[sort_by]}.json`;
+
     const response = await Widget.http.get(url, {
         headers: {
             "User-Agent":
@@ -268,4 +283,37 @@ async function loadTmdbItems(params = {}) {
         return tmdbIds;
     }
     return [];
+}
+
+async function fetchOtherData(typ, sort_by) {
+    const whichDay = sort_by.includes("今天") ? "today" : "tomorrow";
+    const response = await Widget.http.get(`https://gist.githubusercontent.com/huangxd-/5ae61c105b417218b9e5bad7073d2f36/raw/${typ}_${whichDay}.json`, {
+        headers: {
+            "User-Agent":
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        },
+    });
+
+    console.log("请求结果:", response.data);
+
+    const tmdbIds = await fetchImdbItems(response.data);
+
+    console.log("tmdbIds: ", tmdbIds);
+
+    return tmdbIds;
+}
+
+async function loadTmdbItems(params = {}) {
+    const sort_by = params.sort_by || "";
+
+    let res;
+    if (sort_by === "今天播出的国漫" || sort_by === "明天播出的国漫") {
+        res = await fetchOtherData("guoman", sort_by);
+    } else if (sort_by === "今天播出的综艺" || sort_by === "明天播出的综艺") {
+        res = await fetchOtherData("zongyi", sort_by);
+    } else {
+        res = await fetchDefaultData(sort_by);
+    }
+
+    return res;
 }
