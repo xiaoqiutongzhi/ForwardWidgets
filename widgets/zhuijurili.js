@@ -166,9 +166,9 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.3",
+    version: "1.0.2",
     requiredVersion: "0.0.1",
-    description: "解析追剧日历今/明日播出剧集/番剧国漫/综艺、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
+    description: "解析追剧日历今/明日播出剧集/番剧/国漫/综艺、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
     site: "https://github.com/huangxd-/ForwardWidgets"
 };
@@ -217,7 +217,7 @@ async function fetchTmdbData(id, mediaType) {
 async function fetchImdbItems(scItems) {
     const promises = scItems.map(async (scItem) => {
         // 模拟API请求
-        if (!scItem || !scItem.id || !scItem.tmdb_id) {
+        if (!scItem || (!scItem.id && !scItem.tmdb_id)) {
             return null;
         }
 
@@ -287,7 +287,7 @@ async function fetchDefaultData(sort_by) {
 
 async function fetchOtherData(typ, sort_by) {
     const whichDay = sort_by.includes("今天") ? "today" : "tomorrow";
-    const response = await Widget.http.get(`https://gist.githubusercontent.com/huangxd-/5ae61c105b417218b9e5bad7073d2f36/raw/${typ}_${whichDay}.json`, {
+    const response = await Widget.http.get(`https://proxy.hxd.ip-ddns.com/https://gist.githubusercontent.com/huangxd-/5ae61c105b417218b9e5bad7073d2f36/raw/${typ}_${whichDay}.json`, {
         headers: {
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
