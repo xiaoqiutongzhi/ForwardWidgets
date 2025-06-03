@@ -40,7 +40,7 @@ WidgetMetadata = {
                         },
                         {
                             title: "feiyang",
-                            value: "https://feiyang.wangdu.site/ALL-Sub.m3u"
+                            value: "https://nptv.freetv.top/juhe.m3u"
                         },
                         {
                             title: "PlutoTV-美国",
