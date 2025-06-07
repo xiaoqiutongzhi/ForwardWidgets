@@ -7,6 +7,7 @@ WidgetMetadata = {
             title: "trakt我看",
             requiresWebView: false,
             functionName: "loadInterestItems",
+            cacheDuration: 3600,
             params: [
                 {
                     name: "user_name",
@@ -48,6 +49,7 @@ WidgetMetadata = {
             title: "Trakt个性化推荐",
             requiresWebView: false,
             functionName: "loadSuggestionItems",
+            cacheDuration: 43200,
             params: [
                 {
                     name: "cookie",
@@ -81,6 +83,7 @@ WidgetMetadata = {
             title: "Trakt片单",
             requiresWebView: false,
             functionName: "loadListItems",
+            cacheDuration: 86400,
             params: [
                 {
                     name: "user_name",
@@ -155,6 +158,7 @@ WidgetMetadata = {
             title: "Trakt追剧日历",
             requiresWebView: false,
             functionName: "loadCalendarItems",
+            cacheDuration: 43200,
             params: [
                 {
                     name: "cookie",
@@ -192,7 +196,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.9",
+    version: "1.0.10",
     requiredVersion: "0.0.1",
     description: "解析Trakt想看、在看、已看、片单、追剧日历以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",

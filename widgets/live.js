@@ -2,11 +2,13 @@
 WidgetMetadata = {
     id: "live",
     title: "直播(电视+网络)",
+    detailCacheDuration: 60,
     modules: [
         {
             title: "直播(电视+网络)",
             requiresWebView: false,
             functionName: "loadLiveItems",
+            cacheDuration: 21600,
             params: [
                 {
                     name: "url",
@@ -199,7 +201,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.7",
+    version: "1.0.8",
     requiredVersion: "0.0.1",
     description: "解析直播订阅链接【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",

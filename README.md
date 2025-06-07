@@ -204,6 +204,39 @@ PlutoTV-美国 (United States)
 
 #### 今日推荐
 
+### 各插件刷新时间列表
+```shell
+【豆瓣】
+豆瓣我看：1小时
+豆瓣个性化推荐：12小时
+豆瓣片单(TMDB版)：24小时
+电影推荐(TMDB版)：24小时
+剧集推荐(TMDB版)：24小时
+观影偏好(TMDB版)：24小时
+
+【trakt】
+trakt我看：1小时
+trakt个性化推荐：12小时
+trakt片单：24小时
+trakt追剧日历：12小时
+
+【直播(电视+网络)】
+订阅链接：6小时
+详情页：60秒
+
+【雅图(每日放送+点播排行榜+评分排行榜)】
+每日放送：6小时
+点播排行榜：6小时
+评分排行榜：24小时
+
+【追剧日历(今/明日播出、各项榜单、今日推荐)】
+今日播出：12小时
+明日播出：12小时
+今日推荐：12小时
+各项榜单：24小时
+地区榜单：24小时
+```
+
 ### 📈项目 Star 数增长趋势
-## Star History
+#### Star History
 [![Star History Chart](https://api.star-history.com/svg?repos=huangxd-/ForwardWidgets&type=Date)](https://www.star-history.com/#huangxd-/ForwardWidgets&Date)

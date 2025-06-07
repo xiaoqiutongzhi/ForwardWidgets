@@ -7,6 +7,7 @@ WidgetMetadata = {
       title: "豆瓣我看",
       requiresWebView: false,
       functionName: "loadInterestItems",
+      cacheDuration: 3600,
       params: [
         {
           name: "user_id",
@@ -44,6 +45,7 @@ WidgetMetadata = {
       title: "豆瓣个性化推荐",
       requiresWebView: false,
       functionName: "loadSuggestionItems",
+      cacheDuration: 43200,
       params: [
         {
           name: "cookie",
@@ -77,6 +79,7 @@ WidgetMetadata = {
       title: "豆瓣片单(TMDB版)",
       requiresWebView: false,
       functionName: "loadCardItems",
+      cacheDuration: 86400,
       params: [
         {
           name: "url",
@@ -161,6 +164,7 @@ WidgetMetadata = {
       title: "电影推荐(TMDB版)",
       requiresWebView: false,
       functionName: "loadRecommendMovies",
+      cacheDuration: 86400,
       params: [
         {
           name: "category",
@@ -231,6 +235,7 @@ WidgetMetadata = {
       title: "剧集推荐(TMDB版)",
       requiresWebView: false,
       functionName: "loadRecommendShows",
+      cacheDuration: 86400,
       params: [
         {
           name: "category",
@@ -325,6 +330,7 @@ WidgetMetadata = {
       description: "根据个人偏好推荐影视作品",
       requiresWebView: false,
       functionName: "getPreferenceRecommendations",
+      cacheDuration: 86400,
       params: [
         {
           name: "mediaType",
@@ -612,7 +618,7 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.7",
+  version: "1.0.8",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",

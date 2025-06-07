@@ -8,7 +8,7 @@ WidgetMetadata = {
             title: "今日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
-            cacheDuration: 60,              //缓存时长，单位：秒，默认 3600 秒
+            cacheDuration: 43200,
             params: [
                 {
                     name: "sort_by",
@@ -41,6 +41,7 @@ WidgetMetadata = {
             title: "明日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
+            cacheDuration: 43200,
             params: [
                 {
                     name: "sort_by",
@@ -73,6 +74,7 @@ WidgetMetadata = {
             title: "今日推荐",
             requiresWebView: false,
             functionName: "loadTmdbItems",
+            cacheDuration: 43200,
             params: [
                 {
                     name: "sort_by",
@@ -87,6 +89,7 @@ WidgetMetadata = {
             title: "各项榜单",
             requiresWebView: false,
             functionName: "loadTmdbItems",
+            cacheDuration: 86400,
             params: [
                 {
                     name: "sort_by",
@@ -131,6 +134,7 @@ WidgetMetadata = {
             title: "地区榜单",
             requiresWebView: false,
             functionName: "loadTmdbItems",
+            cacheDuration: 86400,
             params: [
                 {
                     name: "sort_by",
@@ -167,7 +171,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.2",
+    version: "1.0.3",
     requiredVersion: "0.0.1",
     description: "解析追剧日历今/明日播出剧集/番剧/国漫/综艺、各项榜单、今日推荐等【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",

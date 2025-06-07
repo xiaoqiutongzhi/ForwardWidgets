@@ -7,6 +7,7 @@ WidgetMetadata = {
             title: "每日放送",
             requiresWebView: false,
             functionName: "loadLatestItems",
+            cacheDuration: 21600,
             params: [
                 {
                     name: "genre",
@@ -82,6 +83,7 @@ WidgetMetadata = {
             title: "点播排行榜",
             requiresWebView: false,
             functionName: "loadClickItems",
+            cacheDuration: 21600,
             params: [
                 {
                     name: "genre",
@@ -147,6 +149,7 @@ WidgetMetadata = {
             title: "评分排行榜",
             requiresWebView: false,
             functionName: "loadScoreItems",
+            cacheDuration: 86400,
             params: [
                 {
                     name: "genre",
@@ -193,7 +196,7 @@ WidgetMetadata = {
             ],
         },
     ],
-    version: "1.0.4",
+    version: "1.0.5",
     requiredVersion: "0.0.1",
     description: "解析雅图每日放送更新以及各类排行榜【五折码：CHEAP.5;七折码：CHEAP】",
     author: "huangxd",
