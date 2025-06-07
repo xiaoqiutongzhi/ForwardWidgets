@@ -8,6 +8,7 @@ WidgetMetadata = {
             title: "今日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
+            cacheDuration: 60,              //缓存时长，单位：秒，默认 3600 秒
             params: [
                 {
                     name: "sort_by",
