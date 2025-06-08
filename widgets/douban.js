@@ -79,7 +79,7 @@ WidgetMetadata = {
       title: "豆瓣片单(TMDB版)",
       requiresWebView: false,
       functionName: "loadCardItems",
-      cacheDuration: 86400,
+      cacheDuration: 43200,
       params: [
         {
           name: "url",

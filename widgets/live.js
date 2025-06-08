@@ -41,8 +41,8 @@ WidgetMetadata = {
                             value: "https://bit.ly/suxuang-v4"
                         },
                         {
-                            title: "feiyang",
-                            value: "https://nptv.freetv.top/juhe.m3u"
+                            title: "123pan",
+                            value: "https://vip.123pan.cn/1814643527/tv/qwt.m3u"
                         },
                         {
                             title: "PlutoTV-美国",
@@ -87,6 +87,10 @@ WidgetMetadata = {
                         {
                             title: "PlutoTV-阿根廷",
                             value: "https://raw.githubusercontent.com/HelmerLuzo/PlutoTV_HL/refs/heads/main/tv/m3u/PlutoTV_tv_AR.m3u"
+                        },
+                        {
+                            title: "全球",
+                            value: "https://raw.githubusercontent.com/Free-TV/IPTV/master/playlist.m3u8"
                         },
                         {
                             title: "IPTV1",
