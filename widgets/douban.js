@@ -693,7 +693,7 @@ async function loadInterestItems(params = {}) {
 
     // 随机抽取10个item
     const shuffled = allDoubanIds.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(10, shuffled.length));
+    return shuffled.slice(0, Math.min(9, shuffled.length));
   } else {
     // 获取单页数据
     return await fetchDoubanPage(user_id, status, start, count);
