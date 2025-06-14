@@ -33,7 +33,7 @@ WidgetMetadata = {
               value: "done",
             },
             {
-              title: "随机想看(从想看列表中无序抽取10个影片)",
+              title: "随机想看(从想看列表中无序抽取9个影片)",
               value: "random_mark",
             },
           ],
