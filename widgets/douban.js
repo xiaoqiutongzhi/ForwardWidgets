@@ -665,12 +665,12 @@ async function loadInterestItems(params = {}) {
   const page = params.page;
   const user_id = params.user_id || "";
   let status = params.status || "";
-  const count = random ? 50 : 20;
-  const start = (page - 1) * count
   const random = status === "random_mark";
   if (random) {
       status = "mark";
   }
+  const count = random ? 50 : 20;
+  const start = (page - 1) * count
 
   if (random) {
     if (page > 1) {
