@@ -32,6 +32,10 @@ WidgetMetadata = {
               title: "看过",
               value: "done",
             },
+            {
+              title: "随机想看(从想看列表中无序抽取10个影片)",
+              value: "random_mark",
+            },
           ],
         },
         {
@@ -618,42 +622,82 @@ WidgetMetadata = {
       ]
     },
   ],
-  version: "1.0.8",
+  version: "1.0.9",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
   site: "https://github.com/huangxd-/ForwardWidgets"
 };
 
+async function fetchDoubanPage(user_id, status, start, count) {
+  const url = `https://m.douban.com/rexxar/api/v2/user/${user_id}/interests?status=${status}&start=${start}&count=${count}`;
+
+  try {
+    const response = await Widget.http.get(url, {
+      headers: {
+        Referer: `https://m.douban.com/mine/movie`,
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+
+    console.log("请求结果:", response.data);
+
+    if (response.data && response.data.interests) {
+      const items = response.data.interests;
+      return [...new Set(
+        items
+          .filter((item) => item.subject.id != null)
+          .map((item) => item.subject.id)
+      )].map((id) => ({
+        id,
+        type: "douban",
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error("获取页面数据失败:", error);
+    return [];
+  }
+}
+
 async function loadInterestItems(params = {}) {
   const page = params.page;
   const user_id = params.user_id || "";
-  const status = params.status || "";
-  const count = 20
-  start = (page - 1) * count
-  let url = `https://m.douban.com/rexxar/api/v2/user/${user_id}/interests?status=${status}&start=${start}&count=${count}`;
-  const response = await Widget.http.get(url, {
-    headers: {
-      Referer: `https://m.douban.com/mine/movie`,
-      "User-Agent":
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-    },
-  });
-
-  console.log("请求结果:", response.data);
-  if (response.data && response.data.interests) {
-    const items = response.data.interests;
-    const doubanIds = [...new Set(
-      items
-        .filter((item) => item.subject.id != null)
-        .map((item) => item.subject.id)
-    )].map((id) => ({
-      id,
-      type: "douban",
-    }));
-    return doubanIds;
+  let status = params.status || "";
+  const count = random ? 50 : 20;
+  const start = (page - 1) * count
+  const random = status === "random_mark";
+  if (random) {
+      status = "mark";
   }
-  return [];
+
+  if (random) {
+    if (page > 1) {
+      return [];
+    }
+    // 获取所有页数据并随机抽取10个item
+    let allDoubanIds = [];
+    let currentStart = start;
+
+    while (true) {
+      const doubanIds = await fetchDoubanPage(user_id, status, currentStart, count);
+      allDoubanIds = [...allDoubanIds, ...doubanIds];
+
+      if (doubanIds.length < count) {
+        break;
+      }
+
+      currentStart += count;
+    }
+
+    // 随机抽取10个item
+    const shuffled = allDoubanIds.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(10, shuffled.length));
+  } else {
+    // 获取单页数据
+    return await fetchDoubanPage(user_id, status, start, count);
+  }
 }
 
 async function loadSuggestionItems(params = {}) {
@@ -711,7 +755,7 @@ async function fetchImdbItems(scItems) {
     if (!scItem || !scItem.title) {
       return null;
     }
-    const title = scItem.title.replace(/ 第[^季]*季/, '');
+    let title = scItem.title.replace(/ 第[^季]*季/, '').replace(/歌手\d{4}/, '我是歌手');
     console.log("title: ", title, " ; type: ", scItem.type);
     const tmdbDatas = await fetchTmdbData(title, scItem.type)
 

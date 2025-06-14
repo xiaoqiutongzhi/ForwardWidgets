@@ -38,6 +38,9 @@
 
 应网友要求进行搬迁，详情请看issue：https://github.com/huangxd-/ForwardWidgets/issues/6
 
+#### 新增豆瓣随机想看
+从想看列表中无序抽取10个影片（由于每次打开想看列表前面总是刚添加的几个影片，增加随机机制，让用户每次从10个想看的影片中挑选一部进行观看）
+
 ### 二、Trakt我看&Trakt个性化推荐
 
 ```shell
