@@ -8,7 +8,7 @@ WidgetMetadata = {
             title: "今日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
-            cacheDuration: 43200,
+            cacheDuration: 21600,
             params: [
                 {
                     name: "sort_by",
@@ -41,7 +41,7 @@ WidgetMetadata = {
             title: "明日播出",
             requiresWebView: false,
             functionName: "loadTmdbItems",
-            cacheDuration: 43200,
+            cacheDuration: 21600,
             params: [
                 {
                     name: "sort_by",
