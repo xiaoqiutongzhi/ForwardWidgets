@@ -340,7 +340,7 @@ async function loadLatestItems(params = {}) {
             sin3: 'tv',
         };
 
-        const response = await Widget.http.get("https://headless-html.hxd.ip-ddns.com/try?url=https://www.yatu.tv/zuijin.asp", {
+        const response = await Widget.http.get("https://gist.githubusercontent.com/huangxd-/28a30eac8051ccb05a43c6f49a117286/raw/zuijin.asp", {
             headers: {
                 "User-Agent":
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -404,7 +404,7 @@ function getClickItemInfos(data, typ) {
 }
 
 async function fetchFinalItems(genre, typ, mediaTypeDict, suffixDict) {
-    const response = await Widget.http.get(`https://headless-html.hxd.ip-ddns.com/try?url=https://www.yatu.tv/top/${genre}.${suffixDict[genre]}`, {
+    const response = await Widget.http.get(`https://gist.githubusercontent.com/huangxd-/28a30eac8051ccb05a43c6f49a117286/raw/${genre}.${suffixDict[genre]}`, {
         headers: {
             "User-Agent":
                 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
