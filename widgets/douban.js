@@ -621,8 +621,74 @@ WidgetMetadata = {
         }
       ]
     },
+    {
+      title: "豆瓣影人作品",
+      requiresWebView: false,
+      functionName: "loadActorItems",
+      cacheDuration: 86400,
+      params: [
+        {
+          name: "actor",
+          title: "演员",
+          type: "input",
+          description: "演员姓名，支持模糊搜索",
+          placeholders: [
+            {"title":"章子怡","value":"章子怡"},{"title":"巩俐","value":"巩俐"},{"title":"周润发","value":"周润发"},
+              {"title":"梁朝伟","value":"梁朝伟"},{"title":"刘德华","value":"刘德华"},{"title":"成龙","value":"成龙"},
+              {"title":"李连杰","value":"李连杰"},{"title":"葛优","value":"葛优"},{"title":"范冰冰","value":"范冰冰"},
+              {"title":"周迅","value":"周迅"},{"title":"张国荣","value":"张国荣"},{"title":"舒淇","value":"舒淇"},
+              {"title":"吴京","value":"吴京"},{"title":"黄渤","value":"黄渤"},{"title":"徐峥","value":"徐峥"},
+              {"title":"邓超","value":"邓超"},{"title":"林青霞","value":"林青霞"},{"title":"张曼玉","value":"张曼玉"},
+              {"title":"刘嘉玲","value":"刘嘉玲"},{"title":"冯小刚","value":"冯小刚"},{"title":"杨紫琼","value":"杨紫琼"},
+              {"title":"甄子丹","value":"甄子丹"},{"title":"赵薇","value":"赵薇"},{"title":"李冰冰","value":"李冰冰"},
+              {"title":"汤唯","value":"汤唯"},{"title":"莱昂纳多·迪卡普里奥","value":"莱昂纳多·迪卡普里奥"},
+              {"title":"罗伯特·德尼罗","value":"罗伯特·德尼罗"},{"title":"梅丽尔·斯特里普","value":"梅丽尔·斯特里普"},
+              {"title":"汤姆·汉克斯","value":"汤姆·汉克斯"},{"title":"约翰尼·德普","value":"约翰尼·德普"},
+              {"title":"布拉德·皮特","value":"布拉德·皮特"},{"title":"安吉丽娜·朱莉","value":"安吉丽娜·朱莉"},
+              {"title":"丹泽尔·华盛顿","value":"丹泽尔·华盛顿"},{"title":"威尔·史密斯","value":"威尔·史密斯"},
+              {"title":"汤姆·克鲁斯","value":"汤姆·克鲁斯"},{"title":"妮可·基德曼","value":"妮可·基德曼"},
+              {"title":"朱莉娅·罗伯茨","value":"朱莉娅·罗伯茨"},{"title":"凯特·温斯莱特","value":"凯特·温斯莱特"},
+              {"title":"斯嘉丽·约翰逊","value":"斯嘉丽·约翰逊"},{"title":"詹妮弗·劳伦斯","value":"詹妮弗·劳伦斯"},
+              {"title":"马特·达蒙","value":"马特·达蒙"},{"title":"克里斯蒂安·贝尔","value":"克里斯蒂安·贝尔"},
+              {"title":"瑞安·高斯林","value":"瑞安·高斯林"},{"title":"克里斯·海姆斯沃斯","value":"克里斯·海姆斯沃斯"},
+              {"title":"罗伯特·唐尼","value":"罗伯特·唐尼"},{"title":"艾玛·沃特森","value":"艾玛·沃特森"},
+              {"title":"玛格特·罗比","value":"玛格特·罗比"},{"title":"赞达亚","value":"赞达亚"},
+              {"title":"弗洛伦斯·皮尤","value":"弗洛伦斯·皮尤"},{"title":"蒂莫西·柴勒梅德","value":"蒂莫西·柴勒梅德"},
+              {"title":"本尼迪克特·康伯巴奇","value":"本尼迪克特·康伯巴奇"},{"title":"杰昆·菲尼克斯","value":"杰昆·菲尼克斯"},
+              {"title":"安东尼·霍普金斯","value":"安东尼·霍普金斯"},{"title":"阿尔·帕西诺","value":"阿尔·帕西诺"},
+              {"title":"杰克·尼科尔森","value":"杰克·尼科尔森"},{"title":"马龙·白兰度","value":"马龙·白兰度"},
+              {"title":"弗朗西斯·麦克多蒙德","value":"弗朗西斯·麦克多蒙德"},{"title":"维奥拉·戴维斯","value":"维奥拉·戴维斯"},
+              {"title":"米歇尔·威廉姆斯","value":"米歇尔·威廉姆斯"},{"title":"莎莉·霍金斯","value":"莎莉·霍金斯"},
+              {"title":"拉尔夫·费因斯","value":"拉尔夫·费因斯"},{"title":"盖尔·加西亚·伯纳尔","value":"盖尔·加西亚·伯纳尔"},
+              {"title":"安德鲁·加菲尔德","value":"安德鲁·加菲尔德"},{"title":"詹姆斯·麦卡沃伊","value":"詹姆斯·麦卡沃伊"},
+              {"title":"西尔莎·罗南","value":"西尔莎·罗南"},{"title":"阿米尔·汗","value":"阿米尔·汗"},
+              {"title":"沙鲁克·汗","value":"沙鲁克·汗"},{"title":"萨尔曼·汗","value":"萨尔曼·汗"},
+              {"title":"阿克谢·库玛尔","value":"阿克谢·库玛尔"},{"title":"迪皮卡·帕度柯妮","value":"迪皮卡·帕度柯妮"},
+              {"title":"阿莉娅·布哈特","value":"阿莉娅·布哈特"},{"title":"伊尔凡·可汗","value":"伊尔凡·可汗"},
+              {"title":"安努舒卡·莎玛","value":"安努舒卡·莎玛"},{"title":"宋康昊","value":"宋康昊"},
+              {"title":"崔岷植","value":"崔岷植"},{"title":"金惠子","value":"金惠子"},{"title":"全度妍","value":"全度妍"},
+              {"title":"冈田准一","value":"冈田准一"},{"title":"深津绘里","value":"深津绘里"},
+              {"title":"役所广司","value":"役所广司"},{"title":"长泽雅美","value":"长泽雅美"},
+              {"title":"本尼西奥·德尔·托罗","value":"本尼西奥·德尔·托罗"},{"title":"安东尼奥·班德拉斯","value":"安东尼奥·班德拉斯"},
+              {"title":"佩内洛普·克鲁兹","value":"佩内洛普·克鲁兹"},{"title":"哈维尔·巴登","value":"哈维尔·巴登"},
+              {"title":"莫妮卡·贝鲁奇","value":"莫妮卡·贝鲁奇"},{"title":"朱丽叶·比诺什","value":"朱丽叶·比诺什"},
+              {"title":"玛丽昂·歌迪亚","value":"玛丽昂·歌迪亚"},{"title":"伊莎贝尔·于佩尔","value":"伊莎贝尔·于佩尔"},
+              {"title":"丹尼尔·戴-刘易斯","value":"丹尼尔·戴-刘易斯"},{"title":"凯拉·奈特莉","value":"凯拉·奈特莉"},
+              {"title":"休·杰克曼","value":"休·杰克曼"},{"title":"娜塔莉·波特曼","value":"娜塔莉·波特曼"},
+              {"title":"艾米·亚当斯","value":"艾米·亚当斯"},{"title":"克里斯托弗·沃肯","value":"克里斯托弗·沃肯"},
+              {"title":"蒂尔达·斯文顿","value":"蒂尔达·斯文顿"},{"title":"加里·奥德曼","value":"加里·奥德曼"},
+              {"title":"埃迪·雷德梅恩","value":"埃迪·雷德梅恩"},{"title":"杰西卡·查斯坦","value":"杰西卡·查斯坦"}
+          ],
+        },
+        {
+          name: "page",
+          title: "页码",
+          type: "page"
+        },
+      ],
+    },
   ],
-  version: "1.0.9",
+  version: "1.0.10",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -1014,4 +1080,79 @@ async function getPreferenceRecommendations(params = {}) {
     } catch (error) {
         throw error;
     }
+}
+
+async function getActorId(name) {
+    // 构建搜索页面 URL
+    const searchUrl = `https://search.douban.com/movie/subject_search?search_text=${name}&cat=1002`;
+
+    console.log("请求搜索页面:", searchUrl);
+
+    // 发送请求获取搜索页面
+    const response = await Widget.http.get(searchUrl, {
+      headers: {
+        Referer: `https://movie.douban.com/`,
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      },
+    });
+
+    if (!response || !response.data) {
+      throw new Error("获取搜索页面数据失败");
+    }
+
+    console.log("搜索页面数据长度:", response.data.length);
+
+    // 使用正则表达式从页面内容中提取演员 ID
+    const actorIdMatch = response.data.match(/https:\/\/movie.douban.com\/celebrity\/(\d+)\//);
+
+    if (actorIdMatch) {
+      const firstActorId = actorIdMatch[1];
+      console.log("第一个演员的 ID:", firstActorId);
+      return firstActorId;
+    } else {
+      console.log("没有找到演员 ID");
+      return null;
+    }
+}
+
+// 解析影人作品
+async function loadActorItems(params = {}) {
+  const page = params.page;
+  const actor = params.actor || "";
+  const count = 20
+  const start = (page - 1) * count
+
+  if (!actor) {
+    console.error("缺少演员姓名");
+    throw new Error("缺少演员姓名");
+  }
+
+  console.log("开始解析豆瓣影人...");
+  const actorId = await getActorId(actor);
+
+  if (!actorId) {
+    console.error("解析豆瓣影人ID失败");
+    throw new Error("解析豆瓣影人ID失败");
+  }
+
+  let url = `https://m.douban.com/rexxar/api/v2/celebrity/${actorId}/works?start=${start}&count=${count}`;
+  const response = await Widget.http.get(url, {
+    headers: {
+      Referer: `https://m.douban.com/movie`,
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+    },
+  });
+
+  console.log("请求结果:", response.data);
+  if (response.data && response.data.works) {
+    const works = response.data.works;
+    const doubanIds = works.filter((work) => work.work.id != null).map((work) => ({
+      id: work.work.id,
+      type: "douban",
+    }));
+    return doubanIds;
+  }
+  return [];
 }
