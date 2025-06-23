@@ -44,6 +44,7 @@
 #### 新增豆瓣影人作品
 输入：演员姓名
 输出：所有该演员参演的作品
+可以查询 https://search.douban.com/movie/subject_search?search_text=章子怡&cat=1002 ，看第一个演员是否是你要找的演员，我是通过这个来匹配的演员id
 
 ### 二、Trakt我看&Trakt个性化推荐
 
