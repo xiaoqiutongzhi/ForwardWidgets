@@ -688,7 +688,7 @@ WidgetMetadata = {
       ],
     },
   ],
-  version: "1.0.10",
+  version: "1.0.11",
   requiredVersion: "0.0.1",
   description: "解析豆瓣想看、在看、已看以及根据个人数据生成的个性化推荐【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -1083,36 +1083,33 @@ async function getPreferenceRecommendations(params = {}) {
 }
 
 async function getActorId(name) {
-    // 构建搜索页面 URL
-    const searchUrl = `https://search.douban.com/movie/subject_search?search_text=${name}&cat=1002`;
+    // 构建搜索建议API URL
+    const apiUrl = `https://movie.douban.com/j/subject_suggest?q=${name}`;
+    console.log("请求API:", apiUrl);
 
-    console.log("请求搜索页面:", searchUrl);
-
-    // 发送请求获取搜索页面
-    const response = await Widget.http.get(searchUrl, {
-      headers: {
-        Referer: `https://movie.douban.com/`,
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      },
+    // 发送请求获取JSON数据
+    const response = await Widget.http.get(apiUrl, {
+        headers: {
+            Referer: "https://movie.douban.com/",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        }
     });
 
     if (!response || !response.data) {
-      throw new Error("获取搜索页面数据失败");
+        throw new Error("获取API数据失败");
     }
 
-    console.log("搜索页面数据长度:", response.data.length);
+    console.log("搜索页面数据:", response.data);
 
-    // 使用正则表达式从页面内容中提取演员 ID
-    const actorIdMatch = response.data.match(/https:\/\/movie.douban.com\/celebrity\/(\d+)\//);
-
-    if (actorIdMatch) {
-      const firstActorId = actorIdMatch[1];
-      console.log("第一个演员的 ID:", firstActorId);
-      return firstActorId;
+    // 筛选并提取演员ID
+    const actorSuggestions = response.data.filter(item => item.type === "celebrity");
+    if (actorSuggestions.length > 0) {
+        const firstActorId = actorSuggestions[0].id;
+        console.log("第一个演员的ID:", firstActorId);
+        return firstActorId;
     } else {
-      console.log("没有找到演员 ID");
-      return null;
+        console.log("没有找到演员ID");
+        return null;
     }
 }
 
