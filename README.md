@@ -42,9 +42,21 @@
 从想看列表中无序抽取9个影片（如果想看列表很长，每次打开想看总是刚添加的几个影片显示在前面，增加随机机制，让用户每次从9个想看的影片中挑选一部进行观看）
 
 #### 新增豆瓣影人作品
-输入：演员姓名
-输出：所有该演员参演的作品
-可以查询 https://search.douban.com/movie/subject_search?search_text=章子怡&cat=1002 ，看第一个演员是否是你要找的演员，我是通过这个来匹配的演员id
+输入：演员姓名，可筛选，也可自定义，其中筛选类型以下几种，分别列举了50位
+```shell
+{ title: "国内男演员", value: "cn_actor" },
+{ title: "国内女演员", value: "cn_actress" },
+{ title: "港台男演员", value: "ht_actor" },
+{ title: "港台女演员", value: "ht_actress" },
+{ title: "日韩男演员", value: "jk_actor" },
+{ title: "日韩女演员", value: "jk_actress" },
+{ title: "欧美男演员", value: "ea_actor" },
+{ title: "欧美女演员", value: "ea_actress" },
+{ title: "国内导演", value: "cn_director" },
+{ title: "国外导演", value: "fr_director" },
+```
+输出：所有该影人的作品
+排序：评价/时间
 
 ### 二、Trakt我看&Trakt个性化推荐
 
@@ -224,7 +236,7 @@ PlutoTV-美国 (United States)
 电影推荐(TMDB版)：24小时
 剧集推荐(TMDB版)：24小时
 观影偏好(TMDB版)：24小时
-豆瓣影人作品：24小时
+豆瓣影人作品：1周
 
 【trakt】
 trakt我看：1小时
