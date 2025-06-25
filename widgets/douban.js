@@ -1413,6 +1413,8 @@ async function loadActorItems(params = {}) {
   const start = (page - 1) * count
 
   const actor = cn_actor || cn_actress || ht_actor || ht_actress || jk_actor || jk_actress || ea_actor || ea_actress || cn_director || fr_director || name_customize || "";
+  console.log(cn_actor, cn_actress, ht_actor, ht_actress, jk_actor, jk_actress, ea_actor, ea_actress, cn_director, fr_director, name_customize);
+  console.log("actor:", actor);
 
   if (!actor) {
     console.error("缺少演员姓名");
