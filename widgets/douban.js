@@ -1412,7 +1412,24 @@ async function loadActorItems(params = {}) {
   const count = 50
   const start = (page - 1) * count
 
-  const actor = cn_actor || cn_actress || ht_actor || ht_actress || jk_actor || jk_actress || ea_actor || ea_actress || cn_director || fr_director || name_customize || "";
+  const nameTypeDict = {
+            'cn_actor': cn_actor,
+            'cn_actress': cn_actress,
+            'ht_actor': ht_actor,
+            'ht_actress': ht_actress,
+            'jk_actor': jk_actor,
+            'jk_actress': jk_actress,
+            'ea_actor': ea_actor,
+            'ea_actress': ea_actress,
+            'cn_director': cn_director,
+            'fr_director': fr_director,
+        };
+  let actor;
+  if (input_type === "select") {
+    actor = nameTypeDict[name_type]
+  } else {
+    actor = name_customize
+  }
   console.log(cn_actor, cn_actress, ht_actor, ht_actress, jk_actor, jk_actress, ea_actor, ea_actress, cn_director, fr_director, name_customize);
   console.log("actor:", actor);
 
