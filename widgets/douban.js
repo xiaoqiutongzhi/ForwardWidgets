@@ -976,10 +976,6 @@ WidgetMetadata = {
           name: "actor_select",
           title: "筛选影人",
           type: "enumeration",
-          belongTo: {
-            paramName: "sort_by",
-            value: ["vote", "time"],
-          },
           enumOptions: [
             {"title":"黄渤","value":"黄渤"}, {"title":"徐峥","value":"徐峥"}, {"title":"王宝强","value":"王宝强"},
             {"title":"吴京","value":"吴京"}, {"title":"张译","value":"张译"}, {"title":"沈腾","value":"沈腾"},
@@ -1166,6 +1162,7 @@ WidgetMetadata = {
           title: "页码",
           type: "page"
         },
+
       ],
     },
   ],
