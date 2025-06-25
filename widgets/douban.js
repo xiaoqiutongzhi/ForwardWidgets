@@ -973,9 +973,23 @@ WidgetMetadata = {
       cacheDuration: 604800,
       params: [
         {
+          name: "sort_by",
+          title: "排序方式",
+          type: "enumeration",
+          value: "vote",
+          enumOptions: [
+            { title: "评价排序", value: "vote" },
+            { title: "时间排序", value: "time" },
+          ],
+        },
+        {
           name: "actor_select",
           title: "筛选影人",
           type: "enumeration",
+          belongTo: {
+            paramName: "sort_by",
+            value: ["vote", "time"],
+          },
           enumOptions: [
             {"title":"黄渤","value":"黄渤"}, {"title":"徐峥","value":"徐峥"}, {"title":"王宝强","value":"王宝强"},
             {"title":"吴京","value":"吴京"}, {"title":"张译","value":"张译"}, {"title":"沈腾","value":"沈腾"},
@@ -1145,16 +1159,6 @@ WidgetMetadata = {
             {"title":"彼得·杰克逊","value":"彼得·杰克逊"}, {"title":"丹尼斯·维伦纽瓦","value":"丹尼斯·维伦纽瓦"}, {"title":"格蕾塔·葛韦格","value":"格蕾塔·葛韦格"},
             {"title":"乔丹·皮尔","value":"乔丹·皮尔"}, {"title":"斯派克·李","value":"斯派克·李"}, {"title":"马丁·斯科塞斯","value":"马丁·斯科塞斯"},
             {"title":"克里斯托弗·诺兰","value":"克里斯托弗·诺兰"},
-          ],
-        },
-        {
-          name: "sort_by",
-          title: "排序方式",
-          type: "enumeration",
-          value: "vote",
-          enumOptions: [
-            { title: "评价排序", value: "vote" },
-            { title: "时间排序", value: "time" },
           ],
         },
         {
