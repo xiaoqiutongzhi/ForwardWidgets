@@ -631,6 +631,7 @@ WidgetMetadata = {
           name: "input_type",
           title: "输入类型",
           type: "enumeration",
+          value: "select",
           enumOptions: [
             { title: "筛选", value: "select" },
             { title: "自定义", value: "customize" },
