@@ -1177,7 +1177,7 @@ WidgetMetadata = {
       requiresWebView: false,
       functionName: "loadCarouselItems",
       description: "从豆瓣热播电影/电视剧/综艺/动漫分别随机获取3个未在影院上映的影片，并乱序后返回总共12个影片",
-      cacheDuration: 21600,
+      cacheDuration: 3600,
     },
   ],
   version: "1.0.14",
