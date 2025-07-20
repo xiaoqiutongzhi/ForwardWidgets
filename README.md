@@ -257,6 +257,7 @@ PlutoTV-美国 (United States)
 剧集推荐(TMDB版)：24小时
 观影偏好(TMDB版)：24小时
 豆瓣影人作品：1周
+豆瓣首页轮播图：6小时
 
 【trakt】
 trakt我看：1小时
