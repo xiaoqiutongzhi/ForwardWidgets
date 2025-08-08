@@ -17,7 +17,7 @@ WidgetMetadata = {
   title: "播放链接弹幕",
   version: "1.0.0",
   requiredVersion: "0.0.2",
-  description: "从指定播放链接和服务器获取弹幕",
+  description: "从指定播放链接和服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd_",
   site: "https://github.com/huangxd_/ForwardWidgets",
   globalParams: [
