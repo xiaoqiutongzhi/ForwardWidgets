@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.auto.danmu",
   title: "自动链接弹幕",
-  version: "1.0.2",
+  version: "1.0.3",
   requiredVersion: "0.0.2",
   description: "自动获取播放链接并从服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -98,7 +98,7 @@ async function fetchTmdbData(id, type) {
         console.log("搜索内容失败：", `/${type}/${id}`);
         return null;
     }
-    // console.log("tmdbResults:" + JSON.stringify(tmdbResult, null, 2));
+    console.log("tmdbResults:" + JSON.stringify(tmdbResult, null, 2));
     // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
     // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
     return tmdbResult;
@@ -187,7 +187,7 @@ async function getPlayurls(title, tmdbId, type, season) {
 
   if (animes.length > 1) {
     const tmdbInfo = await fetchTmdbData(tmdbId, type);
-    const tmdbYear = type === "tv" ? tmdbInfo.data.first_air_date.split("-")[0] : tmdbInfo.data.release_date.split("-")[0];
+    const tmdbYear = type === "tv" ? tmdbInfo.first_air_date.split("-")[0] : tmdbInfo.release_date.split("-")[0];
 
     animes = animes.filter(anime => anime.year == tmdbYear);
   }
