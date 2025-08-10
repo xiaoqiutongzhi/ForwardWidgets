@@ -182,7 +182,7 @@ async function getPlayurls(title, tmdbId, type, season) {
 async function searchDanmu(params) {
   const { tmdbId, type, title, season, link, videoUrl, danmu_server } = params;
 
-  const animes = await getPlayurls(title, tmdbId, type, season);
+  // const animes = await getPlayurls(title, tmdbId, type, season);
 
   return {
     animes: [
@@ -301,7 +301,7 @@ function generateDanmaku(message) {
   const comments = [];
   const baseP = "1,1,25,16777215,1754803089,0,0,26732601000067074,1"; // 原始 p 字符串
 
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < 12; i++) {
     // 增加 cid
     const cid = i;
 
