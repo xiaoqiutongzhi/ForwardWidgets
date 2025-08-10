@@ -98,7 +98,7 @@ async function fetchTmdbData(id, type) {
         console.log("搜索内容失败：", `/${type}/${id}`);
         return null;
     }
-    console.log("tmdbResults:" + JSON.stringify(tmdbResult, null, 2));
+    // console.log("tmdbResults:" + JSON.stringify(tmdbResult, null, 2));
     // console.log("tmdbResults.total_results:" + tmdbResults.total_results);
     // console.log("tmdbResults.results[0]:" + tmdbResults.results[0]);
     return tmdbResult;
@@ -122,7 +122,7 @@ async function getPlayurls(title, tmdbId, type, season) {
   }
 
   const data = response.data;
-  console.log(data);
+  // console.log(data);
 
   // 检查API返回状态
   if (data.msg !== "ok") {
@@ -354,7 +354,7 @@ async function getCommentsById(params) {
     return generateDanmaku("【自动链接弹幕】：相关站点没有找到这部影视剧", count);
   }
 
-  console.log(animes[0]);
+  // console.log(animes[0]);
 
   let playUrl;
   if (episode) {
@@ -390,7 +390,7 @@ async function getCommentsById(params) {
     return generateDanmaku(`【自动链接弹幕】：弹幕服务器异常 ${error.cause} ${error}`, count);
   }
 
-  console.log(response.data);
+  // console.log(response.data);
   // const result = parseDanmakuXML(response.data);
   // console.log(result);
   return response.data;
