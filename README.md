@@ -286,6 +286,9 @@ https://api.danmu.icu
 https://se.678.ooo
 ```
 
+#### debug开关
+新增debug开关，默认关闭，打开的状态下会在开头2分钟内打印错误日志弹幕
+
 ### 各插件刷新时间列表
 ```shell
 【豆瓣】
