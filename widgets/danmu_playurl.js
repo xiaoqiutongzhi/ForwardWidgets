@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.playurl.danmu",
   title: "手动链接弹幕",
-  version: "1.0.1",
+  version: "1.0.2",
   requiredVersion: "0.0.2",
   description: "从指定播放链接和服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -68,6 +68,23 @@ WidgetMetadata = {
     },
   ],
 };
+
+function printFirst200Chars(data) {
+  let dataToPrint;
+
+  if (typeof data === 'string') {
+    dataToPrint = data;  // 如果是字符串，直接使用
+  } else if (Array.isArray(data)) {
+    dataToPrint = JSON.stringify(data);  // 如果是数组，转为字符串
+  } else if (typeof data === 'object') {
+    dataToPrint = JSON.stringify(data);  // 如果是对象，转为字符串
+  } else {
+    console.error("Unsupported data type");
+    return;
+  }
+
+  console.log(dataToPrint.slice(0, 200));  // 打印前200个字符
+}
 
 async function searchDanmu(params) {
   const { tmdbId, type, title, season, link, videoUrl, danmu_server } = params;
@@ -149,8 +166,8 @@ async function getCommentsById(params) {
   //   }
   // );
 
-  // console.log(response.data);
+  console.log("danmu response:", printFirst200Chars(response.data));
   // const result = parseDanmakuXML(response.data);
-  // console.log(result);
+  // console.log("danmu json response:", printFirst200Chars(result));
   return response.data;
 }
