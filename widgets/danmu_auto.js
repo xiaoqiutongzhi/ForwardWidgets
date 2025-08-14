@@ -535,7 +535,7 @@ async function getCommentsById(params) {
   if (tmdbInfo.type !== "Reality") {
       console.log("anime: ", animes[0]);
 
-      if (episode) {
+      if (type === "tv") {
         if (episode - 1 >= 0 && episode - 1 < animes[0].seriesPlaylinks.length) {
             playUrl = animes[0].seriesPlaylinks[episode - 1].url;
         } else {
