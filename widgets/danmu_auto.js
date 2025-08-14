@@ -506,9 +506,9 @@ async function getCommentsById(params) {
   // 测试参数值
   // return printParams(seriesName, episodeName, airDate, runtime, premiereDate, season, episode, tmdbId);
 
-  if (!tmdbId) {
+  if (typeof tmdbId === 'undefined') {
     const count = debug === "true" ? 24 : 1;
-    return generateDanmaku("【自动链接弹幕】：参数tmdbId为null", count);
+    return generateDanmaku("【自动链接弹幕】：参数tmdbId为undefined", count);
   }
 
   let playUrl = null;
