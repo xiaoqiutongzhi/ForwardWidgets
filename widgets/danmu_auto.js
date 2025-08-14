@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.auto.danmu",
   title: "自动链接弹幕",
-  version: "1.0.7",
+  version: "1.0.8",
   requiredVersion: "0.0.2",
   description: "自动获取播放链接并从服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -776,7 +776,7 @@ async function getPlayurlFromVod(title, tmdbInfo, type, season, episode, episode
       console.log(`Selected platform: ${platform}`);
       platformIndex = vodPlayFromList.indexOf(platform);
   }
-  if (!episode) {
+  if (type === "movie") {
       playUrl = vodPlayUrlList[platformIndex].split("#")[0].split("$")[1];
   } else {
       const episodeList = vodPlayUrlList[platformIndex].split("#");
