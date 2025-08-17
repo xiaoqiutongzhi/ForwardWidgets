@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.playurl.danmu",
   title: "手动链接弹幕",
-  version: "1.0.4",
+  version: "1.0.5",
   requiredVersion: "0.0.2",
   description: "从指定播放链接和服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -227,18 +227,15 @@ async function getCommentsById(params) {
 
   console.log("原始播放链接：", title);
 
-  try {
-      new URL(title); // 如果不是有效的 URL，会抛出错误
-  } catch (error) {
+  const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:\d+)?(\/[^\s]*)?$/;
+  if (!urlRegex.test(title)) {
       return generateDanmaku(`【手动链接弹幕】：请输入有效的播放链接进行弹幕搜索`, 1);
   }
 
   const url = await convertMobileToPcUrl(title);
 
-  try {
-      new URL(url); // 如果不是有效的 URL，会抛出错误
-  } catch (error) {
-      return generateDanmaku(`【手动链接弹幕】：${url}`, 1);
+  if (!urlRegex.test(title)) {
+      return generateDanmaku(`【手动链接弹幕】：请输入有效的播放链接进行弹幕搜索`, 1);
   }
 
   console.log("转换后播放链接：", url);
