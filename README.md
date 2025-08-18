@@ -250,6 +250,8 @@ PlutoTV-美国 (United States)
 ### 九、手动链接弹幕
 <img src="https://i.mji.rip/2025/08/09/0034f3549373679f895b69e4f29d6293.jpeg" style="width:400px" />
 
+使用方法请前往 https://t.me/ForwardWidgets/288 观看
+
 #### 自定义服务器
 从哪个服务器获取弹幕，默认是https://fc.lyz05.cn
 ```shell
