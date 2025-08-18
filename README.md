@@ -273,7 +273,7 @@ https://ani.gamer.com.tw/animeVideo.php?sn=41645
 ```
 目前已兼容手机端网页url
 ```shell
-https://www.bilibili.com/bangumi/play/ep1231564
+https://m.bilibili.com/bangumi/play/ep1231564
 https://m.mgtv.com/b/771610/23300622.html
 https://m.v.qq.com/x/m/play?cid=53q0eh78q97e4d1&vid=x00174aq5no
 https://m.youku.com/alipay_video/id_cbff0b0703e54d659628.html
