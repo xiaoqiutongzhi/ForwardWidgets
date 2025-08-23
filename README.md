@@ -255,13 +255,15 @@ PlutoTV-美国 (United States)
 使用方法请前往 https://t.me/ForwardWidgets/288 观看
 
 #### 自定义服务器
-从哪个服务器获取弹幕，默认是https://fc.lyz05.cn
+从哪个服务器获取弹幕，默认是http://127.0.0.1
 ```shell
+http://127.0.0.1
 https://fc.lyz05.cn
 https://danmu.56uxi.com
 https://dmku.hls.one
 https://api.danmu.icu
 https://se.678.ooo
+https://dm.lxlad.com
 ```
 
 弹幕服务器新增localhost http://127.0.0.1 ，弹幕下载会直接请求各平台（搬迁修改自 https://github.com/lyz05/danmaku ），支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
@@ -365,13 +367,15 @@ https://m.iqiyi.com/v_1ftv9n1m3bg.html
 综艺是根据集发布日期和集标题匹配的播放链接，所以如果emby刮削不准确或者360kan平台没有该综艺都会匹配不到
 
 #### 自定义弹幕服务器
-从哪个服务器获取弹幕，默认是https://fc.lyz05.cn
+从哪个服务器获取弹幕，默认是http://127.0.0.1
 ```shell
+http://127.0.0.1
 https://fc.lyz05.cn
 https://danmu.56uxi.com
 https://dmku.hls.one
 https://api.danmu.icu
 https://se.678.ooo
+https://dm.lxlad.com
 ```
 
 弹幕服务器新增localhost http://127.0.0.1 ，弹幕下载会直接请求各平台（搬迁修改自 https://github.com/lyz05/danmaku ），支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
