@@ -264,7 +264,7 @@ https://api.danmu.icu
 https://se.678.ooo
 ```
 
-弹幕服务器新增localhost(http://127.0.0.1)，弹幕下载会直接请求各平台，支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
+弹幕服务器新增localhost http://127.0.0.1 ，弹幕下载会直接请求各平台，支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
 
 其中爱平台下载弹幕的时候需要zlib解压，fw的widget.http.get不支持返回arrayBuffer，没找到好的解决办法，所以当前先用cloudflare转了一下，worker.js如下：
 ```js
@@ -374,7 +374,7 @@ https://api.danmu.icu
 https://se.678.ooo
 ```
 
-弹幕服务器新增localhost(http://127.0.0.1)，弹幕下载会直接请求各平台，支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
+弹幕服务器新增localhost http://127.0.0.1 ，弹幕下载会直接请求各平台，支持爱优腾芒哔，相对原来直接请求三方弹幕服务器会相对更稳定一点
 
 其中爱平台下载弹幕的时候需要zlib解压，fw的widget.http.get不支持返回arrayBuffer，没找到好的解决办法，所以当前先用cloudflare转了一下
 
