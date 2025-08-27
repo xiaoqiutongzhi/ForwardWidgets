@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.auto.danmu",
   title: "自动链接弹幕",
-  version: "1.0.18",
+  version: "1.0.19",
   requiredVersion: "0.0.2",
   description: "自动获取播放链接并从服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -1602,7 +1602,7 @@ async function getDanmuFromUrl(danmu_server, playUrl, debug, danmu_server_pollin
         if (server === "http://127.0.0.1") {
             let res = await fetchLocalhost(playUrl);
             // 弹幕中有&会导致弹幕消失
-            res = res.replace("&", " ");
+            res = res.replace(/&(?![a-zA-Z]+;|#\d+;)/g, "&amp;");
 
             // const fs = require("fs");
             //
