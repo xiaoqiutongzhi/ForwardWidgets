@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.auto.danmu",
   title: "自动链接弹幕",
-  version: "1.0.19",
+  version: "1.0.18",
   requiredVersion: "0.0.2",
   description: "自动获取播放链接并从服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -459,6 +459,24 @@ function md5(message) {
   }
 
   return (wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d)).toLowerCase();
+}
+
+function escapeXmlText(str) {
+  return str.replace(/[<>&"']/g, function (c) {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '"': return '&quot;';
+      case "'": return '&apos;';
+    }
+  });
+}
+
+function fixDTagContent(xmlStr) {
+  return xmlStr.replace(/(<d [^>]*>)([\s\S]*?)(<\/d>)/g, function (match, startTag, textContent, endTag) {
+    return startTag + escapeXmlText(textContent) + endTag;
+  });
 }
 
 function buildQueryString(params) {
@@ -1601,8 +1619,8 @@ async function getDanmuFromUrl(danmu_server, playUrl, debug, danmu_server_pollin
     async function fetchDanmu(server) {
         if (server === "http://127.0.0.1") {
             let res = await fetchLocalhost(playUrl);
-            // 弹幕中有&会导致弹幕消失
-            res = res.replace(/&(?![a-zA-Z]+;|#\d+;)/g, "&amp;");
+            // 弹幕中有特殊字符会导致弹幕消失
+            res = fixDTagContent(res);
 
             // const fs = require("fs");
             //
