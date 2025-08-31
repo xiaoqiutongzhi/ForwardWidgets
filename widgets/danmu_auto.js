@@ -15,7 +15,7 @@
 WidgetMetadata = {
   id: "forward.auto.danmu",
   title: "自动链接弹幕",
-  version: "1.0.18",
+  version: "1.0.19",
   requiredVersion: "0.0.2",
   description: "自动获取播放链接并从服务器获取弹幕【五折码：CHEAP.5;七折码：CHEAP】",
   author: "huangxd",
@@ -511,8 +511,79 @@ function time_to_second(time) {
   return seconds;
 }
 
+async function convertMobileToPcUrl(url) {
+    /**
+     * 将移动端页面 URL 转换为 PC 端页面 URL。
+     * 支持爱奇艺、腾讯视频、优酷、芒果TV和哔哩哔哩。
+     * @param {string} url - 移动端 URL
+     * @returns {string} - PC 端 URL（匹配成功）、错误信息（匹配但解析失败）或原链接（不匹配）
+     */
+
+    // 爱奇艺 (iQIYI)
+    if (url.includes('m.iqiyi.com')) {
+        // 移动端示例: https://m.iqiyi.com/v_1ftv9n1m3bg.html
+        // PC 端示例: https://www.iqiyi.com/v_1ftv9n1m3bg.html
+        return url.replace('m.iqiyi.com', 'www.iqiyi.com');
+    }
+
+    // 腾讯视频 (Tencent Video)
+    if (url.includes('m.v.qq.com')) {
+        // 移动端示例: https://m.v.qq.com/x/m/play?cid=53q0eh78q97e4d1&vid=x00174aq5no&ptag=hippySearch&pageType=long
+        // PC 端示例: https://v.qq.com/x/cover/53q0eh78q97e4d1/x00174aq5no.html
+        const cidMatch = url.match(/cid=([a-zA-Z0-9]+)/);
+        const vidMatch = url.match(/vid=([a-zA-Z0-9]+)/);
+        if (cidMatch && vidMatch) {
+            const cid = cidMatch[1];
+            const vid = vidMatch[1];
+            return `https://v.qq.com/x/cover/${cid}/${vid}.html`;
+        } else if (vidMatch) {
+            const vid = vidMatch[1];
+            return `https://v.qq.com/x/page/${vid}.html`;
+        }
+        return "无法解析腾讯视频移动端 URL";
+    }
+
+    // 优酷 (Youku)
+    if (url.includes('m.youku.com')) {
+        // 移动端示例: https://m.youku.com/alipay_video/id_cbff0b0703e54d659628.html?spm=a2hww.12518357.drawer4.2
+        // PC 端示例: https://v.youku.com/v_show/id_cbff0b0703e54d659628.html
+
+        // 获取重定向location
+        const response = await Widget.http.get(url, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            },
+        });
+
+        const regex = /https:\/\/v\.youku\.com\/v_show\/id_[A-Za-z0-9=]+\.html/g;
+        const matches = response.data.match(regex); // 找到所有匹配的链接
+        if (matches) {
+            return matches[0];
+        }
+
+        return "无法解析优酷移动端 URL";
+    }
+
+    // 芒果TV (Mango TV)
+    if (url.includes('m.mgtv.com')) {
+        // 移动端示例: https://m.mgtv.com/b/771610/23300622.html?fpa=0&fpos=0
+        // PC 端示例: https://www.mgtv.com/b/771610/23300622.html
+        return url.replace('m.mgtv.com', 'www.mgtv.com').replace(/\?.*$/, '');
+    }
+
+    // 哔哩哔哩 (Bilibili)
+    if (url.includes('m.bilibili.com')) {
+        // 移动端示例: https://m.bilibili.com/bangumi/play/ep1231564
+        // PC 端示例: https://www.bilibili.com/bangumi/play/ep1231564
+        return url.replace('m.bilibili.com', 'www.bilibili.com');
+    }
+
+    // 不匹配任何支持的平台，直接返回原链接
+    return url;
+}
+
 function convertToDanmakuXML(contents) {
-  let xml = '<?xml version="1.0" encoding="utf-8"?><i>';
+  let danmus = []
   for (const content of contents) {
     const attributes = [
       content.timepoint,
@@ -525,10 +596,13 @@ function convertToDanmakuXML(contents) {
       '26732601000067074',
       '1'
     ].join(',');
-    xml += `<d p="${attributes}">${content.content}</d>`;
+    danmus.push({
+      p: attributes,
+      m: content.content
+    });
   }
-  xml += '</i>';
-  return xml;
+  console.log("danmus:", danmus.length);
+  return danmus;
 }
 
 async function fetchLocalhost(inputUrl) {
@@ -758,12 +832,14 @@ async function fetchIqiyi(inputUrl) {
         //     console.error(`Fetch error for ${api_url}:`, err);
         //     return null;
         // })
-        Widget.http.get(`https://zlib-decompress.hxd.ip-ddns.com/?url=${api_url}`, {
+        // Widget.http.get(`https://zlib-decompress.hxd.ip-ddns.com/?url=${api_url}`, {
+        Widget.http.get(api_url, {
           headers: {
             "Accpet-Encoding": "gzip",
             "Content-Type": "application/xml",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
           },
+          zlibMode: true
         })
     );
   }
@@ -785,27 +861,28 @@ async function fetchIqiyi(inputUrl) {
 
     for (let data of datas) {
         console.log("piece data: ", printFirst200Chars(data));
-        let xml;
-        // 检查数据是否需要解压
-        if (data instanceof ArrayBuffer || data instanceof Uint8Array) {
-            // 使用 DecompressionStream 解压 zlib 数据
-            const ds = new DecompressionStream("deflate"); // 修改为 zlib 的解压格式
-            const stream = new Blob([data]).stream(); // 将 ArrayBuffer 或 Uint8Array 转换为 Blob 并创建流
-            const decompressedStream = stream.pipeThrough(ds); // 解压流
-            const reader = decompressedStream.getReader();
-
-            let result = "";
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                result += new TextDecoder().decode(value); // 将解压的数据解码为文本
-            }
-            xml = result;
-        } else {
-            // 如果数据已经是字符串，直接使用
-            console.log("数据是未压缩的字符串，直接使用");
-            xml = data.data;
-        }
+        // let xml;
+        // // 检查数据是否需要解压
+        // if (data instanceof ArrayBuffer || data instanceof Uint8Array) {
+        //     // 使用 DecompressionStream 解压 zlib 数据
+        //     const ds = new DecompressionStream("deflate"); // 修改为 zlib 的解压格式
+        //     const stream = new Blob([data]).stream(); // 将 ArrayBuffer 或 Uint8Array 转换为 Blob 并创建流
+        //     const decompressedStream = stream.pipeThrough(ds); // 解压流
+        //     const reader = decompressedStream.getReader();
+        //
+        //     let result = "";
+        //     while (true) {
+        //         const { done, value } = await reader.read();
+        //         if (done) break;
+        //         result += new TextDecoder().decode(value); // 将解压的数据解码为文本
+        //     }
+        //     xml = result;
+        // } else {
+        //     // 如果数据已经是字符串，直接使用
+        //     console.log("数据是未压缩的字符串，直接使用");
+        //     xml = data.data;
+        // }
+        let xml = data.data;
 
         // 解析 XML 数据
         const danmaku = extract(xml, "content");
@@ -1620,7 +1697,7 @@ async function getDanmuFromUrl(danmu_server, playUrl, debug, danmu_server_pollin
         if (server === "http://127.0.0.1") {
             let res = await fetchLocalhost(playUrl);
             // 弹幕中有特殊字符会导致弹幕消失
-            res = fixDTagContent(res);
+            // res = fixDTagContent(res);
 
             // const fs = require("fs");
             //
@@ -1682,6 +1759,17 @@ async function getCommentsById(params) {
 
   // 测试参数值
   // return printParams(seriesName, episodeName, airDate, runtime, premiereDate, season, episode, tmdbId);
+
+  // 手动链接弹幕模块逻辑迁移到这
+  const urlRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(:\d+)?(\/[^\s]*)?$/;
+  if (urlRegex.test(title)) {
+      console.log("原始播放链接：", title);
+      const url = await convertMobileToPcUrl(title);
+      if (urlRegex.test(title)) {
+          console.log("转换后播放链接：", url);
+          return await getDanmuFromUrl(danmu_server, url, debug, danmu_server_polling);
+      }
+  }
 
   if (typeof tmdbId === 'undefined') {
     const count = debug === "true" ? 24 : 1;
